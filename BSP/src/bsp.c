@@ -1,0 +1,320 @@
+/*
+*********************************************************************************************************
+*
+*                                        BOARD SUPPORT PACKAGE
+*
+*                                     ST Microelectronics STM32
+*                                              with the
+*                                   STM3210B-EVAL Evaluation Board
+*
+* Filename      : bsp.c
+* Version       : V1.00
+* Programmer(s) : STM32F103X RT-Thread 0.3.1 USB-CDC
+*********************************************************************************************************
+*/
+
+/*
+*********************************************************************************************************
+*                                             INCLUDE FILES
+*********************************************************************************************************
+*/
+#define  BSP_MODULE
+
+#include <bsp.h>
+#include <rthw.h>
+#include <rtthread.h>
+/*
+*********************************************************************************************************
+*                                            LOCAL TABLES
+*********************************************************************************************************
+*/
+
+
+/*
+*********************************************************************************************************
+*                                       LOCAL GLOBAL VARIABLES
+*********************************************************************************************************
+*/
+
+/*
+*********************************************************************************************************
+*                                      LOCAL FUNCTION PROTOTYPES
+*********************************************************************************************************
+*/
+
+/** This function will initial STM32 board**/
+void rt_hw_board_init()
+{
+	BSP_Init();
+}
+
+/*******************************************************************************
+* Function Name  : RCC_Configuration
+* Description    : Configures the RCC.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void RCC_Configuration(void)
+{
+    //下面是给各模块开启时钟
+    //启动GPIO
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | \
+                           RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD | \
+						   RCC_APB2Periph_GPIOE ,
+                           ENABLE);
+    //启动AFIO
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+	//配置ADC转换时钟
+	RCC_ADCCLKConfig(RCC_PCLK2_Div8); //9M
+    //启动USART1 USART4
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+    //启动DMA时钟
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//使能DMA时钟
+	/* Enable ADC1 and GPIOC clock */
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 , ENABLE);
+}
+
+/*******************************************************************************
+* Function Name  : NVIC_Configuration
+* Description    : Configer NVIC
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void NVIC_Configuration(void)
+{
+    NVIC_InitTypeDef NVIC_InitStructure;
+
+#ifdef  VECT_TAB_RAM
+    // Set the Vector Table base location at 0x20000000
+    NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
+#else  // VECT_TAB_FLASH  
+    // Set the Vector Table base location at 0x08000000
+    NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
+#endif
+
+    //设置NVIC优先级分组为Group2：0-3抢占式优先级，0-3的响应式优先级
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+    //串口1接收中断打开    
+    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);  
+
+}
+/*******************************************************************************
+* Function Name  : GPIO_Configuration
+* Description    : Configures the different GPIO ports.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void GPIO_Configuration(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	/***************数字输出IO初始化*********************/
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;  //蜂鸣器 LED1  LED2
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;  //蜂鸣器
+    GPIO_Init(GPIOB, &GPIO_InitStructure); 
+
+	/*************数字输入IO初始化*********************/	
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
+
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_6;
+	GPIO_Init(GPIOG, &GPIO_InitStructure);
+    
+
+	/****************USART1初始化************************/
+	//USART1_TX
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    
+    //USART1_RX
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+}
+
+
+
+
+/*******************************************************************************
+* Function Name  : USART1_Configuration
+* Description    : NUSART1设置
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void USART1_Configuration(void)
+{
+    USART_InitTypeDef USART_InitStructure;
+    
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
+    USART_Init(USART1, &USART_InitStructure);
+    
+    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//使能串口1的接收中断	
+ 
+    USART_Cmd(USART1, ENABLE);
+}
+
+
+//*******************初始化独立看门狗*************************************
+//函数定义: void IWDG_Configuration(void) 
+//描    述：初始化独立看门狗
+//入口参数：无
+//出口参数：无
+//备    注：分频因子=4*2^prer.但最大值只能是256!时间计算(大概):Tout=40K/((4*2^prer)*rlr)值	 2S超时
+//Editor：liuqh 2013-1-16  Company: BXXJS
+//*******************************************************************
+static void IWDG_Configuration(void) 
+{
+	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);//使能对IWDG->PR和IWDG->RLR的写
+	IWDG_SetPrescaler(IWDG_Prescaler_64);//64分频
+	IWDG_SetReload(1300);
+	IWDG_ReloadCounter();
+	IWDG_Enable();		
+}
+//*******************喂独立看门狗*************************************
+//函数定义: void IWDG_Feed(void)
+//描    述：初始化独立看门狗
+//入口参数：无
+//出口参数：prer:分频数:0~7(只有低3位有效!)，rlr:重装载寄存器值:低11位有效.
+//备    注：分频因子=4*2^prer.但最大值只能是256!时间计算(大概):Tout=40K/((4*2^prer)*rlr)值
+//Editor：liuqh 2013-1-16  Company: BXXJS
+//*******************************************************************
+
+void IWDG_Feed(void)
+{
+	IWDG_ReloadCounter();//reload											   
+}
+
+
+/*******************************************************************************
+ * Function Name  : SysTick_Configuration
+ * Description    : Configures the SysTick for OS tick.
+ * Input          : None
+ * Output         : None
+ * Return         : None
+ *******************************************************************************/
+void  SysTick_Configuration(void)
+{
+	RCC_ClocksTypeDef  rcc_clocks;
+	rt_uint32_t         cnts;
+
+	RCC_GetClocksFreq(&rcc_clocks);
+
+	cnts = (rt_uint32_t)rcc_clocks.HCLK_Frequency / RT_TICK_PER_SECOND;
+
+	SysTick_Config(cnts);
+	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
+}
+/**
+ * This is the timer interrupt service routine.
+ *
+ */
+void rt_hw_timer_handler(void)
+{
+	/* enter interrupt */
+	rt_interrupt_enter();
+
+	rt_tick_increase();
+
+	/* leave interrupt */
+	rt_interrupt_leave();
+}
+
+/*
+*********************************************************************************************************
+*                                     LOCAL CONFIGURATION ERRORS
+*********************************************************************************************************
+*/
+
+
+/*
+*********************************************************************************************************
+*                                               BSP_Init()
+*
+* Description : Initialize the Board Support Package (BSP).
+*
+* Argument(s) : none.
+*
+* Return(s)   : none.
+*
+* Caller(s)   : Application.
+*
+* Note(s)     : (1) This function SHOULD be called before any other BSP function is called.
+*********************************************************************************************************
+*/
+
+void  BSP_Init (void)
+{
+	RCC_Configuration();
+	NVIC_Configuration();
+	SysTick_Configuration();
+	GPIO_Configuration();	
+	USART1_Configuration();
+// 	IWDG_Configuration();
+}
+//****************************防超时程序********************************
+//函数定义: uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)())
+//描    述：在TimeOfTimeout时间内，每Period时间检测一次DetectCondition()返回的值是否有效
+//入口参数：TimeOfTimeout：防超时总时间（单位：systick）
+//          Period       ：每Period时间检测一次，即时间因子（单位：systick）
+//          (*DetectCondition)()：检测条件，等于ConditionValue则条件满足，检测结束，否则延时Period时间继续检测
+//          ConditionValue      ；条件成立的值
+//出口参数：0：在TimeOfTimeout时间内，检测到条件成立
+//          1：在TimeOfTimeout时间内，没有检测到条件成立
+//备    注：Editor：Armink 2012-03-09    Company: BXXJS
+//**********************************************************************
+uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)(),uint8_t ConditionValue)
+{
+	uint32_t LastTimeLocal, CurTimeLocal;
+	uint8_t ConditionValueLocal;
+	LastTimeLocal = rt_tick_get();
+	CurTimeLocal  =  LastTimeLocal;
+	while(CurTimeLocal - LastTimeLocal < TimeOfTimeout)
+	{	 
+		CurTimeLocal = rt_tick_get();
+		ConditionValueLocal = DetectCondition();
+		if (ConditionValueLocal == ConditionValue) return 0;
+		rt_thread_delay(Period);
+	}	
+	return 1;
+} 
+
+
+//************************************延时函数**************************************
+//函数定义: void Delay(vu32 nCount)
+//入口参数：nCount ：延时函数中，循环的次数
+//出口参数：无
+//备    注：Editor：Armink 2011-03-18    Company: BXXJS
+//**********************************************************************************
+void Delay(vu32 nCount)
+{
+  for(; nCount!= 0;nCount--);
+}
+
