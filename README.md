@@ -8,6 +8,7 @@ FreeModbus_Slaver&Master + RT-Thread1.1.1 + STM32F103
 目前还有一个难题就是关于FreeModbus主机的支持，笔者初步打算修改FreeModbus源码，增加Modbus主机功能，这个工作放在第二步。操作系统和协议栈都有了，接下来的工作就容易了。
 
 该项目软件将采用Keil+IAR+Eclipse三大IDE同步开发，Keil方便调试，IAR作为Eclipse编译STM32的工具，Eclipse作为最主要的编码平台，方便灵活快捷。更重要的是Eclipse支持强大的版本管理插件，在该项目中将采用GIT作为默认的版本管理软件。
+(备注：如果您需要把这个项目商用，请及时联系RT-Thread给您授权)
 # 二、	项目目标 #
 硬件平台选择STM32F103RET6，软件平台：Keil+IAR+Eclipse+GIT。目标共有4个阶段，由于笔者在公司工作繁忙，没法把全部精力放在上面。初步估计一个月时间完成
 
