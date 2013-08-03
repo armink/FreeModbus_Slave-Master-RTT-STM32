@@ -120,27 +120,6 @@ void DebugMon_Handler(void)
     rt_hw_timer_handler();
 }
 
-/*******************************************************************************
-* Function Name  : USART1_IRQHandler
-* Description    : This function handles USART1 global interrupt request.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void USART1_IRQHandler(void)
-{
-	/* enter interrupt */
-	rt_interrupt_enter();
-	
-	if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) != RESET)
-    {
-		USART_ClearITPendingBit(USART1,USART_IT_RXNE);
-	}
-
-	rt_interrupt_leave();
-}
-
-
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */

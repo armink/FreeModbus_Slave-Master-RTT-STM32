@@ -23,6 +23,7 @@
 #include <bsp.h>
 #include <rthw.h>
 #include <rtthread.h>
+#include "UserModbusSlaver.h"
 /*
 *********************************************************************************************************
 *                                            LOCAL TABLES
@@ -94,14 +95,6 @@ static void NVIC_Configuration(void)
     NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
 
-    //设置NVIC优先级分组为Group2：0-3抢占式优先级，0-3的响应式优先级
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-    //串口1接收中断打开    
-    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);  
 
 }
 /*******************************************************************************
@@ -119,10 +112,10 @@ static void GPIO_Configuration(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;  //蜂鸣器 LED1  LED2
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_12;  //继电器1  LED1  LED2
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;  //蜂鸣器
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //蜂鸣器 继电器3   继电器2
     GPIO_Init(GPIOB, &GPIO_InitStructure); 
 
 	/*************数字输入IO初始化*********************/	
@@ -133,25 +126,7 @@ static void GPIO_Configuration(void)
 	GPIO_Init(GPIOG, &GPIO_InitStructure);
     
 
-	/****************USART1初始化************************/
-	//USART1_TX
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
-    
-    //USART1_RX
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-    GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 
 
@@ -276,7 +251,7 @@ void  BSP_Init (void)
 	NVIC_Configuration();
 	SysTick_Configuration();
 	GPIO_Configuration();	
-	USART1_Configuration();
+//	TODO  方便调试，暂时注释看门狗，正式发布时需要打开
 // 	IWDG_Configuration();
 }
 //****************************防超时程序********************************

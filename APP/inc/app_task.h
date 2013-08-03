@@ -12,6 +12,7 @@
 #include "bsp.h"
 #include "delay_conf.h"
 #include "cpuusage.h"
+#include "UserModbusSlaver.h"
 
 /*******************************************************************************************************/
 //                           DEFINES                                                                   
@@ -25,7 +26,10 @@
 #define true                     1
 
 
-
+extern uint16_t   usDiscreteInputBuf[]  ;
+extern uint16_t   usCoilBuf[]           ;
+extern uint16_t   usRegInputBuf[]       ;
+extern uint16_t   usRegHoldingBuf[]     ;
 
 
 
