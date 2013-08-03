@@ -52,7 +52,7 @@ void thread_entry_SysMonitor(void* parameter)
 //******************************************************************
 void thread_entry_ModbusSlaverPoll(void* parameter)
 {
-	eMBInit(MB_RTU, 0x01, 1, 115200, MB_PAR_NONE);
+	eMBInit(MB_RTU, 0x01, 1, 115200,  MB_PAR_EVEN);
 	eMBEnable();
 	while (1)
 	{
