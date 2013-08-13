@@ -1,6 +1,6 @@
 /*
- * FreeModbus Libary: LPC214X Port
- * Copyright (C) 2007 Tiago Prado Lone <tiago@maxwellbohr.com.br>
+ * FreeModbus Libary: STM32 Port
+ * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: portserial.c,v 1.1 2007/04/24 23:15:18 wolti Exp $
+ * File: $Id: port_s_serial.c,v 1.1 2013/08/13 15:07:05 Armink Exp $
  */
 
 #include "port.h"
@@ -33,12 +33,12 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if (xRxEnable)
 	{
-		RS485_RECEIVE_MODE;
+		SLAVER_RS485_RECEIVE_MODE;
 		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	}
 	else
 	{
-		RS485_SEND_MODE;
+		SLAVER_RS485_SEND_MODE;
 		USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
 	}
 	if (xTxEnable)

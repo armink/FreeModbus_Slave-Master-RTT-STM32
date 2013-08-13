@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: port.h,v 1.1 2007/04/24 23:15:18 wolti Exp $
+ * File: $Id: port.h add Master Functions,v 1.1 2013/08/13 15:07:05 Armink Exp $
  */
 
 #ifndef _PORT_H
@@ -34,8 +34,10 @@
 #define	PR_END_EXTERN_C             }
 
 //TODO  暂时先写B13引脚，等组网测试时再确认
-#define RS485_SEND_MODE  GPIO_SetBits(GPIOB,GPIO_Pin_13)
-#define RS485_RECEIVE_MODE  GPIO_ResetBits(GPIOB,GPIO_Pin_13)
+#define SLAVER_RS485_SEND_MODE  GPIO_SetBits(GPIOB,GPIO_Pin_13)
+#define SLAVER_RS485_RECEIVE_MODE  GPIO_ResetBits(GPIOB,GPIO_Pin_13)
+#define MASTER_RS485_SEND_MODE  GPIO_SetBits(GPIOB,GPIO_Pin_13)
+#define MASTER_RS485_RECEIVE_MODE  GPIO_ResetBits(GPIOB,GPIO_Pin_13)
 
 //void USART1_IRQHandler(void);
 //void TIM3_IRQHandler(void);
@@ -45,9 +47,6 @@
 
 void EnterCriticalSection(void);
 void ExitCriticalSection(void);
-void prvvUARTTxReadyISR(void);
-void prvvUARTRxISR(void);
-void TIMERExpiredISR(void);
 
 typedef uint8_t BOOL;
 
