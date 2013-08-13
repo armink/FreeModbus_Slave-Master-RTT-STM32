@@ -29,7 +29,7 @@ static void prvvUARTTxReadyISR(void);
 static void prvvUARTRxISR(void);
 /* ----------------------- Start implementation -----------------------------*/
 
-void vMBPortMasterSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
+void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if (xRxEnable)
 	{
@@ -51,13 +51,13 @@ void vMBPortMasterSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	}
 }
 
-void vMBPortMasterClose(void)
+void vMBMasterPortClose(void)
 {
 	USART_ITConfig(USART2, USART_IT_TXE | USART_IT_RXNE, DISABLE);
 	USART_Cmd(USART2, DISABLE);
 }
 //默认一个从机 串口2 波特率可设置  奇偶检验可设置
-BOOL xMBPortMasterSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
+BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 		eMBParity eParity)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -130,13 +130,13 @@ BOOL xMBPortMasterSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 	return TRUE;
 }
 
-BOOL xMBPortMasterSerialPutByte(CHAR ucByte)
+BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
 {
 	USART_SendData(USART2, ucByte);
 	return TRUE;
 }
 
-BOOL xMBPortMasterSerialGetByte(CHAR * pucByte)
+BOOL xMBMasterPortSerialGetByte(CHAR * pucByte)
 {
 	*pucByte = USART_ReceiveData(USART2);
 	return TRUE;
@@ -151,7 +151,7 @@ BOOL xMBPortMasterSerialGetByte(CHAR * pucByte)
  */
 void prvvUARTTxReadyISR(void)
 {
-	pxMBFrameCBTransmitterEmpty();
+	pxMBMasterFrameCBTransmitterEmpty();
 }
 
 /* 
@@ -162,7 +162,7 @@ void prvvUARTTxReadyISR(void)
  */
 void prvvUARTRxISR(void)
 {
-	pxMBFrameCBByteReceived();
+	pxMBMasterFrameCBByteReceived();
 }
 /*******************************************************************************
  * Function Name  : USART2_IRQHandler

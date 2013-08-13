@@ -39,9 +39,6 @@
 #define MASTER_RS485_SEND_MODE  GPIO_SetBits(GPIOB,GPIO_Pin_13)
 #define MASTER_RS485_RECEIVE_MODE  GPIO_ResetBits(GPIOB,GPIO_Pin_13)
 
-//void USART1_IRQHandler(void);
-//void TIM3_IRQHandler(void);
-
 #define ENTER_CRITICAL_SECTION()	EnterCriticalSection()
 #define EXIT_CRITICAL_SECTION()    ExitCriticalSection()
 

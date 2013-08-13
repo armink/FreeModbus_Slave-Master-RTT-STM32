@@ -26,6 +26,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * File: $Id: mbconfig.h,v 1.14 2006/12/07 22:10:34 wolti Exp $
+ *       $Id: mbconfig.h,v 1.15 2013/08/13 21:19:55 Armink Add Master Functions $
  */
 
 #ifndef _MB_CONFIG_H
@@ -46,12 +47,18 @@ PR_BEGIN_EXTERN_C
 /*! \addtogroup modbus_cfg
  *  @{
  */
-/*! \brief If Modbus ASCII support is enabled. */
-#define MB_ASCII_ENABLED                        (  0 )
-/*! \brief If Modbus RTU support is enabled. */
-#define MB_RTU_ENABLED                          (  1 )
-/*! \brief If Modbus TCP support is enabled. */
-#define MB_TCP_ENABLED                          (  0 )
+/*! \brief If Modbus Master ASCII support is enabled. */
+#define MB_MASTER_ASCII_ENABLED                 (  0 )
+/*! \brief If Modbus Master RTU support is enabled. */
+#define MB_MASTER_RTU_ENABLED                   (  1 )
+/*! \brief If Modbus Master TCP support is enabled. */
+#define MB_MASTER_TCP_ENABLED                   (  0 )
+/*! \brief If Modbus Slaver ASCII support is enabled. */
+#define MB_SLAVER_ASCII_ENABLED                 (  0 )
+/*! \brief If Modbus Slaver RTU support is enabled. */
+#define MB_SLAVER_RTU_ENABLED                   (  1 )
+/*! \brief If Modbus Slaver TCP support is enabled. */
+#define MB_SLAVER_TCP_ENABLED                   (  0 )
 /*! \brief The character timeout value for Modbus ASCII.
  *
  * The character timeout value is not fixed for Modbus ASCII and is therefore

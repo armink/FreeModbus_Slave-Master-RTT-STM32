@@ -44,13 +44,13 @@
 #include "mbfunc.h"
 
 #include "mbport.h"
-#if MB_RTU_ENABLED == 1
+#if MB_SLAVER_RTU_ENABLED == 1
 #include "mbrtu.h"
 #endif
-#if MB_ASCII_ENABLED == 1
+#if MB_SLAVER_ASCII_ENABLED == 1
 #include "mbascii.h"
 #endif
-#if MB_TCP_ENABLED == 1
+#if MB_SLAVER_TCP_ENABLED == 1
 #include "mbtcp.h"
 #endif
 
@@ -72,6 +72,7 @@ static enum
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
  * mode (RTU or ASCII) the are set to the correct implementations.
+ * Using for Modbus Slaver
  */
 static peMBFrameSend peMBFrameSendCur;
 static pvMBFrameStart pvMBFrameStartCur;
@@ -79,9 +80,20 @@ static pvMBFrameStop pvMBFrameStopCur;
 static peMBFrameReceive peMBFrameReceiveCur;
 static pvMBFrameClose pvMBFrameCloseCur;
 
+/* Functions pointer which are initialized in eMBInit( ). Depending on the
+ * mode (RTU or ASCII) the are set to the correct implementations.
+ * Using for Modbus Master,Add by Armink 20130813
+ */
+static peMBFrameSend peMBMasterFrameSendCur;
+static pvMBFrameStart pvMBMasterFrameStartCur;
+static pvMBFrameStop pvMBMasterFrameStopCur;
+static peMBFrameReceive peMBMasterFrameReceiveCur;
+static pvMBFrameClose pvMBMasterFrameCloseCur;
+
 /* Callback functions required by the porting layer. They are called when
  * an external event has happend which includes a timeout or the reception
  * or transmission of a character.
+ * Using for Modbus Slaver
  */
 BOOL( *pxMBFrameCBByteReceived ) ( void );
 BOOL( *pxMBFrameCBTransmitterEmpty ) ( void );
@@ -89,6 +101,18 @@ BOOL( *pxMBPortCBTimerExpired ) ( void );
 
 BOOL( *pxMBFrameCBReceiveFSMCur ) ( void );
 BOOL( *pxMBFrameCBTransmitFSMCur ) ( void );
+
+/* Callback functions required by the porting layer. They are called when
+ * an external event has happend which includes a timeout or the reception
+ * or transmission of a character.
+ * Using for Modbus Master,Add by Armink 20130813
+ */
+BOOL( *pxMBMasterFrameCBByteReceived ) ( void );
+BOOL( *pxMBMasterFrameCBTransmitterEmpty ) ( void );
+BOOL( *pxMBMasterPortCBTimerExpired ) ( void );
+
+BOOL( *pxMBMasterFrameCBReceiveFSMCur ) ( void );
+BOOL( *pxMBMasterFrameCBTransmitFSMCur ) ( void );
 
 /* An array of Modbus functions handlers which associates Modbus function
  * codes with implementing functions.
@@ -144,7 +168,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
 
         switch ( eMode )
         {
-#if MB_RTU_ENABLED > 0
+#if MB_SLAVER_RTU_ENABLED > 0
         case MB_RTU:
             pvMBFrameStartCur = eMBRTUStart;
             pvMBFrameStopCur = eMBRTUStop;
@@ -158,7 +182,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
             eStatus = eMBRTUInit( ucMBAddress, ucPort, ulBaudRate, eParity );
             break;
 #endif
-#if MB_ASCII_ENABLED > 0
+#if MB_SLAVER_ASCII_ENABLED > 0
         case MB_ASCII:
             pvMBFrameStartCur = eMBASCIIStart;
             pvMBFrameStopCur = eMBASCIIStop;
@@ -193,7 +217,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
     return eStatus;
 }
 
-#if MB_TCP_ENABLED > 0
+#if MB_SLAVER_TCP_ENABLED > 0
 eMBErrorCode
 eMBTCPInit( USHORT ucTCPPort )
 {
