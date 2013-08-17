@@ -23,7 +23,7 @@
 #include <bsp.h>
 #include <rthw.h>
 #include <rtthread.h>
-#include "UserModbusSlaver.h"
+#include "user_app.h"
 /*
 *********************************************************************************************************
 *                                            LOCAL TABLES
@@ -124,13 +124,8 @@ static void GPIO_Configuration(void)
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_6;
 	GPIO_Init(GPIOG, &GPIO_InitStructure);
-    
-
 
 }
-
-
-
 
 /*******************************************************************************
 * Function Name  : USART1_Configuration

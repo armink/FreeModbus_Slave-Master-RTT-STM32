@@ -26,6 +26,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * File: $Id: mbport.h,v 1.17 2006/12/07 22:10:34 wolti Exp $
+ *            mbport.h,v 1.60 2013/08/17 11:42:56 Armink Add Master Functions  $
  */
 
 #ifndef _MB_PORT_H
@@ -66,6 +67,12 @@ BOOL            xMBPortEventPost( eMBEventType eEvent );
 
 BOOL            xMBPortEventGet(  /*@out@ */ eMBEventType * eEvent );
 
+BOOL            xMBMasterPortEventInit( void );
+
+BOOL            xMBMasterPortEventPost( eMBEventType eEvent );
+
+BOOL            xMBMasterPortEventGet(  /*@out@ */ eMBEventType * eEvent );
+
 /* ----------------------- Serial port functions ----------------------------*/
 
 BOOL            xMBPortSerialInit( UCHAR ucPort, ULONG ulBaudRate,
@@ -81,6 +88,20 @@ INLINE BOOL     xMBPortSerialGetByte( CHAR * pucByte );
 
 INLINE BOOL     xMBPortSerialPutByte( CHAR ucByte );
 
+
+BOOL            xMBMasterPortSerialInit( UCHAR ucPort, ULONG ulBaudRate,
+                                   UCHAR ucDataBits, eMBParity eParity );
+
+void            vMBMasterPortClose( void );
+
+void            xMBMasterPortSerialClose( void );
+
+void            vMBMasterPortSerialEnable( BOOL xRxEnable, BOOL xTxEnable );
+
+INLINE BOOL     xMBMasterPortSerialGetByte( CHAR * pucByte );
+
+INLINE BOOL     xMBPortSerialPutByte( CHAR ucByte );
+
 /* ----------------------- Timers functions ---------------------------------*/
 BOOL            xMBPortTimersInit( USHORT usTimeOut50us );
 
@@ -89,6 +110,14 @@ void            xMBPortTimersClose( void );
 INLINE void     vMBPortTimersEnable( void );
 
 INLINE void     vMBPortTimersDisable( void );
+
+BOOL            xMBMasterPortTimersInit( USHORT usTimeOut50us );
+
+void            xMBMasterPortTimersClose( void );
+
+INLINE void     vMBMasterPortTimersEnable( void );
+
+INLINE void     vMBMasterPortTimersDisable( void );
 
 /* ----------------------- Callback for the protocol stack ------------------*/
 

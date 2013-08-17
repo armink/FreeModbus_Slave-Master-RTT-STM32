@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: port_m_serial.c add Master Functions,v 1.1 2013/08/13 15:07:05 Armink Exp $
+ * File: $Id: portserial.c,v 1.60 2013/08/13 15:07:05 Armink add Master Functions$
  */
 
 #include "port.h"
@@ -29,35 +29,35 @@ static void prvvUARTTxReadyISR(void);
 static void prvvUARTRxISR(void);
 /* ----------------------- Start implementation -----------------------------*/
 
-void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
+void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if (xRxEnable)
 	{
-		MASTER_RS485_RECEIVE_MODE;
-		USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
+		SLAVER_RS485_RECEIVE_MODE;
+		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	}
 	else
 	{
-		MASTER_RS485_SEND_MODE;
-		USART_ITConfig(USART2, USART_IT_RXNE, DISABLE);
+		SLAVER_RS485_SEND_MODE;
+		USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
 	}
 	if (xTxEnable)
 	{
-		USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+		USART_ITConfig(USART1, USART_IT_TXE, ENABLE);
 	}
 	else
 	{
-		USART_ITConfig(USART2, USART_IT_TXE, DISABLE);
+		USART_ITConfig(USART1, USART_IT_TXE, DISABLE);
 	}
 }
 
-void vMBMasterPortClose(void)
+void vMBPortClose(void)
 {
-	USART_ITConfig(USART2, USART_IT_TXE | USART_IT_RXNE, DISABLE);
-	USART_Cmd(USART2, DISABLE);
+	USART_ITConfig(USART1, USART_IT_TXE | USART_IT_RXNE, DISABLE);
+	USART_Cmd(USART1, DISABLE);
 }
-//默认一个从机 串口2 波特率可设置  奇偶检验可设置
-BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
+//默认一个从机 串口1 波特率可设置  奇偶检验可设置
+BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 		eMBParity eParity)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -65,17 +65,17 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 	NVIC_InitTypeDef NVIC_InitStructure;
 	//======================时钟初始化=======================================
 	RCC_APB2PeriphClockCmd(
-			RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB1Periph_USART2,
+			RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB2Periph_USART1,
 			ENABLE);
 	//======================IO初始化=======================================	
-	//USART2_TX
+	//USART1_TX
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	//USART2_RX
+	//USART1_RX
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 	//配置485发送和接收模式
 //    TODO   暂时先写B13 等之后组网测试时再修改
@@ -112,16 +112,16 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 
 	ENTER_CRITICAL_SECTION(); //关全局中断
 
-	USART_Init(USART2, &USART_InitStructure);
-	USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-	USART_Cmd(USART2, ENABLE);
+	USART_Init(USART1, &USART_InitStructure);
+	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
+	USART_Cmd(USART1, ENABLE);
 
 	//=====================中断初始化======================================
 	//设置NVIC优先级分组为Group2：0-3抢占式优先级，0-3的响应式优先级
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
@@ -130,15 +130,15 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 	return TRUE;
 }
 
-BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
+BOOL xMBPortSerialPutByte(CHAR ucByte)
 {
-	USART_SendData(USART2, ucByte);
+	USART_SendData(USART1, ucByte);
 	return TRUE;
 }
 
-BOOL xMBMasterPortSerialGetByte(CHAR * pucByte)
+BOOL xMBPortSerialGetByte(CHAR * pucByte)
 {
-	*pucByte = USART_ReceiveData(USART2);
+	*pucByte = USART_ReceiveData(USART1);
 	return TRUE;
 }
 
@@ -151,7 +151,7 @@ BOOL xMBMasterPortSerialGetByte(CHAR * pucByte)
  */
 void prvvUARTTxReadyISR(void)
 {
-	pxMBMasterFrameCBTransmitterEmpty();
+	pxMBFrameCBTransmitterEmpty();
 }
 
 /* 
@@ -162,28 +162,28 @@ void prvvUARTTxReadyISR(void)
  */
 void prvvUARTRxISR(void)
 {
-	pxMBMasterFrameCBByteReceived();
+	pxMBFrameCBByteReceived();
 }
 /*******************************************************************************
- * Function Name  : USART2_IRQHandler
- * Description    : This function handles USART2 global interrupt request.
+ * Function Name  : USART1_IRQHandler
+ * Description    : This function handles USART1 global interrupt request.
  * Input          : None
  * Output         : None
  * Return         : None
  *******************************************************************************/
-void USART2_IRQHandler(void)
+void USART1_IRQHandler(void)
 {
 	rt_interrupt_enter();
 	//接收中断
-	if (USART_GetITStatus(USART2, USART_IT_RXNE) == SET)
+	if (USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
 	{
-		USART_ClearITPendingBit(USART2, USART_IT_RXNE);
+		USART_ClearITPendingBit(USART1, USART_IT_RXNE);
 		prvvUARTRxISR();
 	}
 	//发送中断
-	if (USART_GetITStatus(USART2, USART_IT_TXE) == SET)
+	if (USART_GetITStatus(USART1, USART_IT_TXE) == SET)
 	{
-		USART_ClearITPendingBit(USART2, USART_IT_TXE);
+		USART_ClearITPendingBit(USART1, USART_IT_TXE);
 		prvvUARTTxReadyISR();
 	}
 	rt_interrupt_leave();

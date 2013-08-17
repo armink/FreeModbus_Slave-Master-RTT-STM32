@@ -1,4 +1,4 @@
-#include "UserModbusSlaver.h"
+#include "user_app.h"
 /* ----------------------- Variables ---------------------------------*/
 USHORT   usDiscreteInputStart                             = DISCRETE_INPUT_START;
 UCHAR    usDiscreteInputBuf[DISCRETE_INPUT_NDISCRETES/8]  ;

@@ -26,7 +26,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * File: $Id: mbconfig.h,v 1.14 2006/12/07 22:10:34 wolti Exp $
- *       $Id: mbconfig.h,v 1.15 2013/08/13 21:19:55 Armink Add Master Functions $
+ *       $Id: mbconfig.h,v 1.60 2013/08/13 21:19:55 Armink Add Master Functions $
  */
 
 #ifndef _MB_CONFIG_H

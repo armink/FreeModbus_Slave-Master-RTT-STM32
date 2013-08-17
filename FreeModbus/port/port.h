@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: port.h add Master Functions,v 1.1 2013/08/13 15:07:05 Armink Exp $
+ * File: $Id: port.h ,v 1.60 2013/08/13 15:07:05 Armink add Master Functions $
  */
 
 #ifndef _PORT_H

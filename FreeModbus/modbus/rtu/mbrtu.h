@@ -25,8 +25,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * File: $Id: mbrtu.h,v 1.9 2006/12/07 22:10:34 wolti Exp $
+ * File: $Id: mbrtu.h,v 1.9  2006/12/07 22:10:34 wolti Exp $
+ * File: $Id: mbrtu.h,v 1.60 2013/08/17 13:11:42 Armink Add Master Functions $
  */
+#include "mbconfig.h"
 
 #ifndef _MB_RTU_H
 #define _MB_RTU_H
@@ -34,8 +36,8 @@
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C
 #endif
-    eMBErrorCode eMBRTUInit( UCHAR slaveAddress, UCHAR ucPort, ULONG ulBaudRate,
-                             eMBParity eParity );
+eMBErrorCode    eMBRTUInit( UCHAR slaveAddress, UCHAR ucPort, ULONG ulBaudRate,
+						    eMBParity eParity );
 void            eMBRTUStart( void );
 void            eMBRTUStop( void );
 eMBErrorCode    eMBRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
@@ -44,6 +46,18 @@ BOOL            xMBRTUReceiveFSM( void );
 BOOL            xMBRTUTransmitFSM( void );
 BOOL            xMBRTUTimerT15Expired( void );
 BOOL            xMBRTUTimerT35Expired( void );
+
+#if MB_MASTER_RTU_ENABLED > 0
+eMBErrorCode    eMBMasterRTUInit( UCHAR ucPort, ULONG ulBaudRate,eMBParity eParity );
+void            eMBMasterRTUStart( void );
+void            eMBMasterRTUStop( void );
+eMBErrorCode    eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
+eMBErrorCode    eMBMasterRTUSend( UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
+BOOL            xMBMasterRTUReceiveFSM( void );
+BOOL            xMBMasterRTUTransmitFSM( void );
+BOOL            xMBMasterRTUTimerT15Expired( void );
+BOOL            xMBMasterRTUTimerT35Expired( void );
+#endif
 
 #ifdef __cplusplus
 PR_END_EXTERN_C

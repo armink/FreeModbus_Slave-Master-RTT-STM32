@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: port_m_event.c add Master Functions,v 1.1 2013/08/13 15:07:05 Armink Exp $
+ * File: $Id: portevent_m.c v 1.60 2013/08/13 15:07:05 Armink add Master Functions, $
  */
 
 /* ----------------------- Modbus includes ----------------------------------*/
@@ -29,14 +29,14 @@ static BOOL     xMasterEventInQueue;
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL
-xMBPortMasterEventInit( void )
+xMBMasterPortEventInit( void )
 {
     xMasterEventInQueue = FALSE;
     return TRUE;
 }
 
 BOOL
-xMBPortMasterEventPost( eMBEventType eEvent )
+xMBMasterPortEventPost( eMBEventType eEvent )
 {
     xMasterEventInQueue = TRUE;
     eMasterQueuedEvent = eEvent;
@@ -44,7 +44,7 @@ xMBPortMasterEventPost( eMBEventType eEvent )
 }
 
 BOOL
-xMBPortMasterEventGet( eMBEventType * eEvent )
+xMBMasterPortEventGet( eMBEventType * eEvent )
 {
     BOOL            xEventHappened = FALSE;
 

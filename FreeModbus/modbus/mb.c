@@ -198,6 +198,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
 #endif
         default:
             eStatus = MB_EINVAL;
+            break;
         }
 
         if( eStatus == MB_ENOERR )
@@ -244,6 +245,64 @@ eMBTCPInit( USHORT ucTCPPort )
         eMBState = STATE_DISABLED;
     }
     return eStatus;
+}
+#endif
+
+#if MB_MASTER_RTU_ENABLED > 0
+eMBErrorCode
+eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
+{
+    eMBErrorCode    eStatus = MB_ENOERR;
+
+	switch (eMode)
+	{
+#if MB_MASTER_RTU_ENABLED > 0
+	case MB_RTU:
+		pvMBMasterFrameStartCur = eMBMasterRTUStart;
+		pvMBMasterFrameStopCur = eMBMasterRTUStop;
+		peMBMasterFrameSendCur = eMBMasterRTUSend;
+		peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
+		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+		pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
+		pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
+		pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerT35Expired;
+
+		eStatus = eMBMasterRTUInit(ucPort, ulBaudRate, eParity);
+		break;
+#endif
+#if MB_MASTER_ASCII_ENABLED > 0
+		case MB_ASCII:
+		pvMBMasterFrameStartCur = eMBMasterASCIIStart;
+		pvMBMasterFrameStopCur = eMBMasterASCIIStop;
+		peMBMasterFrameSendCur = eMBMasterASCIISend;
+		peMBMasterFrameReceiveCur = eMBMasterASCIIReceive;
+		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+		pxMBMasterFrameCBByteReceived = xMBMasterASCIIReceiveFSM;
+		pxMBMasterFrameCBTransmitterEmpty = xMBMasterASCIITransmitFSM;
+		pxMBMasterPortCBTimerExpired = xMBMasterASCIITimerT1SExpired;
+
+		eStatus = eMBMasterASCIIInit(ucPort, ulBaudRate, eParity );
+		break;
+#endif
+	default:
+		eStatus = MB_EINVAL;
+		break;
+	}
+
+	if (eStatus == MB_ENOERR)
+	{
+		if (!xMBMasterPortEventInit())
+		{
+			/* port dependent event module initalization failed. */
+			eStatus = MB_EPORTERR;
+		}
+		else
+		{
+			eMBCurrentMode = eMode;
+			eMBState = STATE_DISABLED;
+		}
+	}
+	return eStatus;
 }
 #endif
 
@@ -313,6 +372,27 @@ eMBClose( void )
     return eStatus;
 }
 
+#if MB_MASTER_RTU_ENABLED > 0
+eMBErrorCode
+eMBMasterClose( void )
+{
+    eMBErrorCode    eStatus = MB_ENOERR;
+
+    if( eMBState == STATE_DISABLED )
+    {
+        if( pvMBMasterFrameCloseCur != NULL )
+        {
+            pvMBMasterFrameCloseCur(  );
+        }
+    }
+    else
+    {
+        eStatus = MB_EILLSTATE;
+    }
+    return eStatus;
+}
+#endif
+
 eMBErrorCode
 eMBEnable( void )
 {
@@ -330,6 +410,26 @@ eMBEnable( void )
     }
     return eStatus;
 }
+
+#if MB_MASTER_RTU_ENABLED > 0
+eMBErrorCode
+eMBMasterEnable( void )
+{
+    eMBErrorCode    eStatus = MB_ENOERR;
+
+    if( eMBState == STATE_DISABLED )
+    {
+        /* Activate the protocol stack. */
+        pvMBMasterFrameStartCur(  );
+        eMBState = STATE_ENABLED;
+    }
+    else
+    {
+        eStatus = MB_EILLSTATE;
+    }
+    return eStatus;
+}
+#endif
 
 eMBErrorCode
 eMBDisable( void )
@@ -352,6 +452,30 @@ eMBDisable( void )
     }
     return eStatus;
 }
+
+#if MB_MASTER_RTU_ENABLED > 0
+eMBErrorCode
+eMBMasterDisable( void )
+{
+    eMBErrorCode    eStatus;
+
+    if( eMBState == STATE_ENABLED )
+    {
+        pvMBMasterFrameStopCur(  );
+        eMBState = STATE_DISABLED;
+        eStatus = MB_ENOERR;
+    }
+    else if( eMBState == STATE_DISABLED )
+    {
+        eStatus = MB_ENOERR;
+    }
+    else
+    {
+        eStatus = MB_EILLSTATE;
+    }
+    return eStatus;
+}
+#endif
 
 eMBErrorCode eMBPoll( void )
 {
