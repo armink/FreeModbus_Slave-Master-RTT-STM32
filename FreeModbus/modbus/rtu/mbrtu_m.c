@@ -56,14 +56,14 @@ typedef enum
 {
     STATE_M_RX_INIT,              /*!< Receiver is in initial state. */
     STATE_M_RX_IDLE,              /*!< Receiver is in idle state. */
-    STATE_M_RX_RCV                /*!< Frame is beeing received. */
+    STATE_M_RX_RCV,               /*!< Frame is beeing received. */
+    STATE_M_RX_ERROR              /*!< If the frame is invalid. */
 } eMBMasterRcvState;
 
 typedef enum
 {
     STATE_M_TX_IDLE,              /*!< Transmitter is in idle state. */
     STATE_M_TX_XMIT,              /*!< Transmitter is in transfer state. */
-    STATE_M_TX_ERROR              /*!< If the frame is invalid. */
 } eMBMasterSndState;
 
 /* ----------------------- Static variables ---------------------------------*/
@@ -321,13 +321,13 @@ eMBMasterRTUStop( void )
 //}
 //
 BOOL
-xMBMasterRTUTimerT35Expired( void )
+xMBMasterRTUTimerT35Expired(void)
 {
 	BOOL xNeedPoll = FALSE;
 
 	switch (eRcvState)
 	{
-	/* Timer t35 expired. Startup phase is finished. */
+		/* Timer t35 expired. Startup phase is finished. */
 	case STATE_M_RX_INIT:
 		xNeedPoll = xMBMasterPortEventPost(EV_READY);
 		break;
@@ -337,10 +337,15 @@ xMBMasterRTUTimerT35Expired( void )
 	case STATE_M_RX_RCV:
 		xNeedPoll = xMBMasterPortEventPost(EV_FRAME_RECEIVED);
 		break;
+
+		/* An error occured while receiving the frame. */
+	case STATE_RX_ERROR:
+		break;
+
 		/* Function called in an illegal state. */
 	default:
 		assert_param(
-				( eRcvState == STATE_M_RX_INIT ) || ( eRcvState == STATE_M_RX_RCV ));
+				( eRcvState == STATE_M_RX_INIT ) || ( eRcvState == STATE_M_RX_RCV ) || ( eRcvState == STATE_M_RX_ERROR ));
 		break;
 	}
 
@@ -349,7 +354,14 @@ xMBMasterRTUTimerT35Expired( void )
 
 	//TODO 发送状态在超时后的状态转换需要添加
 
-    return xNeedPoll;
+	switch(eSndState)
+	{
+		/* Timer t35 expired. . */
+	case STATE_M_TX_XMIT :
+
+	}
+
+	return xNeedPoll;
 }
 #endif
 
