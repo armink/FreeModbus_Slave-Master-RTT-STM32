@@ -53,11 +53,11 @@ PR_BEGIN_EXTERN_C
 #define MB_MASTER_RTU_ENABLED                   (  1 )
 /*! \brief If Modbus Master TCP support is enabled. */
 #define MB_MASTER_TCP_ENABLED                   (  0 )
-/*! \brief If Modbus Slaver ASCII support is enabled. */
+/*! \brief If Modbus Slave ASCII support is enabled. */
 #define MB_SLAVE_ASCII_ENABLED                  (  0 )
-/*! \brief If Modbus Slaver RTU support is enabled. */
+/*! \brief If Modbus Slave RTU support is enabled. */
 #define MB_SLAVE_RTU_ENABLED                    (  1 )
-/*! \brief If Modbus Slaver TCP support is enabled. */
+/*! \brief If Modbus Slave TCP support is enabled. */
 #define MB_SLAVE_TCP_ENABLED                    (  0 )
 /*! \brief The character timeout value for Modbus ASCII.
  *

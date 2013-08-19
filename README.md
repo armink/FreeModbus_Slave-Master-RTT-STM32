@@ -1,4 +1,4 @@
-FreeModbus_Slaver&Master + RT-Thread1.1.1 + STM32F103
+FreeModbus_Slave&Master + RT-Thread1.1.1 + STM32F103
 ----------
 # 一、	背景描述 #
 目前操作系统在嵌入式软件行业非常流行，在工控组网方面，可能以后会经常会用到Modbus主机+操作系统、Modbus从机+操作系统甚至Modbus主机+Modbus从机+操作系统。但是操作系统缺乏对Modbus的支持；同时市面上也有很好的开源Modbus协议栈，例如FreeModbus，但是缺点就是该协议栈只支持从机，网上缺乏它和操作系统结合的案例。

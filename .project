@@ -27,7 +27,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Debug}</value>
+					<value>${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Debug}</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.contents</key>

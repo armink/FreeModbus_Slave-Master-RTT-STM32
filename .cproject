@@ -33,7 +33,7 @@
 							<option id="iar.arm.toolchain.option.lowLevelInterfaceCortex.v5.4.0.469960283" name="Library low-level&#10;interface implementation&#10;(Cortex-M cores):" superClass="iar.arm.toolchain.option.lowLevelInterfaceCortex.v5.4.0"/>
 							<option id="iar.arm.toolchain.option.useDSPLibrary.v6.2.2.745067602" name="DSP Library" superClass="iar.arm.toolchain.option.useDSPLibrary.v6.2.2"/>
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="iar.arm.toolchain.targetPlatform.v5.4.0.555588680" isAbstract="false" name="IAR Target platform for ARM (ELF)" osList="win32,linux" superClass="iar.arm.toolchain.targetPlatform.v5.4.0"/>
-							<builder buildPath="${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Debug}" id="iar.arm.toolchain.builder.2.2025863817" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="iar.arm.toolchain.builder.2"/>
+							<builder buildPath="${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Debug}" id="iar.arm.toolchain.builder.2.2025863817" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="iar.arm.toolchain.builder.2"/>
 							<tool id="iar.arm.toolchain.compiler.v5.4.1.137030134" name="IAR C/C++ Compiler for ARM" superClass="iar.arm.toolchain.compiler.v5.4.1">
 								<option defaultValue="true" id="iar.arm.toolchain.compiler.option.debugInfo.v5.4.0.2005964005" name="Generate debug information" superClass="iar.arm.toolchain.compiler.option.debugInfo.v5.4.0" valueType="boolean"/>
 								<option defaultValue="iar.arm.toolchain.compiler.option.optLevel.none.v5.4.0" id="iar.arm.toolchain.compiler.option.optLevel.v5.4.0.138043467" name="Optimization level:" superClass="iar.arm.toolchain.compiler.option.optLevel.v5.4.0" value="iar.arm.toolchain.compiler.option.optLevel.low.v5.4.0" valueType="enumerated"/>
@@ -141,7 +141,7 @@
 							<option id="iar.arm.toolchain.option.lowLevelInterfaceCortex.v5.4.0.298557260" name="Library low-level&#10;interface implementation&#10;(Cortex-M cores):" superClass="iar.arm.toolchain.option.lowLevelInterfaceCortex.v5.4.0"/>
 							<option id="iar.arm.toolchain.option.useCMSIS.v6.2.2.1008613098" name="Use CMSIS" superClass="iar.arm.toolchain.option.useCMSIS.v6.2.2"/>
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF" id="iar.arm.toolchain.targetPlatform.v5.4.0.227679239" isAbstract="false" name="IAR Target platform for ARM (ELF)" osList="win32,linux" superClass="iar.arm.toolchain.targetPlatform.v5.4.0"/>
-							<builder buildPath="${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Release}" id="iar.arm.toolchain.builder.2.1632539169" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="iar.arm.toolchain.builder.2"/>
+							<builder buildPath="${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Release}" id="iar.arm.toolchain.builder.2.1632539169" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="CDT Internal Builder" superClass="iar.arm.toolchain.builder.2"/>
 							<tool id="iar.arm.toolchain.compiler.v5.4.1.872171530" name="IAR C/C++ Compiler for ARM" superClass="iar.arm.toolchain.compiler.v5.4.1">
 								<option defaultValue="false" id="iar.arm.toolchain.compiler.option.debugInfo.v5.4.0.533414914" name="Generate debug information" superClass="iar.arm.toolchain.compiler.option.debugInfo.v5.4.0" valueType="boolean"/>
 								<option defaultValue="iar.arm.toolchain.compiler.option.optLevel.highBalance.v5.4.0" id="iar.arm.toolchain.compiler.option.optLevel.v5.4.0.173127463" name="Optimization level:" superClass="iar.arm.toolchain.compiler.option.optLevel.v5.4.0" valueType="enumerated"/>
@@ -179,7 +179,7 @@
 		</cconfiguration>
 	</storageModule>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-		<project id="FreeModbus_Slaver&amp;Master+RTT+STM32.iar.arm.toolchain.project.exe.v5.4.0.215810011" name="Executable (IAR)" projectType="iar.arm.toolchain.project.exe.v5.4.0"/>
+		<project id="FreeModbus_Slave&amp;Master+RTT+STM32.iar.arm.toolchain.project.exe.v5.4.0.215810011" name="Executable (IAR)" projectType="iar.arm.toolchain.project.exe.v5.4.0"/>
 	</storageModule>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -188,7 +188,7 @@
 		</scannerConfigBuildInfo>
 	</storageModule>
 	<storageModule moduleId="refreshScope" versionNumber="1">
-		<resource resourceType="PROJECT" workspacePath="/FreeModbus_Slaver&amp;Master+RTT+STM32"/>
+		<resource resourceType="PROJECT" workspacePath="/FreeModbus_Slave&amp;Master+RTT+STM32"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
 		<project-mappings>

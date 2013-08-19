@@ -72,7 +72,7 @@ static enum
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
  * mode (RTU or ASCII) the are set to the correct implementations.
- * Using for Modbus Slaver
+ * Using for Modbus Slave
  */
 static peMBFrameSend peMBFrameSendCur;
 static pvMBFrameStart pvMBFrameStartCur;
@@ -93,7 +93,7 @@ static pvMBFrameClose pvMBMasterFrameCloseCur;
 /* Callback functions required by the porting layer. They are called when
  * an external event has happend which includes a timeout or the reception
  * or transmission of a character.
- * Using for Modbus Slaver
+ * Using for Modbus Slave
  */
 BOOL( *pxMBFrameCBByteReceived ) ( void );
 BOOL( *pxMBFrameCBTransmitterEmpty ) ( void );

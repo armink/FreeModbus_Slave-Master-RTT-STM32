@@ -12,14 +12,14 @@ uint8_t CpuUsageMajor, CpuUsageMinor; //CPU使用率
 
 //====================操作系统各线程优先级==================================
 #define thread_SysMonitor_Prio		    	11
-#define thread_ModbusSlaverPoll_Prio    	10
+#define thread_ModbusSlavePoll_Prio    	10
 ALIGN(RT_ALIGN_SIZE)
 //====================操作系统各线程堆栈====================================
 static rt_uint8_t thread_SysMonitor_stack[256];
-static rt_uint8_t thread_ModbusSlaverPoll_stack[512];
+static rt_uint8_t thread_ModbusSlavePoll_stack[512];
 
 struct rt_thread thread_SysMonitor;
-struct rt_thread thread_ModbusSlaverPoll;
+struct rt_thread thread_ModbusSlavePoll;
 
 //***************************系统监控线程***************************
 //函数定义: void thread_entry_SysRunLed(void* parameter)
@@ -45,12 +45,12 @@ void thread_entry_SysMonitor(void* parameter)
 }
 
 //*************************** Modbus从机线程***************************
-//函数定义: void thread_entry_ModbusSlaverPoll(void* parameter)
+//函数定义: void thread_entry_ModbusSlavePoll(void* parameter)
 //入口参数：无
 //出口参数：无
 //备    注：Editor：Armink   2013-08-02    Company: BXXJS
 //******************************************************************
-void thread_entry_ModbusSlaverPoll(void* parameter)
+void thread_entry_ModbusSlavePoll(void* parameter)
 {
 	eMBInit(MB_RTU, 0x01, 1, 115200,  MB_PAR_EVEN);
 	eMBEnable();
@@ -74,12 +74,12 @@ int rt_application_init(void)
 			thread_SysMonitor_Prio, 5);
 	rt_thread_startup(&thread_SysMonitor);
 
-	rt_thread_init(&thread_ModbusSlaverPoll, "MBSlaverPoll",
-			thread_entry_ModbusSlaverPoll, RT_NULL,
-			thread_ModbusSlaverPoll_stack,
-			sizeof(thread_ModbusSlaverPoll_stack), thread_ModbusSlaverPoll_Prio,
+	rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
+			thread_entry_ModbusSlavePoll, RT_NULL,
+			thread_ModbusSlavePoll_stack,
+			sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
 			5);
-	rt_thread_startup(&thread_ModbusSlaverPoll);
+	rt_thread_startup(&thread_ModbusSlavePoll);
 
 	return 0;
 }
