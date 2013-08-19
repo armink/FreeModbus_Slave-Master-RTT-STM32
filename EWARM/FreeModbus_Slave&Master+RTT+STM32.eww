@@ -2,7 +2,7 @@
 
 <workspace>
   <project>
-    <path>$WS_DIR$\FreeModbus_Slaver&amp;Master+RTT+STM32.ewp</path>
+    <path>$WS_DIR$\FreeModbus_Slave&amp;Master+RTT+STM32.ewp</path>
   </project>
   <batchBuild/>
 </workspace>

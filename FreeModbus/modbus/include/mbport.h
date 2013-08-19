@@ -139,6 +139,12 @@ extern          BOOL( *pxMBFrameCBTransmitterEmpty ) ( void );
 
 extern          BOOL( *pxMBPortCBTimerExpired ) ( void );
 
+extern          BOOL( *pxMBMasterFrameCBByteReceived ) ( void );
+
+extern          BOOL( *pxMBMasterFrameCBTransmitterEmpty ) ( void );
+
+extern          BOOL( *pxMBMasterPortCBTimerExpired ) ( void );
+
 /* ----------------------- TCP port functions -------------------------------*/
 BOOL            xMBTCPPortInit( USHORT usTCPPort );
 

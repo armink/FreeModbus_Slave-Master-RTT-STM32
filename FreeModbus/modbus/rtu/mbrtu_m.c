@@ -339,7 +339,7 @@ xMBMasterRTUTimerT35Expired(void)
 		break;
 
 		/* An error occured while receiving the frame. */
-	case STATE_RX_ERROR:
+	case STATE_M_RX_ERROR:
 		break;
 
 		/* Function called in an illegal state. */

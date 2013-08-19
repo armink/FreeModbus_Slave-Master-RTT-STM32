@@ -401,11 +401,6 @@
               <FilePath>..\APP\src\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>UserModbusSlaver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\UserModbusSlaver.c</FilePath>
-            </File>
-            <File>
               <FileName>cpuusage.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\cpuusage.c</FilePath>
@@ -673,7 +668,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>FreeModbusSlaver</GroupName>
+          <GroupName>FreeModbus</GroupName>
           <Files>
             <File>
               <FileName>mb.c</FileName>
@@ -726,6 +721,11 @@
               <FilePath>..\FreeModbus\modbus\rtu\mbrtu.c</FilePath>
             </File>
             <File>
+              <FileName>mbrtu_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\rtu\mbrtu_m.c</FilePath>
+            </File>
+            <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\port.c</FilePath>
@@ -744,6 +744,26 @@
               <FileName>porttimer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_app_s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\user_app_s.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1144,11 +1164,6 @@
               <FilePath>..\APP\src\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>UserModbusSlaver.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\UserModbusSlaver.c</FilePath>
-            </File>
-            <File>
               <FileName>cpuusage.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\APP\src\cpuusage.c</FilePath>
@@ -1416,7 +1431,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>FreeModbusSlaver</GroupName>
+          <GroupName>FreeModbus</GroupName>
           <Files>
             <File>
               <FileName>mb.c</FileName>
@@ -1469,6 +1484,11 @@
               <FilePath>..\FreeModbus\modbus\rtu\mbrtu.c</FilePath>
             </File>
             <File>
+              <FileName>mbrtu_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\rtu\mbrtu_m.c</FilePath>
+            </File>
+            <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\port.c</FilePath>
@@ -1487,6 +1507,26 @@
               <FileName>porttimer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_app_s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\user_app_s.c</FilePath>
             </File>
           </Files>
         </Group>

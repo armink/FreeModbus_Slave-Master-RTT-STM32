@@ -57,7 +57,7 @@ void thread_entry_ModbusSlaverPoll(void* parameter)
 	while (1)
 	{
 		eMBPoll();
-		rt_thread_delay(DELAY_MB_SLAVER_POLL);
+		rt_thread_delay(DELAY_MB_SLAVE_POLL);
 	}
 }
 

@@ -48,15 +48,15 @@
 								<option id="iar.arm.toolchain.compiler.option.cppdialect.v6.1.0.1638054484" name="C++ dialect" superClass="iar.arm.toolchain.compiler.option.cppdialect.v6.1.0"/>
 								<option id="iar.arm.toolchain.compiler.option.cpuMode.v5.4.0.1177576854" name="Processor mode:" superClass="iar.arm.toolchain.compiler.option.cpuMode.v5.4.0" value="iar.arm.toolchain.compiler.option.cpuMode.thumb.v5.4.0" valueType="enumerated"/>
 								<option id="iar.arm.toolchain.compiler.option.incPaths.v5.4.0.219050810" name="Additional include directories" superClass="iar.arm.toolchain.compiler.option.incPaths.v5.4.0" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/APP/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/BSP/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Libaries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/RT-Thread-1.1.1/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Libaries/CMSIS_EWARM/Include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/Libaries/CMSIS_EWARM/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/FreeModbus/modbus/include}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/FreeModbus/modbus/rtu}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slaver&amp;Master+RTT+STM32/FreeModbus/port}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/APP/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/BSP/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Libaries/STM32F10x_StdPeriph_Driver/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/RT-Thread-1.1.1/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Libaries/CMSIS_EWARM/Include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/Libaries/CMSIS_EWARM/CM3/DeviceSupport/ST/STM32F10x}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/FreeModbus/modbus/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/FreeModbus/modbus/rtu}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FreeModbus_Slave&amp;Master+RTT+STM32/FreeModbus/port}&quot;"/>
 								</option>
 								<option id="iar.arm.toolchain.compiler.option.defines.v5.4.0.1280497388" name="Defined Symbols:" superClass="iar.arm.toolchain.compiler.option.defines.v5.4.0" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32F10X_MD"/>

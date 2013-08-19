@@ -1855,16 +1855,10 @@
       <name>$PROJ_DIR$\..\APP\src\cpuusage.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\RT-Thread-0.3.2\include\rtthread.h</name>
-    </file>
-    <file>
       <name>$PROJ_DIR$\..\APP\inc\stm32f10x_conf.h</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\APP\src\stm32f10x_it.c</name>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\..\APP\src\UserModbusSlaver.c</name>
     </file>
   </group>
   <group>
@@ -1921,22 +1915,34 @@
       <name>$PROJ_DIR$\..\FreeModbus\modbus\rtu\mbrtu.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\FreeModbus\modbus\rtu\mbrtu_m.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\FreeModbus\modbus\functions\mbutils.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\FreeModbus\port\port.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\FreeModbus\port\port.h</name>
+      <name>$PROJ_DIR$\..\FreeModbus\port\portevent.c</name>
     </file>
     <file>
-      <name>$PROJ_DIR$\..\FreeModbus\port\portevent.c</name>
+      <name>$PROJ_DIR$\..\FreeModbus\port\portevent_m.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\..\FreeModbus\port\portserial.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\FreeModbus\port\portserial_m.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\FreeModbus\port\porttimer.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\FreeModbus\port\porttimer_m.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\FreeModbus\port\user_app_s.c</name>
     </file>
   </group>
   <group>

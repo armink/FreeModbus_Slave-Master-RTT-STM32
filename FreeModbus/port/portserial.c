@@ -33,12 +33,12 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if (xRxEnable)
 	{
-		SLAVER_RS485_RECEIVE_MODE;
+		SLAVE_RS485_RECEIVE_MODE;
 		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	}
 	else
 	{
-		SLAVER_RS485_SEND_MODE;
+		SLAVE_RS485_SEND_MODE;
 		USART_ITConfig(USART1, USART_IT_RXNE, DISABLE);
 	}
 	if (xTxEnable)

@@ -1,5 +1,5 @@
-#ifndef	USER_MODBUS_SLAVER_H
-#define USER_MODBUS_SLAVER_H
+#ifndef	USER_APP
+#define USER_APP
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
 #include "mbport.h"

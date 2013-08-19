@@ -44,13 +44,13 @@
 #include "mbfunc.h"
 
 #include "mbport.h"
-#if MB_SLAVER_RTU_ENABLED == 1
+#if MB_SLAVE_RTU_ENABLED == 1
 #include "mbrtu.h"
 #endif
-#if MB_SLAVER_ASCII_ENABLED == 1
+#if MB_SLAVE_ASCII_ENABLED == 1
 #include "mbascii.h"
 #endif
-#if MB_SLAVER_TCP_ENABLED == 1
+#if MB_SLAVE_TCP_ENABLED == 1
 #include "mbtcp.h"
 #endif
 
@@ -168,7 +168,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
 
         switch ( eMode )
         {
-#if MB_SLAVER_RTU_ENABLED > 0
+#if MB_SLAVE_RTU_ENABLED > 0
         case MB_RTU:
             pvMBFrameStartCur = eMBRTUStart;
             pvMBFrameStopCur = eMBRTUStop;
@@ -182,7 +182,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
             eStatus = eMBRTUInit( ucMBAddress, ucPort, ulBaudRate, eParity );
             break;
 #endif
-#if MB_SLAVER_ASCII_ENABLED > 0
+#if MB_SLAVE_ASCII_ENABLED > 0
         case MB_ASCII:
             pvMBFrameStartCur = eMBASCIIStart;
             pvMBFrameStopCur = eMBASCIIStop;
@@ -218,7 +218,7 @@ eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eM
     return eStatus;
 }
 
-#if MB_SLAVER_TCP_ENABLED > 0
+#if MB_SLAVE_TCP_ENABLED > 0
 eMBErrorCode
 eMBTCPInit( USHORT ucTCPPort )
 {
