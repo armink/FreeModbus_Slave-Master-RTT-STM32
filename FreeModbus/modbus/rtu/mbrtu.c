@@ -346,6 +346,7 @@ xMBRTUTimerT35Expired( void )
     default:
         assert_param( ( eRcvState == STATE_RX_INIT ) ||
                 ( eRcvState == STATE_RX_RCV ) || ( eRcvState == STATE_RX_ERROR ) );
+         break;
     }
 
     vMBPortTimersDisable(  );

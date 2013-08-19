@@ -26,11 +26,15 @@
 #include "mb.h"
 #include "mbport.h"
 
+#if MB_MASTER_RTU_ENABLED > 0
+/* ----------------------- Variables ----------------------------------------*/
+static USHORT usT35TimeOut50us;
+
 /* ----------------------- static functions ---------------------------------*/
 static void prvvTIMERExpiredISR(void);
 
 /* ----------------------- Start implementation -----------------------------*/
-BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
+BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 {
 
 	uint16_t PrescalerValue = 0;
@@ -48,7 +52,8 @@ BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
 	
 	PrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
 	//定时器1初始化
-	TIM_TimeBaseStructure.TIM_Period = (uint16_t) usTim1Timerout50us;
+	usT35TimeOut50us = usTimeOut50us; //保存T35定时器计数值
+
 	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -72,8 +77,39 @@ BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
 	return TRUE;
 }
 
-void vMBMasterPortTimersEnable()
+void vMBMasterPortTimersT35Enable()
 {
+	//装载计数值     基准50us
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t) usT35TimeOut50us;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+	TIM_SetCounter(TIM2, 0);
+	TIM_Cmd(TIM2, ENABLE);
+}
+
+void vMBMasterPortTimersConvertDelayEnable()
+{
+	//装载计数值     基准50us
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t)(MB_MASTER_DELAY_MS_CONVERT * 1000 / 50) ;
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
+	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
+	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
+	TIM_SetCounter(TIM2, 0);
+	TIM_Cmd(TIM2, ENABLE);
+}
+
+void vMBMasterPortTimersRespondTimeoutEnable()
+{
+	//装载计数值     基准50us
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t)(MB_MASTER_TIMEOUT_MS_RESPOND * 1000 / 50);
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
+
 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 	TIM_ITConfig(TIM2, TIM_IT_Update, ENABLE);
 	TIM_SetCounter(TIM2, 0);
@@ -105,3 +141,5 @@ void TIM2_IRQHandler(void)
 	}
 	rt_interrupt_leave();
 }
+
+#endif
