@@ -23,7 +23,7 @@
 #include "mb.h"
 #include "mbport.h"
 
-#if MB_MASTER_RTU_ENABLED > 0
+#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED
 /* ----------------------- Variables ----------------------------------------*/
 static eMBMasterEventType eMasterQueuedEvent;
 static BOOL     xMasterEventInQueue;

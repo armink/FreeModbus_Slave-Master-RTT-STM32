@@ -150,7 +150,6 @@ eMBRTUStop( void )
 eMBErrorCode
 eMBRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength )
 {
-    BOOL            xFrameReceived = FALSE;
     eMBErrorCode    eStatus = MB_ENOERR;
 
     ENTER_CRITICAL_SECTION(  );
@@ -172,7 +171,6 @@ eMBRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength )
 
         /* Return the start of the Modbus PDU to the caller. */
         *pucFrame = ( UCHAR * ) & ucRTUBuf[MB_SER_PDU_PDU_OFF];
-        xFrameReceived = TRUE;
     }
     else
     {

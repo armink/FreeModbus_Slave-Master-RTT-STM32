@@ -1,6 +1,6 @@
 /* 
  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
- * Copyright (c) 2006 Christian Walter <wolti@sil.at>
+ * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * File: $Id: mb.c,v 1.27 2007/02/18 23:45:41 wolti Exp $
+ * File: $Id: mbrtu_m.c,v 1.60 2013/08/20 11:18:10 Armink Add Master Functions , $
  */
 
 /* ----------------------- System includes ----------------------------------*/
@@ -44,15 +44,17 @@
 #include "mbfunc.h"
 
 #include "mbport.h"
-#if MB_SLAVE_RTU_ENABLED == 1
+#if MB_MASTER_RTU_ENABLED == 1
 #include "mbrtu.h"
 #endif
-#if MB_SLAVE_ASCII_ENABLED == 1
+#if MB_MASTER_ASCII_ENABLED == 1
 #include "mbascii.h"
 #endif
-#if MB_SLAVE_TCP_ENABLED == 1
+#if MB_MASTER_TCP_ENABLED == 1
 #include "mbtcp.h"
 #endif
+
+#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 
 #ifndef MB_PORT_HAS_CLOSE
 #define MB_PORT_HAS_CLOSE 0
@@ -72,25 +74,25 @@ static enum
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
  * mode (RTU or ASCII) the are set to the correct implementations.
- * Using for Modbus Slave
+ * Using for Modbus Master,Add by Armink 20130813
  */
-static peMBFrameSend peMBFrameSendCur;
-static pvMBFrameStart pvMBFrameStartCur;
-static pvMBFrameStop pvMBFrameStopCur;
-static peMBFrameReceive peMBFrameReceiveCur;
-static pvMBFrameClose pvMBFrameCloseCur;
+static peMBFrameSend peMBMasterFrameSendCur;
+static pvMBFrameStart pvMBMasterFrameStartCur;
+static pvMBFrameStop pvMBMasterFrameStopCur;
+static peMBFrameReceive peMBMasterFrameReceiveCur;
+static pvMBFrameClose pvMBMasterFrameCloseCur;
 
 /* Callback functions required by the porting layer. They are called when
  * an external event has happend which includes a timeout or the reception
  * or transmission of a character.
- * Using for Modbus Slave
+ * Using for Modbus Master,Add by Armink 20130813
  */
-BOOL( *pxMBFrameCBByteReceived ) ( void );
-BOOL( *pxMBFrameCBTransmitterEmpty ) ( void );
-BOOL( *pxMBPortCBTimerExpired ) ( void );
+BOOL( *pxMBMasterFrameCBByteReceived ) ( void );
+BOOL( *pxMBMasterFrameCBTransmitterEmpty ) ( void );
+BOOL( *pxMBMasterPortCBTimerExpired ) ( void );
 
-BOOL( *pxMBFrameCBReceiveFSMCur ) ( void );
-BOOL( *pxMBFrameCBTransmitFSMCur ) ( void );
+BOOL( *pxMBMasterFrameCBReceiveFSMCur ) ( void );
+BOOL( *pxMBMasterFrameCBTransmitFSMCur ) ( void );
 
 /* An array of Modbus functions handlers which associates Modbus function
  * codes with implementing functions.
@@ -130,159 +132,71 @@ static xMBFunctionHandler xFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
 
 /* ----------------------- Start implementation -----------------------------*/
 eMBErrorCode
-eMBInit( eMBMode eMode, UCHAR ucSlaveAddress, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
+eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
-    /* check preconditions */
-    if( ( ucSlaveAddress == MB_ADDRESS_BROADCAST ) ||
-        ( ucSlaveAddress < MB_ADDRESS_MIN ) || ( ucSlaveAddress > MB_ADDRESS_MAX ) )
-    {
-        eStatus = MB_EINVAL;
-    }
-    else
-    {
-        ucMBAddress = ucSlaveAddress;
+	switch (eMode)
+	{
+#if MB_MASTER_RTU_ENABLED > 0
+	case MB_RTU:
+		pvMBMasterFrameStartCur = eMBMasterRTUStart;
+		pvMBMasterFrameStopCur = eMBMasterRTUStop;
+		peMBMasterFrameSendCur = eMBMasterRTUSend;
+		peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
+		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+		pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
+		pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
+		pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerT35Expired;
 
-        switch ( eMode )
-        {
-#if MB_SLAVE_RTU_ENABLED > 0
-        case MB_RTU:
-            pvMBFrameStartCur = eMBRTUStart;
-            pvMBFrameStopCur = eMBRTUStop;
-            peMBFrameSendCur = eMBRTUSend;
-            peMBFrameReceiveCur = eMBRTUReceive;
-            pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBPortClose : NULL;
-            pxMBFrameCBByteReceived = xMBRTUReceiveFSM;
-            pxMBFrameCBTransmitterEmpty = xMBRTUTransmitFSM;
-            pxMBPortCBTimerExpired = xMBRTUTimerT35Expired;
-
-            eStatus = eMBRTUInit( ucMBAddress, ucPort, ulBaudRate, eParity );
-            break;
+		eStatus = eMBMasterRTUInit(ucPort, ulBaudRate, eParity);
+		break;
 #endif
-#if MB_SLAVE_ASCII_ENABLED > 0
-        case MB_ASCII:
-            pvMBFrameStartCur = eMBASCIIStart;
-            pvMBFrameStopCur = eMBASCIIStop;
-            peMBFrameSendCur = eMBASCIISend;
-            peMBFrameReceiveCur = eMBASCIIReceive;
-            pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBPortClose : NULL;
-            pxMBFrameCBByteReceived = xMBASCIIReceiveFSM;
-            pxMBFrameCBTransmitterEmpty = xMBASCIITransmitFSM;
-            pxMBPortCBTimerExpired = xMBASCIITimerT1SExpired;
+#if MB_MASTER_ASCII_ENABLED > 0
+		case MB_ASCII:
+		pvMBMasterFrameStartCur = eMBMasterASCIIStart;
+		pvMBMasterFrameStopCur = eMBMasterASCIIStop;
+		peMBMasterFrameSendCur = eMBMasterASCIISend;
+		peMBMasterFrameReceiveCur = eMBMasterASCIIReceive;
+		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+		pxMBMasterFrameCBByteReceived = xMBMasterASCIIReceiveFSM;
+		pxMBMasterFrameCBTransmitterEmpty = xMBMasterASCIITransmitFSM;
+		pxMBMasterPortCBTimerExpired = xMBMasterASCIITimerT1SExpired;
 
-            eStatus = eMBASCIIInit( ucMBAddress, ucPort, ulBaudRate, eParity );
-            break;
+		eStatus = eMBMasterASCIIInit(ucPort, ulBaudRate, eParity );
+		break;
 #endif
-        default:
-            eStatus = MB_EINVAL;
-            break;
-        }
+	default:
+		eStatus = MB_EINVAL;
+		break;
+	}
 
-        if( eStatus == MB_ENOERR )
-        {
-            if( !xMBPortEventInit(  ) )
-            {
-                /* port dependent event module initalization failed. */
-                eStatus = MB_EPORTERR;
-            }
-            else
-            {
-                eMBCurrentMode = eMode;
-                eMBState = STATE_DISABLED;
-            }
-        }
-    }
-    return eStatus;
+	if (eStatus == MB_ENOERR)
+	{
+		if (!xMBMasterPortEventInit())
+		{
+			/* port dependent event module initalization failed. */
+			eStatus = MB_EPORTERR;
+		}
+		else
+		{
+			eMBCurrentMode = eMode;
+			eMBState = STATE_DISABLED;
+		}
+	}
+	return eStatus;
 }
 
-#if MB_SLAVE_TCP_ENABLED > 0
 eMBErrorCode
-eMBTCPInit( USHORT ucTCPPort )
-{
-    eMBErrorCode    eStatus = MB_ENOERR;
-
-    if( ( eStatus = eMBTCPDoInit( ucTCPPort ) ) != MB_ENOERR )
-    {
-        eMBState = STATE_DISABLED;
-    }
-    else if( !xMBPortEventInit(  ) )
-    {
-        /* Port dependent event module initalization failed. */
-        eStatus = MB_EPORTERR;
-    }
-    else
-    {
-        pvMBFrameStartCur = eMBTCPStart;
-        pvMBFrameStopCur = eMBTCPStop;
-        peMBFrameReceiveCur = eMBTCPReceive;
-        peMBFrameSendCur = eMBTCPSend;
-        pvMBFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBTCPPortClose : NULL;
-        ucMBAddress = MB_TCP_PSEUDO_ADDRESS;
-        eMBCurrentMode = MB_TCP;
-        eMBState = STATE_DISABLED;
-    }
-    return eStatus;
-}
-#endif
-
-eMBErrorCode
-eMBRegisterCB( UCHAR ucFunctionCode, pxMBFunctionHandler pxHandler )
-{
-    int             i;
-    eMBErrorCode    eStatus;
-
-    if( ( 0 < ucFunctionCode ) && ( ucFunctionCode <= 127 ) )
-    {
-        ENTER_CRITICAL_SECTION(  );
-        if( pxHandler != NULL )
-        {
-            for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
-            {
-                if( ( xFuncHandlers[i].pxHandler == NULL ) ||
-                    ( xFuncHandlers[i].pxHandler == pxHandler ) )
-                {
-                    xFuncHandlers[i].ucFunctionCode = ucFunctionCode;
-                    xFuncHandlers[i].pxHandler = pxHandler;
-                    break;
-                }
-            }
-            eStatus = ( i != MB_FUNC_HANDLERS_MAX ) ? MB_ENOERR : MB_ENORES;
-        }
-        else
-        {
-            for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
-            {
-                if( xFuncHandlers[i].ucFunctionCode == ucFunctionCode )
-                {
-                    xFuncHandlers[i].ucFunctionCode = 0;
-                    xFuncHandlers[i].pxHandler = NULL;
-                    break;
-                }
-            }
-            /* Remove can't fail. */
-            eStatus = MB_ENOERR;
-        }
-        EXIT_CRITICAL_SECTION(  );
-    }
-    else
-    {
-        eStatus = MB_EINVAL;
-    }
-    return eStatus;
-}
-
-
-eMBErrorCode
-eMBClose( void )
+eMBMasterClose( void )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
     if( eMBState == STATE_DISABLED )
     {
-        if( pvMBFrameCloseCur != NULL )
+        if( pvMBMasterFrameCloseCur != NULL )
         {
-            pvMBFrameCloseCur(  );
+            pvMBMasterFrameCloseCur(  );
         }
     }
     else
@@ -292,16 +206,15 @@ eMBClose( void )
     return eStatus;
 }
 
-
 eMBErrorCode
-eMBEnable( void )
+eMBMasterEnable( void )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
     if( eMBState == STATE_DISABLED )
     {
         /* Activate the protocol stack. */
-        pvMBFrameStartCur(  );
+        pvMBMasterFrameStartCur(  );
         eMBState = STATE_ENABLED;
     }
     else
@@ -312,13 +225,13 @@ eMBEnable( void )
 }
 
 eMBErrorCode
-eMBDisable( void )
+eMBMasterDisable( void )
 {
     eMBErrorCode    eStatus;
 
     if( eMBState == STATE_ENABLED )
     {
-        pvMBFrameStopCur(  );
+        pvMBMasterFrameStopCur(  );
         eMBState = STATE_DISABLED;
         eStatus = MB_ENOERR;
     }
@@ -333,7 +246,7 @@ eMBDisable( void )
     return eStatus;
 }
 
-eMBErrorCode eMBPoll( void )
+eMBErrorCode eMBMasterPoll( void )
 {
     static UCHAR   *ucMBFrame;
     static UCHAR    ucRcvAddress;
@@ -343,7 +256,7 @@ eMBErrorCode eMBPoll( void )
 
     int             i;
     eMBErrorCode    eStatus = MB_ENOERR;
-    eMBEventType    eEvent;
+    eMBMasterEventType    eEvent;
 
     /* Check if the protocol stack is ready. */
     if( eMBState != STATE_ENABLED )
@@ -353,26 +266,27 @@ eMBErrorCode eMBPoll( void )
 
     /* Check if there is a event available. If not return control to caller.
      * Otherwise we will handle the event. */
-    if( xMBPortEventGet( &eEvent ) == TRUE )
+    if( xMBMasterPortEventGet( &eEvent ) == TRUE )
     {
         switch ( eEvent )
         {
-        case EV_READY:
+        case EV_MASTER_READY:
             break;
 
-        case EV_FRAME_RECEIVED:
-            eStatus = peMBFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
+        case EV_MASTER_FRAME_RECEIVED:
+            eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
             if( eStatus == MB_ENOERR )
             {
                 /* Check if the frame is for us. If not ignore the frame. */
                 if( ( ucRcvAddress == ucMBAddress ) || ( ucRcvAddress == MB_ADDRESS_BROADCAST ) )
                 {
-                    ( void )xMBPortEventPost( EV_EXECUTE );
+                    ( void )xMBMasterPortEventPost( EV_MASTER_EXECUTE );
                 }
             }
+            else ( void )xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
             break;
 
-        case EV_EXECUTE:
+        case EV_MASTER_EXECUTE:
             ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
@@ -400,13 +314,17 @@ eMBErrorCode eMBPoll( void )
                     ucMBFrame[usLength++] = ( UCHAR )( ucFunctionCode | MB_FUNC_ERROR );
                     ucMBFrame[usLength++] = eException;
                 }
-                eStatus = peMBFrameSendCur( ucMBAddress, ucMBFrame, usLength );
+                eStatus = peMBMasterFrameSendCur( ucMBAddress, ucMBFrame, usLength );
             }
             break;
 
-        case EV_FRAME_SENT:
+        case EV_MASTER_FRAME_SENT:
             break;
+
+        case EV_MASTER_ERROR_PROCESS:
+        	break;
         }
     }
     return MB_ENOERR;
 }
+#endif
