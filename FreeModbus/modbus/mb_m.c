@@ -62,8 +62,9 @@
 
 /* ----------------------- Static variables ---------------------------------*/
 
-static UCHAR    ucMBAddress;
+static UCHAR    ucMBSendSlaveAddress;
 static eMBMode  eMBCurrentMode;
+static UCHAR  pucMasterRTUBuf[MB_PDU_SIZE_MAX];
 
 static enum
 {
@@ -97,7 +98,7 @@ BOOL( *pxMBMasterFrameCBTransmitFSMCur ) ( void );
 /* An array of Modbus functions handlers which associates Modbus function
  * codes with implementing functions.
  */
-static xMBFunctionHandler xFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
+static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
 #if MB_FUNC_OTHER_REP_SLAVEID_ENABLED > 0
     {MB_FUNC_OTHER_REPORT_SLAVEID, eMBFuncReportSlaveID},
 #endif
@@ -248,7 +249,6 @@ eMBMasterDisable( void )
 
 eMBErrorCode eMBMasterPoll( void )
 {
-    static UCHAR   *ucMBFrame;
     static UCHAR    ucRcvAddress;
     static UCHAR    ucFunctionCode;
     static USHORT   usLength;
@@ -274,51 +274,38 @@ eMBErrorCode eMBMasterPoll( void )
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
-            eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
-            if( eStatus == MB_ENOERR )
-            {
-                /* Check if the frame is for us. If not ignore the frame. */
-                if( ( ucRcvAddress == ucMBAddress ) || ( ucRcvAddress == MB_ADDRESS_BROADCAST ) )
-                {
-                    ( void )xMBMasterPortEventPost( EV_MASTER_EXECUTE );
-                }
-            }
-            else ( void )xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
-            break;
+			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, (UCHAR **)(pucMasterRTUBuf + 1),	&usLength );
+			/* Check if the frame is for us. If not ,send an error process event. */
+			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBSendSlaveAddress ) )
+			{
+				( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
+			}
+			else
+			{
+				( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+			}
+			break;
 
         case EV_MASTER_EXECUTE:
-            ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
+            ucFunctionCode = (pucMasterRTUBuf + 1)[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
             {
                 /* No more function handlers registered. Abort. */
-                if( xFuncHandlers[i].ucFunctionCode == 0 )
+                if( xMasterFuncHandlers[i].ucFunctionCode == 0 )
                 {
                     break;
                 }
-                else if( xFuncHandlers[i].ucFunctionCode == ucFunctionCode )
+                else if( xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode )
                 {
-                    eException = xFuncHandlers[i].pxHandler( ucMBFrame, &usLength );
+                    eException = xMasterFuncHandlers[i].pxHandler( pucMasterRTUBuf + 1, &usLength );
                     break;
                 }
-            }
-
-            /* If the request was not sent to the broadcast address we
-             * return a reply. */
-            if( ucRcvAddress != MB_ADDRESS_BROADCAST )
-            {
-                if( eException != MB_EX_NONE )
-                {
-                    /* An exception occured. Build an error frame. */
-                    usLength = 0;
-                    ucMBFrame[usLength++] = ( UCHAR )( ucFunctionCode | MB_FUNC_ERROR );
-                    ucMBFrame[usLength++] = eException;
-                }
-                eStatus = peMBMasterFrameSendCur( ucMBAddress, ucMBFrame, usLength );
             }
             break;
 
         case EV_MASTER_FRAME_SENT:
+			eStatus = peMBMasterFrameSendCur( ucMBSendSlaveAddress, pucMasterRTUBuf + 1, usLength );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
@@ -327,4 +314,5 @@ eMBErrorCode eMBMasterPoll( void )
     }
     return MB_ENOERR;
 }
+
 #endif

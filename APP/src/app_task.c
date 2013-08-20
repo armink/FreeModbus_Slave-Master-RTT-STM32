@@ -25,7 +25,7 @@ struct rt_thread thread_ModbusSlavePoll;
 //函数定义: void thread_entry_SysRunLed(void* parameter)
 //入口参数：无
 //出口参数：无
-//备    注：Editor：Liuqiuhu   2013-1-30    Company: BXXJS
+//备    注：Editor：Armink   2013-08-02   Company: BXXJS
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {

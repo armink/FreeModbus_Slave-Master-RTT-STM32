@@ -71,7 +71,7 @@ typedef enum
 static volatile eMBMasterSndState eSndState;
 static volatile eMBMasterRcvState eRcvState;
 
-volatile UCHAR  ucMasterRTUBuf[MB_SER_PDU_SIZE_MAX];
+static volatile UCHAR  ucMasterRTUBuf[MB_SER_PDU_SIZE_MAX];
 
 static volatile UCHAR *pucMasterSndBufferCur;
 static volatile USHORT usMasterSndBufferCount;
