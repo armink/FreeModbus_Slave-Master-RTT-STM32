@@ -62,9 +62,11 @@
 
 /* ----------------------- Static variables ---------------------------------*/
 
-static UCHAR    ucMBSendSlaveAddress;
+static UCHAR    ucMBMasterSendAddress;
 static eMBMode  eMBCurrentMode;
-static UCHAR  pucMasterRTUBuf[MB_PDU_SIZE_MAX];
+static UCHAR    ucMasterRTUBuf[MB_PDU_SIZE_MAX];
+static UCHAR *  pucMasterPUDBuf = ucMasterRTUBuf + 1;
+static UCHAR    ucMasterSendPDULength;
 
 static enum
 {
@@ -274,9 +276,9 @@ eMBErrorCode eMBMasterPoll( void )
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
-			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, (UCHAR **)(pucMasterRTUBuf + 1),	&usLength );
+			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &pucMasterPUDBuf, &usLength );
 			/* Check if the frame is for us. If not ,send an error process event. */
-			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBSendSlaveAddress ) )
+			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterSendAddress ) )
 			{
 				( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
 			}
@@ -287,7 +289,7 @@ eMBErrorCode eMBMasterPoll( void )
 			break;
 
         case EV_MASTER_EXECUTE:
-            ucFunctionCode = (pucMasterRTUBuf + 1)[MB_PDU_FUNC_OFF];
+            ucFunctionCode = (ucMasterRTUBuf + 1)[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
             {
@@ -298,14 +300,14 @@ eMBErrorCode eMBMasterPoll( void )
                 }
                 else if( xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode )
                 {
-                    eException = xMasterFuncHandlers[i].pxHandler( pucMasterRTUBuf + 1, &usLength );
+                    eException = xMasterFuncHandlers[i].pxHandler( pucMasterPUDBuf, &usLength );
                     break;
                 }
             }
             break;
 
         case EV_MASTER_FRAME_SENT:
-			eStatus = peMBMasterFrameSendCur( ucMBSendSlaveAddress, pucMasterRTUBuf + 1, usLength );
+			eStatus = peMBMasterFrameSendCur( ucMBMasterSendAddress, pucMasterPUDBuf, ucMasterSendPDULength );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
