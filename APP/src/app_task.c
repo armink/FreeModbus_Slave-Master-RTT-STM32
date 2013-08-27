@@ -32,8 +32,8 @@ void thread_entry_SysMonitor(void* parameter)
 	while (1)
 	{
 		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
-		usRegHoldingBuf[HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
-		usRegHoldingBuf[HD_CPU_USAGE_MINOR] = CpuUsageMinor;
+		usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
+		usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
 		LED_LED1_ON;
 		LED_LED2_ON;
 		rt_thread_delay(DELAY_SYS_RUN_LED);

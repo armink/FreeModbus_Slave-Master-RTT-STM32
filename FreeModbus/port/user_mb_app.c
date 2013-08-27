@@ -1,14 +1,28 @@
-#include "user_app.h"
+#include "user_mb_app.h"
 /* ----------------------- Variables ---------------------------------*/
-USHORT   usDiscreteInputStart                             = DISCRETE_INPUT_START;
-UCHAR    usDiscreteInputBuf[DISCRETE_INPUT_NDISCRETES/8]  ;
-USHORT   usCoilStart                                      = COIL_START;
-UCHAR    usCoilBuf[COIL_NCOILS/8]                         ;
-USHORT   usRegInputStart                                  = REG_INPUT_START;
-USHORT   usRegInputBuf[REG_INPUT_NREGS]                   ;
-USHORT   usRegHoldingStart                                = REG_HOLDING_START;
-USHORT   usRegHoldingBuf[REG_HOLDING_NREGS]               ;
+//Slave mode use these variables
+USHORT   usSDiscInStart                             = S_DISCRETE_INPUT_START;
+UCHAR    ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES/8];
+USHORT   usSCoilStart                               = S_COIL_START;
+UCHAR    ucSCoilBuf[S_COIL_NCOILS/8]                ;
+USHORT   usSRegInStart                              = S_REG_INPUT_START;
+USHORT   usSRegInBuf[S_REG_INPUT_NREGS]             ;
+USHORT   usSRegHoldStart                            = S_REG_HOLDING_START;
+USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]         ;
+//Master mode use these variables
+#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+USHORT   usMDiscInStart                             = M_DISCRETE_INPUT_START;
+UCHAR    ucMDiscInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_DISCRETE_INPUT_NDISCRETES/8];
+USHORT   usMCoilStart                               = M_COIL_START;
+UCHAR    ucMCoilBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_COIL_NCOILS/8];
+USHORT   usMRegInStart                              = M_REG_INPUT_START;
+USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+USHORT   usMRegHoldStart                            = M_REG_HOLDING_START;
+USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
 
+extern volatile UCHAR  ucMBMasterSendAddress;
+extern volatile BOOL   bMBRunInMasterMode;
+#endif
 //******************************输入寄存器回调函数**********************************
 //函数定义: eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 //描    述：输入寄存器相关的功能（读、连续读）
@@ -23,14 +37,35 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     int             iRegIndex;
+    USHORT *        pusRegInputBuf;
+    UCHAR           REG_INPUT_START;
+    UCHAR           REG_INPUT_NREGS;
+    UCHAR           usRegInStart;
+
+    //Determine the master or slave
+    if (bMBRunInMasterMode)
+    {
+    	pusRegInputBuf = usMRegInBuf[ucMBMasterSendAddress];
+    	REG_INPUT_START = M_REG_INPUT_START;
+    	REG_INPUT_NREGS = M_REG_INPUT_NREGS;
+    	usRegInStart = usMRegInStart;
+    }
+    else
+    {
+    	pusRegInputBuf = usSRegInBuf;
+    	REG_INPUT_START = S_REG_INPUT_START;
+    	REG_INPUT_NREGS = S_REG_INPUT_NREGS;
+    	usRegInStart = usSRegInStart;
+    }
+
     if( ( usAddress >= REG_INPUT_START )
         && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
     {
-        iRegIndex = ( int )( usAddress - usRegInputStart );
+        iRegIndex = ( int )( usAddress - usRegInStart );
         while( usNRegs > 0 )
         {
-            *pucRegBuffer++ = ( unsigned char )( usRegInputBuf[iRegIndex] >> 8 );
-            *pucRegBuffer++ = ( unsigned char )( usRegInputBuf[iRegIndex] & 0xFF );
+            *pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] >> 8 );
+            *pucRegBuffer++ = ( unsigned char )( pusRegInputBuf[iRegIndex] & 0xFF );
             iRegIndex++;
             usNRegs--;
         }
@@ -59,10 +94,31 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     int             iRegIndex;
+    USHORT *        usRegHoldingBuf;
+    UCHAR           REG_HOLDING_START;
+    UCHAR           REG_HOLDING_NREGS;
+    UCHAR           usRegHoldStart;
+
+    //Determine the master or slave
+    if (bMBRunInMasterMode)
+    {
+    	usRegHoldingBuf = usMRegHoldBuf[ucMBMasterSendAddress];
+    	REG_HOLDING_START = M_REG_HOLDING_START;
+    	REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
+    	usRegHoldStart = usMRegHoldStart;
+    }
+    else
+    {
+    	usRegHoldingBuf = usSRegInBuf;
+    	REG_HOLDING_START = S_REG_INPUT_START;
+    	REG_HOLDING_NREGS = S_REG_INPUT_NREGS;
+    	usRegHoldStart = usSRegInStart;
+    }
+
     if( ( usAddress >= REG_HOLDING_START ) &&
         ( usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS ) )
     {
-        iRegIndex = ( int )( usAddress - usRegHoldingStart );
+        iRegIndex = ( int )( usAddress - usRegHoldStart );
         switch ( eMode )
         {
             /* Pass current register values to the protocol stack. */
@@ -113,6 +169,27 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
     eMBErrorCode    eStatus = MB_ENOERR;
     int             iRegIndex , iRegBitIndex , iNReg;
     iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
+    UCHAR *         ucCoilBuf;
+    UCHAR           COIL_START;
+    UCHAR           COIL_NCOILS;
+    UCHAR           usCoilStart;
+
+    //Determine the master or slave
+    if (bMBRunInMasterMode)
+    {
+    	ucCoilBuf = ucMCoilBuf[ucMBMasterSendAddress];
+    	COIL_START = M_COIL_START;
+    	COIL_NCOILS = M_COIL_NCOILS;
+    	usCoilStart = usMCoilStart;
+    }
+    else
+    {
+    	ucCoilBuf = ucSCoilBuf;
+    	COIL_START = S_COIL_START;
+    	COIL_NCOILS = S_COIL_NCOILS;
+    	usCoilStart = usSCoilStart;
+    }
+
     if( ( usAddress >= COIL_START ) &&
         ( usAddress + usNCoils <= COIL_START + COIL_NCOILS ) )
     {
@@ -124,7 +201,7 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
         case MB_REG_READ:
             while( iNReg > 0 )
             {
-				*pucRegBuffer++ = xMBUtilGetBits(&usCoilBuf[iRegIndex++] , iRegBitIndex , 8);
+				*pucRegBuffer++ = xMBUtilGetBits(&ucCoilBuf[iRegIndex++] , iRegBitIndex , 8);
                 iNReg --;
             }
 			pucRegBuffer --;
@@ -138,11 +215,11 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
         case MB_REG_WRITE:
             while(iNReg > 1)									 //最后面余下来的数单独算
             {
-				xMBUtilSetBits(&usCoilBuf[iRegIndex++] , iRegBitIndex  , 8 , *pucRegBuffer++);
+				xMBUtilSetBits(&ucCoilBuf[iRegIndex++] , iRegBitIndex  , 8 , *pucRegBuffer++);
                 iNReg--;
             }
 			usNCoils = usNCoils % 8;                            //余下的线圈数
-			xMBUtilSetBits(&usCoilBuf[iRegIndex++] , iRegBitIndex  , usNCoils , *pucRegBuffer++);
+			xMBUtilSetBits(&ucCoilBuf[iRegIndex++] , iRegBitIndex  , usNCoils , *pucRegBuffer++);
 			break;
         }
     }
@@ -168,6 +245,27 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
     eMBErrorCode    eStatus = MB_ENOERR;
 	int             iRegIndex , iRegBitIndex , iNReg;
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
+    UCHAR *         ucDiscreteInputBuf;
+    UCHAR           DISCRETE_INPUT_START;
+    UCHAR           DISCRETE_INPUT_NDISCRETES;
+    UCHAR           usDiscreteInputStart;
+
+    //Determine the master or slave
+    if (bMBRunInMasterMode)
+    {
+    	ucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterSendAddress];
+    	DISCRETE_INPUT_START = M_DISCRETE_INPUT_START;
+    	DISCRETE_INPUT_NDISCRETES = M_DISCRETE_INPUT_NDISCRETES;
+    	usDiscreteInputStart = usMDiscInStart;
+    }
+    else
+    {
+    	ucDiscreteInputBuf = ucSDiscInBuf;
+    	DISCRETE_INPUT_START = S_DISCRETE_INPUT_START;
+    	DISCRETE_INPUT_NDISCRETES = S_DISCRETE_INPUT_NDISCRETES;
+    	usDiscreteInputStart = usSDiscInStart;
+    }
+
     if( ( usAddress >= DISCRETE_INPUT_START )
         && ( usAddress + usNDiscrete <= DISCRETE_INPUT_START + DISCRETE_INPUT_NDISCRETES ) )
     {
@@ -175,7 +273,7 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 		iRegBitIndex = ( int )( usAddress - usDiscreteInputStart ) % 8 ;	   //相对于寄存器内部的位地址
 	    while( iNReg > 0 )
         {
-			*pucRegBuffer++ = xMBUtilGetBits(&usDiscreteInputBuf[iRegIndex++] , iRegBitIndex , 8);
+			*pucRegBuffer++ = xMBUtilGetBits(&ucDiscreteInputBuf[iRegIndex++] , iRegBitIndex , 8);
             iNReg --;
         }
 		pucRegBuffer --;

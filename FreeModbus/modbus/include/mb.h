@@ -150,6 +150,9 @@ typedef enum
  */
 eMBErrorCode    eMBInit( eMBMode eMode, UCHAR ucSlaveAddress,
                          UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterInit( eMBMode eMode, UCHAR ucPort,
+		                 ULONG ulBaudRate, eMBParity eParity );
 
 /*! \ingroup modbus
  * \brief Initialize the Modbus protocol stack for Modbus TCP.
@@ -182,6 +185,8 @@ eMBErrorCode    eMBTCPInit( USHORT usTCPPort );
  *   eMBErrorCode::MB_EILLSTATE.
  */
 eMBErrorCode    eMBClose( void );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterClose( void );
 
 /*! \ingroup modbus
  * \brief Enable the Modbus protocol stack.
@@ -194,6 +199,8 @@ eMBErrorCode    eMBClose( void );
  *   return eMBErrorCode::MB_EILLSTATE.
  */
 eMBErrorCode    eMBEnable( void );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterEnable( void );
 
 /*! \ingroup modbus
  * \brief Disable the Modbus protocol stack.
@@ -205,6 +212,8 @@ eMBErrorCode    eMBEnable( void );
  *  eMBErrorCode::MB_EILLSTATE.
  */
 eMBErrorCode    eMBDisable( void );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterDisable( void );
 
 /*! \ingroup modbus
  * \brief The main pooling loop of the Modbus protocol stack.
@@ -219,6 +228,8 @@ eMBErrorCode    eMBDisable( void );
  *   eMBErrorCode::MB_ENOERR.
  */
 eMBErrorCode    eMBPoll( void );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterPoll( void );
 
 /*! \ingroup modbus
  * \brief Configure the slave id of the device.
@@ -311,6 +322,9 @@ eMBErrorCode    eMBRegisterCB( UCHAR ucFunctionCode,
  */
 eMBErrorCode    eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
                                USHORT usNRegs );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBRegMasterInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
+                               USHORT usNRegs );
 
 /*! \ingroup modbus_registers
  * \brief Callback function used if a <em>Holding Register</em> value is
@@ -345,6 +359,9 @@ eMBErrorCode    eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       a <b>SLAVE DEVICE FAILURE</b> exception is sent as a response.
  */
 eMBErrorCode    eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
+                                 USHORT usNRegs, eMBRegisterMode eMode );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
                                  USHORT usNRegs, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
@@ -381,6 +398,9 @@ eMBErrorCode    eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
  */
 eMBErrorCode    eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
                                USHORT usNCoils, eMBRegisterMode eMode );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
+                               USHORT usNCoils, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
  * \brief Callback function used if a <em>Input Discrete Register</em> value is
@@ -409,6 +429,9 @@ eMBErrorCode    eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       a <b>SLAVE DEVICE FAILURE</b> exception is sent as a response.
  */
 eMBErrorCode    eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress,
+                                  USHORT usNDiscrete );
+/*  This callback function will be use in Modbus Master mode.*/
+eMBErrorCode    eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress,
                                   USHORT usNDiscrete );
 
 #ifdef __cplusplus

@@ -23,7 +23,6 @@
 #include <bsp.h>
 #include <rthw.h>
 #include <rtthread.h>
-#include "user_app.h"
 /*
 *********************************************************************************************************
 *                                            LOCAL TABLES

@@ -12,7 +12,7 @@
 #include "bsp.h"
 #include "delay_conf.h"
 #include "cpuusage.h"
-#include "user_app.h"
+#include "user_mb_app.h"
 
 /*******************************************************************************************************/
 //                           DEFINES                                                                   
@@ -26,10 +26,10 @@
 #define true                     1
 
 
-extern uint16_t   usDiscreteInputBuf[]  ;
-extern uint16_t   usCoilBuf[]           ;
-extern uint16_t   usRegInputBuf[]       ;
-extern uint16_t   usRegHoldingBuf[]     ;
+extern uint16_t   ucSDiscInBuf[]  ;
+extern uint16_t   ucSCoilBuf[]    ;
+extern uint16_t   usSRegInBuf[]   ;
+extern uint16_t   usSRegHoldBuf[] ;
 
 
 
