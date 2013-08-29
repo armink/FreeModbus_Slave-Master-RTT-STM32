@@ -67,8 +67,6 @@ static void RCC_Configuration(void)
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 	//配置ADC转换时钟
 	RCC_ADCCLKConfig(RCC_PCLK2_Div8); //9M
-    //启动USART1 USART4
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
     //启动DMA时钟
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//使能DMA时钟
 	/* Enable ADC1 and GPIOC clock */
@@ -93,8 +91,6 @@ static void NVIC_Configuration(void)
     // Set the Vector Table base location at 0x08000000
     NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
-
-
 }
 /*******************************************************************************
 * Function Name  : GPIO_Configuration
@@ -126,32 +122,7 @@ static void GPIO_Configuration(void)
 
 }
 
-/*******************************************************************************
-* Function Name  : USART1_Configuration
-* Description    : NUSART1设置
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-static void USART1_Configuration(void)
-{
-    USART_InitTypeDef USART_InitStructure;
-    
-    USART_InitStructure.USART_BaudRate = 115200;
-    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-    USART_InitStructure.USART_StopBits = USART_StopBits_1;
-    USART_InitStructure.USART_Parity = USART_Parity_No;
-    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-    USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
-    USART_Init(USART1, &USART_InitStructure);
-    
-    USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//使能串口1的接收中断	
- 
-    USART_Cmd(USART1, ENABLE);
-}
-
-
-//*******************初始化独立看门狗*************************************
+ //*******************初始化独立看门狗*************************************
 //函数定义: void IWDG_Configuration(void) 
 //描    述：初始化独立看门狗
 //入口参数：无
@@ -244,7 +215,7 @@ void  BSP_Init (void)
 	RCC_Configuration();
 	NVIC_Configuration();
 	SysTick_Configuration();
-	GPIO_Configuration();	
+	GPIO_Configuration();
 //	TODO  方便调试，暂时注释看门狗，正式发布时需要打开
 // 	IWDG_Configuration();
 }

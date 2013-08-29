@@ -38,7 +38,8 @@
 
 #define DELAY_SYS_RUN_LED			DELAY_MS(500)  //系统指示灯延时500ms
 #define DELAY_SYS_SLEEP_LED			DELAY_MS(1000) //系统指示灯延时1s
-#define DELAY_MB_SLAVE_POLL		DELAY_MS(10)   //Modbus从机轮训时间
+#define DELAY_MB_SLAVE_POLL		    DELAY_MS(10)   //Modbus从机轮训时间
+#define DELAY_MB_MASTER_POLL	    DELAY_MS(10)   //Modbus主机轮训时间
 
 #endif  
 

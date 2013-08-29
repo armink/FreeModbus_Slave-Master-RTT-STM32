@@ -62,11 +62,11 @@
 
 /* ----------------------- Static variables ---------------------------------*/
 
-volatile UCHAR  ucMBMasterSendAddress;
+volatile UCHAR  ucMBMasterSndAddress;
 volatile BOOL   bMBRunInMasterMode = FALSE;
 static eMBMode  eMBCurrentMode;
-static UCHAR    ucMasterRTUBuf[MB_PDU_SIZE_MAX];
-static UCHAR *  pucMasterPUDBuf = ucMasterRTUBuf + 1;
+UCHAR    ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
+static UCHAR *  pucMasterPUDSndBuf = ucMasterRTUSndBuf + 1;
 static UCHAR    ucMasterSendPDULength;
 
 static enum
@@ -253,6 +253,7 @@ eMBMasterDisable( void )
 eMBErrorCode
 eMBMasterPoll( void )
 {
+    static UCHAR   *ucMBFrame;
     static UCHAR    ucRcvAddress;
     static UCHAR    ucFunctionCode;
     static USHORT   usLength;
@@ -278,9 +279,9 @@ eMBMasterPoll( void )
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
-			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &pucMasterPUDBuf, &usLength );
+			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
 			/* Check if the frame is for us. If not ,send an error process event. */
-			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterSendAddress ) )
+			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterSndAddress ) )
 			{
 				( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
 			}
@@ -291,7 +292,7 @@ eMBMasterPoll( void )
 			break;
 
         case EV_MASTER_EXECUTE:
-            ucFunctionCode = (ucMasterRTUBuf + 1)[MB_PDU_FUNC_OFF];
+            ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
             for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
             {
@@ -303,7 +304,7 @@ eMBMasterPoll( void )
                 else if( xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode )
                 {
                 	bMBRunInMasterMode = TRUE;
-                    eException = xMasterFuncHandlers[i].pxHandler( pucMasterPUDBuf, &usLength );
+                    eException = xMasterFuncHandlers[i].pxHandler( ucMBFrame, &usLength );
                     bMBRunInMasterMode = FALSE;
                     break;
                 }
@@ -311,7 +312,7 @@ eMBMasterPoll( void )
             break;
 
         case EV_MASTER_FRAME_SENT:
-			eStatus = peMBMasterFrameSendCur( ucMBMasterSendAddress, pucMasterPUDBuf, ucMasterSendPDULength );
+			eStatus = peMBMasterFrameSendCur( ucMBMasterSndAddress, pucMasterPUDSndBuf, ucMasterSendPDULength );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
@@ -321,4 +322,16 @@ eMBMasterPoll( void )
     return MB_ENOERR;
 }
 
+//Test Modbus Master
+void vMBMasterReadHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue)
+{
+	ucMBMasterSndAddress = ucSlaveAddress;
+	pucMasterPUDSndBuf[MB_PDU_FUNC_OFF] = MB_FUNC_READ_HOLDING_REGISTER;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 0] = usRegAddress / 256;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 1] = usRegAddress % 256;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 3] = ucRegValue / 256;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 4] = ucRegValue % 256;
+	ucMasterSendPDULength = 5;
+	( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+}
 #endif

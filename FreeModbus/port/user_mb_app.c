@@ -20,7 +20,7 @@ USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 USHORT   usMRegHoldStart                            = M_REG_HOLDING_START;
 USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
 
-extern volatile UCHAR  ucMBMasterSendAddress;
+extern volatile UCHAR  ucMBMasterSndAddress;
 extern volatile BOOL   bMBRunInMasterMode;
 #endif
 //******************************输入寄存器回调函数**********************************
@@ -45,7 +45,7 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
     //Determine the master or slave
     if (bMBRunInMasterMode)
     {
-    	pusRegInputBuf = usMRegInBuf[ucMBMasterSendAddress];
+    	pusRegInputBuf = usMRegInBuf[ucMBMasterSndAddress];
     	REG_INPUT_START = M_REG_INPUT_START;
     	REG_INPUT_NREGS = M_REG_INPUT_NREGS;
     	usRegInStart = usMRegInStart;
@@ -111,7 +111,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
     //Determine the master or slave
     if (bMBRunInMasterMode)
     {
-    	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterSendAddress];
+    	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterSndAddress];
     	REG_HOLDING_START = M_REG_HOLDING_START;
     	REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
     	usRegHoldStart = usMRegHoldStart;
@@ -179,16 +179,17 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     int             iRegIndex , iRegBitIndex , iNReg;
-    iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
-    UCHAR *         pucCoilBuf;
+	UCHAR *         pucCoilBuf;
     UCHAR           COIL_START;
     UCHAR           COIL_NCOILS;
     UCHAR           usCoilStart;
+    iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
+
 
     //Determine the master or slave
     if (bMBRunInMasterMode)
     {
-    	pucCoilBuf = ucMCoilBuf[ucMBMasterSendAddress];
+    	pucCoilBuf = ucMCoilBuf[ucMBMasterSndAddress];
     	COIL_START = M_COIL_START;
     	COIL_NCOILS = M_COIL_NCOILS;
     	usCoilStart = usMCoilStart;
@@ -257,16 +258,16 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 	int             iRegIndex , iRegBitIndex , iNReg;
-	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
-    UCHAR *         pucDiscreteInputBuf;
+	UCHAR *         pucDiscreteInputBuf;
     UCHAR           DISCRETE_INPUT_START;
     UCHAR           DISCRETE_INPUT_NDISCRETES;
     UCHAR           usDiscreteInputStart;
+	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
 
     //Determine the master or slave
     if (bMBRunInMasterMode)
     {
-    	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterSendAddress];
+    	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterSndAddress];
     	DISCRETE_INPUT_START = M_DISCRETE_INPUT_START;
     	DISCRETE_INPUT_NDISCRETES = M_DISCRETE_INPUT_NDISCRETES;
     	usDiscreteInputStart = usMDiscInStart;

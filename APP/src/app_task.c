@@ -12,14 +12,17 @@ uint8_t CpuUsageMajor, CpuUsageMinor; //CPU使用率
 
 //====================操作系统各线程优先级==================================
 #define thread_SysMonitor_Prio		    	11
-#define thread_ModbusSlavePoll_Prio    	10
+#define thread_ModbusSlavePoll_Prio      	10
+#define thread_ModbusMasterPoll_Prio      	 9
 ALIGN(RT_ALIGN_SIZE)
 //====================操作系统各线程堆栈====================================
 static rt_uint8_t thread_SysMonitor_stack[256];
 static rt_uint8_t thread_ModbusSlavePoll_stack[512];
+static rt_uint8_t thread_ModbusMasterPoll_stack[512];
 
 struct rt_thread thread_SysMonitor;
 struct rt_thread thread_ModbusSlavePoll;
+struct rt_thread thread_ModbusMasterPoll;
 
 //***************************系统监控线程***************************
 //函数定义: void thread_entry_SysRunLed(void* parameter)
@@ -29,6 +32,8 @@ struct rt_thread thread_ModbusSlavePoll;
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {
+	extern void vMBMasterReadHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue);
+
 	while (1)
 	{
 		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
@@ -41,10 +46,12 @@ void thread_entry_SysMonitor(void* parameter)
 		LED_LED2_OFF;
 		rt_thread_delay(DELAY_SYS_RUN_LED);
 		IWDG_Feed(); //喂狗
+		//Test Modbus Master
+		vMBMasterReadHoldReg(1,1,rt_tick_get()%65535);
 	}
 }
 
-//*************************** Modbus从机线程***************************
+//************************ Modbus从机轮训线程***************************
 //函数定义: void thread_entry_ModbusSlavePoll(void* parameter)
 //入口参数：无
 //出口参数：无
@@ -58,6 +65,23 @@ void thread_entry_ModbusSlavePoll(void* parameter)
 	{
 		eMBPoll();
 		rt_thread_delay(DELAY_MB_SLAVE_POLL);
+	}
+}
+
+//************************ Modbus主机轮训线程***************************
+//函数定义: void thread_entry_ModbusMasterPoll(void* parameter)
+//入口参数：无
+//出口参数：无
+//备    注：Editor：Armink   2013-08-28    Company: BXXJS
+//******************************************************************
+void thread_entry_ModbusMasterPoll(void* parameter)
+{
+	eMBMasterInit(MB_RTU, 2, 115200,  MB_PAR_EVEN);
+	eMBMasterEnable();
+	while (1)
+	{
+		eMBMasterPoll();
+		rt_thread_delay(DELAY_MB_MASTER_POLL);
 	}
 }
 
@@ -75,11 +99,16 @@ int rt_application_init(void)
 	rt_thread_startup(&thread_SysMonitor);
 
 	rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
-			thread_entry_ModbusSlavePoll, RT_NULL,
-			thread_ModbusSlavePoll_stack,
+			thread_entry_ModbusSlavePoll, RT_NULL, thread_ModbusSlavePoll_stack,
 			sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
 			5);
 	rt_thread_startup(&thread_ModbusSlavePoll);
+
+	rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
+			thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
+			sizeof(thread_ModbusMasterPoll_stack), thread_ModbusMasterPoll_Prio,
+			5);
+	rt_thread_startup(&thread_ModbusMasterPoll);
 
 	return 0;
 }

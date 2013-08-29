@@ -741,9 +741,9 @@
               <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
             </File>
             <File>
-              <FileName>user_app_s.c</FileName>
+              <FileName>user_mb_app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\user_app_s.c</FilePath>
+              <FilePath>..\FreeModbus\port\user_mb_app.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1514,9 +1514,9 @@
               <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
             </File>
             <File>
-              <FileName>user_app_s.c</FileName>
+              <FileName>user_mb_app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\user_app_s.c</FilePath>
+              <FilePath>..\FreeModbus\port\user_mb_app.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -58,7 +58,7 @@ void vMBMasterPortClose(void)
 	USART_ITConfig(USART2, USART_IT_TXE | USART_IT_RXNE, DISABLE);
 	USART_Cmd(USART2, DISABLE);
 }
-//默认一个从机 串口2 波特率可设置  奇偶检验可设置
+//默认一个主机 串口2 波特率可设置  奇偶检验可设置
 BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 		eMBParity eParity)
 {
@@ -66,9 +66,8 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 	USART_InitTypeDef USART_InitStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	//======================时钟初始化=======================================
-	RCC_APB2PeriphClockCmd(
-			RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | RCC_APB1Periph_USART2,
-			ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 	//======================IO初始化=======================================	
 	//USART2_TX
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -109,7 +108,7 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 	USART_InitStructure.USART_HardwareFlowControl =
 			USART_HardwareFlowControl_None;
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-	if (ucPORT > 1)
+	if (ucPORT != 2)
 		return FALSE;
 
 	ENTER_CRITICAL_SECTION(); //关全局中断
