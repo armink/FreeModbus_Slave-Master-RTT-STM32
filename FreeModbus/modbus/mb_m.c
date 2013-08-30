@@ -323,14 +323,14 @@ eMBMasterPoll( void )
 }
 
 //Test Modbus Master
-void vMBMasterReadHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue)
+void vMBMasterWriteHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue)
 {
 	ucMBMasterSndAddress = ucSlaveAddress;
-	pucMasterPUDSndBuf[MB_PDU_FUNC_OFF] = MB_FUNC_READ_HOLDING_REGISTER;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 0] = usRegAddress / 256;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 1] = usRegAddress % 256;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 3] = ucRegValue / 256;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 4] = ucRegValue % 256;
+	pucMasterPUDSndBuf[MB_PDU_FUNC_OFF] = MB_FUNC_WRITE_REGISTER;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 0] = usRegAddress >> 8;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 1] = usRegAddress;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 2] = ucRegValue >> 8;
+	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 3] = ucRegValue ;
 	ucMasterSendPDULength = 5;
 	( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
 }

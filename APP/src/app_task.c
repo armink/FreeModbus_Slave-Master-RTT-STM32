@@ -32,7 +32,7 @@ struct rt_thread thread_ModbusMasterPoll;
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {
-	extern void vMBMasterReadHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue);
+	extern void vMBMasterWriteHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue);
 
 	while (1)
 	{
@@ -47,7 +47,7 @@ void thread_entry_SysMonitor(void* parameter)
 		rt_thread_delay(DELAY_SYS_RUN_LED);
 		IWDG_Feed(); //Î¹¹·
 		//Test Modbus Master
-		vMBMasterReadHoldReg(1,1,rt_tick_get()%65535);
+		vMBMasterWriteHoldReg(1,3,(USHORT)rt_tick_get());
 	}
 }
 

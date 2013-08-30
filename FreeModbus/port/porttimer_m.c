@@ -29,6 +29,7 @@
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED
 /* ----------------------- Variables ----------------------------------------*/
 static USHORT usT35TimeOut50us;
+static USHORT usPrescalerValue = 0;
 
 /* ----------------------- static functions ---------------------------------*/
 static void prvvTIMERExpiredISR(void);
@@ -36,9 +37,6 @@ static void prvvTIMERExpiredISR(void);
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 {
-
-	uint16_t PrescalerValue = 0;
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	NVIC_InitTypeDef NVIC_InitStructure;
 	//====================================时钟初始化===========================
 	//使能定时器2时钟
@@ -48,16 +46,11 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 	//HCLK为72MHz，APB1经过2分频为36MHz
 	//TIM2的时钟倍频后为72MHz（硬件自动倍频,达到最大）
 	//TIM2的分频系数为3599，时间基频率为72 / (1 + Prescaler) = 20KHz,基准为50us
-	//TIM最大计数值为usTim1Timerout50u
-	
-	PrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
-	//定时器1初始化
-	usT35TimeOut50us = usTimeOut50us; //保存T35定时器计数值
+	//TIM最大计数值为usTim1Timerout50u	
+	usPrescalerValue = (uint16_t) (SystemCoreClock / 20000) - 1;
+	//保存T35定时器计数值
+	usT35TimeOut50us = usTimeOut50us; 
 
-	TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 	//预装载使能
 	TIM_ARRPreloadConfig(TIM2, ENABLE);
 	//====================================中断初始化===========================
@@ -79,8 +72,10 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 
 void vMBMasterPortTimersT35Enable()
 {
-	//装载计数值     基准50us
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseStructure.TIM_Period = (uint16_t) usT35TimeOut50us;
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
@@ -92,9 +87,11 @@ void vMBMasterPortTimersT35Enable()
 
 void vMBMasterPortTimersConvertDelayEnable()
 {
-	//装载计数值     基准50us
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
-	TIM_TimeBaseStructure.TIM_Period = (uint16_t)(MB_MASTER_DELAY_MS_CONVERT * 1000 / 50) ;
+	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
+	TIM_TimeBaseStructure.TIM_Period = (uint16_t)(MB_MASTER_DELAY_MS_CONVERT * 1000 / 50);
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
 	TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
@@ -105,8 +102,10 @@ void vMBMasterPortTimersConvertDelayEnable()
 
 void vMBMasterPortTimersRespondTimeoutEnable()
 {
-	//装载计数值     基准50us
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
+	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseStructure.TIM_Period = (uint16_t)(MB_MASTER_TIMEOUT_MS_RESPOND * 1000 / 50);
 	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
 
