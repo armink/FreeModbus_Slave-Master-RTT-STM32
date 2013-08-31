@@ -35,7 +35,7 @@
 PR_BEGIN_EXTERN_C
 #endif
 #if MB_FUNC_OTHER_REP_SLAVEID_BUF > 0
-    eMBException eMBFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );
+eMBException    eMBFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );
 #endif
 
 #if MB_FUNC_READ_INPUT_ENABLED > 0

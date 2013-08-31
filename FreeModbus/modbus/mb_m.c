@@ -64,7 +64,6 @@
 
 volatile UCHAR  ucMBMasterSndAddress;
 volatile BOOL   bMBRunInMasterMode = FALSE;
-static eMBMode  eMBCurrentMode;
 UCHAR    ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
 static UCHAR *  pucMasterPUDSndBuf = ucMasterRTUSndBuf + 1;
 static UCHAR    ucMasterSendPDULength;
@@ -184,7 +183,6 @@ eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
 		}
 		else
 		{
-			eMBCurrentMode = eMode;
 			eMBState = STATE_DISABLED;
 		}
 	}
@@ -309,6 +307,9 @@ eMBMasterPoll( void )
                     break;
                 }
             }
+            /* If receive frame has exception .The receive function code highest bit is 1.*/
+            if(ucFunctionCode >> 7) eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
+            if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
             break;
 
         case EV_MASTER_FRAME_SENT:

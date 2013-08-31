@@ -1959,7 +1959,7 @@
         <name>$PROJ_DIR$\..\FreeModbus\port\porttimer.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\user_app_s.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\user_mb_app.c</name>
       </file>
     </group>
   </group>

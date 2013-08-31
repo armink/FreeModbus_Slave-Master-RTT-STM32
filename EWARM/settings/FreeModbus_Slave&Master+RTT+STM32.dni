@@ -9,7 +9,7 @@ TriggerName=main
 LimitSize=0
 ByteLimit=50
 [DebugChecksum]
-Checksum=-1928856892
+Checksum=1081849262
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -44,6 +44,10 @@ ActionState=1
 [Trace1]
 Enabled=0
 ShowSource=1
+[watch_formats]
+Fmt0={W}0:CpuUsageMinor	3	0
+Fmt1={W}42:CpuUsageMajor	3	0
+Fmt2={W}42:CpuUsageMinor	3	0
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""

@@ -373,8 +373,8 @@ xMBMasterRTUTimerT35Expired(void)
 		break;
 		/* Function called in an illegal state. */
 	default:
-			assert_param( eSndState == STATE_M_TX_XFWR );
-			break;
+		assert_param( eSndState == STATE_M_TX_XFWR );
+		break;
 	}
 	eSndState = STATE_M_TX_IDLE;
 
