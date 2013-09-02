@@ -71,7 +71,8 @@ typedef enum
 static volatile eMBMasterSndState eSndState;
 static volatile eMBMasterRcvState eRcvState;
 
-extern UCHAR ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
+extern   BOOL   bMasterIsBusy;
+extern   UCHAR  ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
 volatile UCHAR  ucMasterRTURcvBuf[MB_SER_PDU_SIZE_MAX];
 
 static volatile UCHAR *pucMasterSndBufferCur;
@@ -334,7 +335,7 @@ xMBMasterRTUTransmitFSM( void )
 }
 
 BOOL
-xMBMasterRTUTimerT35Expired(void)
+xMBMasterRTUTimerExpired(void)
 {
 	BOOL xNeedPoll = FALSE;
 
@@ -379,6 +380,9 @@ xMBMasterRTUTimerT35Expired(void)
 	eSndState = STATE_M_TX_IDLE;
 
 	vMBMasterPortTimersDisable();
+	/* Master is idel now. */
+	bMasterIsBusy = FALSE;
+
 	return xNeedPoll;
 }
 #endif

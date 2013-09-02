@@ -55,8 +55,7 @@ eMBErrorCode    eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, U
 eMBErrorCode    eMBMasterRTUSend( UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
 BOOL            xMBMasterRTUReceiveFSM( void );
 BOOL            xMBMasterRTUTransmitFSM( void );
-BOOL            xMBMasterRTUTimerT15Expired( void );
-BOOL            xMBMasterRTUTimerT35Expired( void );
+BOOL            xMBMasterRTUTimerExpired( void );
 #endif
 
 #ifdef __cplusplus
