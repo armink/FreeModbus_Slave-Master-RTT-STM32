@@ -119,8 +119,8 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
     else
     {
     	pusRegHoldingBuf = usSRegHoldBuf;
-    	REG_HOLDING_START = S_REG_INPUT_START;
-    	REG_HOLDING_NREGS = S_REG_INPUT_NREGS;
+    	REG_HOLDING_START = S_REG_HOLDING_START;
+    	REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
     	usRegHoldStart = usSRegHoldStart;
     }
 
