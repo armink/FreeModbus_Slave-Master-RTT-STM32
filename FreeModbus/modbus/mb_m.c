@@ -25,7 +25,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * File: $Id: mbrtu_m.c,v 1.60 2013/08/20 11:18:10 Armink Add Master Functions , $
+ * File: $Id: mbrtu_m.c,v 1.60 2013/08/20 11:18:10 Armink Add Master Functions $
  */
 
 /* ----------------------- System includes ----------------------------------*/
@@ -38,6 +38,7 @@
 /* ----------------------- Modbus includes ----------------------------------*/
 
 #include "mb.h"
+#include "mb_m.h"
 #include "mbconfig.h"
 #include "mbframe.h"
 #include "mbproto.h"
@@ -62,12 +63,9 @@
 
 /* ----------------------- Static variables ---------------------------------*/
 
-volatile UCHAR  ucMBMasterSndAddress;
-volatile BOOL   bMBRunInMasterMode = FALSE;
-UCHAR           ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
-BOOL            bMasterIsBusy = FALSE;
-static UCHAR *  pucMasterPUDSndBuf = ucMasterRTUSndBuf + 1;
-static UCHAR    ucMasterSendPDULength;
+static UCHAR    ucMBMasterDestAddress;
+static BOOL     xMBRunInMasterMode = FALSE;
+static BOOL     xMasterIsBusy = FALSE;
 
 static enum
 {
@@ -280,7 +278,7 @@ eMBMasterPoll( void )
         case EV_MASTER_FRAME_RECEIVED:
 			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
 			/* Check if the frame is for us. If not ,send an error process event. */
-			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterSndAddress ) )
+			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterGetDestAddress() ) )
 			{
 				( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
 			}
@@ -302,9 +300,9 @@ eMBMasterPoll( void )
                 }
                 else if( xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode )
                 {
-                	bMBRunInMasterMode = TRUE;
+                	vMBMasterSetCBRunInMasterMode(TRUE);
                     eException = xMasterFuncHandlers[i].pxHandler( ucMBFrame, &usLength );
-                    bMBRunInMasterMode = FALSE;
+                    vMBMasterSetCBRunInMasterMode(FALSE);
                     break;
                 }
             }
@@ -315,8 +313,9 @@ eMBMasterPoll( void )
 
         case EV_MASTER_FRAME_SENT:
         	/* Master is busy now. */
-        	bMasterIsBusy = TRUE;
-			eStatus = peMBMasterFrameSendCur( ucMBMasterSndAddress, pucMasterPUDSndBuf, ucMasterSendPDULength );
+        	vMBMasterSetIsBusy( TRUE );
+        	vMBMasterGetPDUSndBuf( &ucMBFrame );
+			eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, ucMBMasterGetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
@@ -326,21 +325,48 @@ eMBMasterPoll( void )
     return MB_ENOERR;
 }
 
-BOOL bMBMasterGetIsBusy( void )
+BOOL xMBMasterGetIsBusy( void )
 {
-	return bMasterIsBusy;
+	return xMasterIsBusy;
+}
+
+void vMBMasterSetIsBusy( BOOL IsBusy )
+{
+	xMasterIsBusy = IsBusy;
+}
+
+BOOL xMBMasterGetCBRunInMasterMode( void )
+{
+	return xMBRunInMasterMode;
+}
+
+void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode )
+{
+	xMBRunInMasterMode = IsMasterMode;
+}
+
+UCHAR ucMBMasterGetDestAddress( void )
+{
+	return ucMBMasterDestAddress;
+}
+
+void vMBMasterSetDestAddress( UCHAR Address )
+{
+	ucMBMasterDestAddress = Address;
 }
 
 //Test Modbus Master
 void vMBMasterWriteHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue)
 {
-	ucMBMasterSndAddress = ucSlaveAddress;
-	pucMasterPUDSndBuf[MB_PDU_FUNC_OFF] = MB_FUNC_WRITE_REGISTER;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 0] = usRegAddress >> 8;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 1] = usRegAddress;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 2] = ucRegValue >> 8;
-	pucMasterPUDSndBuf[MB_PDU_DATA_OFF + 3] = ucRegValue ;
-	ucMasterSendPDULength = 5;
+    static UCHAR   *ucMBFrame;
+    vMBMasterGetPDUSndBuf( &ucMBFrame );
+    vMBMasterSetDestAddress(ucSlaveAddress);
+	ucMBFrame[MB_PDU_FUNC_OFF] = MB_FUNC_WRITE_REGISTER;
+	ucMBFrame[MB_PDU_DATA_OFF + 0] = usRegAddress >> 8;
+	ucMBFrame[MB_PDU_DATA_OFF + 1] = usRegAddress;
+	ucMBFrame[MB_PDU_DATA_OFF + 2] = ucRegValue >> 8;
+	ucMBFrame[MB_PDU_DATA_OFF + 3] = ucRegValue ;
+	vMBMasterSetRTUSndSndLength(5);
 	( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
 }
 #endif

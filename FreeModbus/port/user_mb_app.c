@@ -20,8 +20,6 @@ USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 USHORT   usMRegHoldStart                            = M_REG_HOLDING_START;
 USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
 
-extern volatile UCHAR  ucMBMasterSndAddress;
-extern volatile BOOL   bMBRunInMasterMode;
 #endif
 //******************************输入寄存器回调函数**********************************
 //函数定义: eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
@@ -43,9 +41,9 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
     UCHAR           usRegInStart;
 
     //Determine the master or slave
-    if (bMBRunInMasterMode)
+    if (xMBMasterGetCBRunInMasterMode())
     {
-    	pusRegInputBuf = usMRegInBuf[ucMBMasterSndAddress];
+    	pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress()];
     	REG_INPUT_START = M_REG_INPUT_START;
     	REG_INPUT_NREGS = M_REG_INPUT_NREGS;
     	usRegInStart = usMRegInStart;
@@ -65,7 +63,7 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
         while( usNRegs > 0 )
         {
             //Determine the master or slave
-            if (bMBRunInMasterMode)
+            if (xMBMasterGetCBRunInMasterMode())
             {
             	pusRegInputBuf[iRegIndex] = *pucRegBuffer++ << 8;
                 pusRegInputBuf[iRegIndex] |= *pucRegBuffer++;
@@ -109,9 +107,9 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
     UCHAR           usRegHoldStart;
 
     //Determine the master or slave
-    if (bMBRunInMasterMode)
+    if (xMBMasterGetCBRunInMasterMode())
     {
-    	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterSndAddress];
+    	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress()];
     	REG_HOLDING_START = M_REG_HOLDING_START;
     	REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
     	usRegHoldStart = usMRegHoldStart;
@@ -123,7 +121,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
     	pusRegHoldingBuf = usSRegHoldBuf;
     	REG_HOLDING_START = S_REG_INPUT_START;
     	REG_HOLDING_NREGS = S_REG_INPUT_NREGS;
-    	usRegHoldStart = usSRegInStart;
+    	usRegHoldStart = usSRegHoldStart;
     }
 
     if( ( usAddress >= REG_HOLDING_START ) &&
@@ -187,9 +185,9 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 
 
     //Determine the master or slave
-    if (bMBRunInMasterMode)
+    if (xMBMasterGetCBRunInMasterMode())
     {
-    	pucCoilBuf = ucMCoilBuf[ucMBMasterSndAddress];
+    	pucCoilBuf = ucMCoilBuf[ucMBMasterGetDestAddress()];
     	COIL_START = M_COIL_START;
     	COIL_NCOILS = M_COIL_NCOILS;
     	usCoilStart = usMCoilStart;
@@ -265,9 +263,9 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
 
     //Determine the master or slave
-    if (bMBRunInMasterMode)
+    if (xMBMasterGetCBRunInMasterMode())
     {
-    	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterSndAddress];
+    	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterGetDestAddress()];
     	DISCRETE_INPUT_START = M_DISCRETE_INPUT_START;
     	DISCRETE_INPUT_NDISCRETES = M_DISCRETE_INPUT_NDISCRETES;
     	usDiscreteInputStart = usMDiscInStart;
@@ -287,7 +285,7 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 		iRegBitIndex = ( int )( usAddress - usDiscreteInputStart ) % 8 ;	   //相对于寄存器内部的位地址
 
 	    //Determine the master or slave
-	    if (bMBRunInMasterMode)
+	    if (xMBMasterGetCBRunInMasterMode())
 	    {
 			/* Update current coil values with new values from the
 			 * protocol stack. */

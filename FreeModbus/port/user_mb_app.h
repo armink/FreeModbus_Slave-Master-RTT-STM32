@@ -2,8 +2,10 @@
 #define USER_APP
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
-#include "mbport.h"
+#include "mb_m.h"
 #include "mbconfig.h"
+#include "mbframe.h"
+#include "mbutils.h"
 
 /* -----------------------Slave Defines -------------------------------------*/
 #define S_DISCRETE_INPUT_START        1
@@ -48,11 +50,5 @@
 
 //主机模式：在离散输入中，各个地址对应的功能定义
 #define          M_DI_RESERVE                     1		  //保留
-
-
-
-/*--------------------------Extern Functions------------------------------------*/
-extern UCHAR xMBUtilGetBits( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits );
-extern void  xMBUtilSetBits( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits,UCHAR ucValue );
 
 #endif
