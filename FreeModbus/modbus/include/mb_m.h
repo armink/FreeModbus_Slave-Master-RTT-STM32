@@ -69,7 +69,31 @@ PR_BEGIN_EXTERN_C
 #define MB_MASTER_TCP_PORT_USE_DEFAULT 0
 
 /* ----------------------- Type definitions ---------------------------------*/
-
+/*! \ingroup modbus
+ * \brief Errorcodes used by all function in the Master request.
+ */
+typedef enum
+{
+    MB_MRE_NO_ERR,                  /*!< no error. */
+    MB_MRE_NO_REG,                  /*!< illegal register address. */
+    MB_MRE_ILL_ARG,                 /*!< illegal argument. */
+    MB_MRE_PORT_ERR,                /*!< porting layer error. */
+    MB_MRE_NO_RES,                  /*!< insufficient resources. */
+    MB_MRE_IO,                      /*!< I/O error. */
+    MB_MRE_ILL_STATE,               /*!< protocol stack in illegal state. */
+    MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
+    MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
+    MB_MRE_SLAVE_EXCE               /*!< slave has exception. */
+} eMBMasterReqErrCode;
+/*! \ingroup modbus
+ *  \brief TimerMode is Master 3 kind of Timer modes.
+ */
+typedef enum
+{
+	MB_TMODE_T35,                   /*!< Master receive frame T3.5 timeout. */
+	MB_TMODE_RESPOND_TIMEOUT,       /*!< Master wait respond for slave. */
+	MB_TMODE_CONVERT_DELAY          /*!< Master sent broadcast ,then delay sometime.*/
+}eMBMasterTimerMode;
 
 /* ----------------------- Function prototypes ------------------------------*/
 /*! \ingroup modbus
@@ -165,19 +189,33 @@ eMBErrorCode    eMBMasterDisable( void );
  */
 eMBErrorCode    eMBMasterPoll( void );
 
-/* Get Modbus Master busy flag,It will return TRUE when Master is busy. */
-BOOL xMBMasterGetIsBusy( void );
 
+/*! \ingroup modbus
+ *\brief These Modbus functions are called for user when Modbus run in Master Mode.
+ */
+eMBMasterReqErrCode
+eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT * pusDataBuffer, USHORT usRegAddr );
+eMBMasterReqErrCode
+eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr,USHORT * pusDataBuffer, USHORT usRegAddr, USHORT usNRegs );
+eMBMasterReqErrCode
+eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs );
+eMBMasterReqErrCode
+eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,USHORT * pusDataBuffer, USHORT usReadRegAddr, USHORT usNReadRegs ,
+		USHORT usWriteRegAddr, USHORT usNWriteRegs);
+
+/*£¡ \ingroup modbus
+ *\brief These functions are interface for Modbus Master
+ */
+BOOL xMBMasterGetIsBusy( void );
 void vMBMasterGetPDUSndBuf( UCHAR ** pucFrame );
 UCHAR ucMBMasterGetDestAddress( void );
 void vMBMasterSetDestAddress( UCHAR Address );
 void vMBMasterSetIsBusy( BOOL IsBusy );
 BOOL xMBMasterGetCBRunInMasterMode( void );
 void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode );
-/* Get Modbus Master send PDU's buffer length.*/
 UCHAR ucMBMasterGetPDUSndLength( void );
-/* Set Modbus Master send PDU's buffer length.*/
-void vMBMasterSetRTUSndSndLength( UCHAR SendPDULength );
+void vMBMasterSetPDUSndLength( UCHAR SendPDULength );
+void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
 
 /* ----------------------- Callback -----------------------------------------*/
 

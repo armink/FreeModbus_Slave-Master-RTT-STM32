@@ -24,6 +24,7 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
+#include "mb_m.h"
 #include "mbport.h"
 
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED
@@ -72,6 +73,9 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 
 void vMBMasterPortTimersT35Enable()
 {
+	/* Set current timer mode,don't change it.*/
+	vMBMasterSetCurTimerMode(MB_TMODE_T35);
+
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
@@ -87,6 +91,9 @@ void vMBMasterPortTimersT35Enable()
 
 void vMBMasterPortTimersConvertDelayEnable()
 {
+	/* Set current timer mode,don't change it.*/
+	vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
+
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
@@ -102,6 +109,9 @@ void vMBMasterPortTimersConvertDelayEnable()
 
 void vMBMasterPortTimersRespondTimeoutEnable()
 {
+	/* Set current timer mode,don't change it.*/
+	vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
+
 	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;

@@ -308,7 +308,9 @@ eMBMasterPoll( void )
             }
             /* If receive frame has exception .The receive function code highest bit is 1.*/
             if(ucFunctionCode >> 7) eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
+            /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+            else vMBMasterSetIsBusy( FALSE );
             break;
 
         case EV_MASTER_FRAME_SENT:
@@ -319,54 +321,41 @@ eMBMasterPoll( void )
             break;
 
         case EV_MASTER_ERROR_PROCESS:
+        	vMBMasterSetIsBusy( FALSE );
         	break;
         }
     }
     return MB_ENOERR;
 }
-
+/* Get whether the Modbus Master is busy.*/
 BOOL xMBMasterGetIsBusy( void )
 {
 	return xMasterIsBusy;
 }
-
+/* Set whether the Modbus Master is busy.*/
 void vMBMasterSetIsBusy( BOOL IsBusy )
 {
 	xMasterIsBusy = IsBusy;
 }
-
+/* Get whether the Modbus Master is run in master mode.*/
 BOOL xMBMasterGetCBRunInMasterMode( void )
 {
 	return xMBRunInMasterMode;
 }
-
+/* Set whether the Modbus Master is run in master mode.*/
 void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode )
 {
 	xMBRunInMasterMode = IsMasterMode;
 }
-
+/* Get Modbus Master send destination address*/
 UCHAR ucMBMasterGetDestAddress( void )
 {
 	return ucMBMasterDestAddress;
 }
-
+/* Set Modbus Master send destination address*/
 void vMBMasterSetDestAddress( UCHAR Address )
 {
 	ucMBMasterDestAddress = Address;
 }
 
-//Test Modbus Master
-void vMBMasterWriteHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue)
-{
-    static UCHAR   *ucMBFrame;
-    vMBMasterGetPDUSndBuf( &ucMBFrame );
-    vMBMasterSetDestAddress(ucSlaveAddress);
-	ucMBFrame[MB_PDU_FUNC_OFF] = MB_FUNC_WRITE_REGISTER;
-	ucMBFrame[MB_PDU_DATA_OFF + 0] = usRegAddress >> 8;
-	ucMBFrame[MB_PDU_DATA_OFF + 1] = usRegAddress;
-	ucMBFrame[MB_PDU_DATA_OFF + 2] = ucRegValue >> 8;
-	ucMBFrame[MB_PDU_DATA_OFF + 3] = ucRegValue ;
-	vMBMasterSetRTUSndSndLength(5);
-	( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
-}
 #endif

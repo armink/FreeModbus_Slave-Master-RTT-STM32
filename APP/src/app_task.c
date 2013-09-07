@@ -9,6 +9,7 @@ extern int __bss_end;
 #endif
 
 uint8_t CpuUsageMajor, CpuUsageMinor; //CPU使用率
+USHORT  usModbusUserData[MB_PDU_SIZE_MAX];
 
 //====================操作系统各线程优先级==================================
 #define thread_SysMonitor_Prio		    	11
@@ -32,8 +33,6 @@ struct rt_thread thread_ModbusMasterPoll;
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {
-	extern void vMBMasterWriteHoldReg(UCHAR ucSlaveAddress, USHORT usRegAddress, USHORT ucRegValue);
-
 	while (1)
 	{
 		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
@@ -47,7 +46,11 @@ void thread_entry_SysMonitor(void* parameter)
 		rt_thread_delay(DELAY_SYS_RUN_LED);
 		IWDG_Feed(); //喂狗
 		//Test Modbus Master
-		vMBMasterWriteHoldReg(1,3,(USHORT)(rt_tick_get()/10));
+		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
+		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
+//		eMBMasterFuncWriteHoldingRegister(1,usModbusUserData,3);
+//		eMBMasterFuncWriteMultipleHoldingRegister(1,usModbusUserData,3,2);
+		eMBMasterReqReadHoldingRegister(1,3,2);
 	}
 }
 
