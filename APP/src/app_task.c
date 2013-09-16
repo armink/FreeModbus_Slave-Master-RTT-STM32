@@ -48,9 +48,10 @@ void thread_entry_SysMonitor(void* parameter)
 		//Test Modbus Master
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
-//		eMBMasterFuncWriteHoldingRegister(1,usModbusUserData,3);
-//		eMBMasterFuncWriteMultipleHoldingRegister(1,usModbusUserData,3,2);
-		eMBMasterReqReadHoldingRegister(1,3,2);
+		eMBMasterReqWriteHoldingRegister(1,usModbusUserData,3);
+//		eMBMasterReqWriteMultipleHoldingRegister(1,usModbusUserData,3,2);
+//		eMBMasterReqReadHoldingRegister(1,3,2);
+//		eMBMasterReqReadWriteMultipleHoldingRegister(1,usModbusUserData,3,2,5,2);
 	}
 }
 

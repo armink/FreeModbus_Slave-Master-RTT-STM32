@@ -203,6 +203,27 @@ eMBMasterReqErrCode
 eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,USHORT * pusDataBuffer, USHORT usReadRegAddr, USHORT usNReadRegs ,
 		USHORT usWriteRegAddr, USHORT usNWriteRegs);
 
+eMBException
+eMBMasterFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncReadInputRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncReadDiscreteInputs( UCHAR * pucFrame, USHORT * usLen );
+eMBException
+eMBMasterFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+
 /*£¡ \ingroup modbus
  *\brief These functions are interface for Modbus Master
  */
