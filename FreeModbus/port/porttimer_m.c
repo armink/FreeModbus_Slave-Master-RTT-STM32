@@ -73,10 +73,11 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
 
 void vMBMasterPortTimersT35Enable()
 {
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
 	/* Set current timer mode,don't change it.*/
 	vMBMasterSetCurTimerMode(MB_TMODE_T35);
 
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -91,10 +92,11 @@ void vMBMasterPortTimersT35Enable()
 
 void vMBMasterPortTimersConvertDelayEnable()
 {
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
 	/* Set current timer mode,don't change it.*/
 	vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
 
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -109,10 +111,11 @@ void vMBMasterPortTimersConvertDelayEnable()
 
 void vMBMasterPortTimersRespondTimeoutEnable()
 {
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
+
 	/* Set current timer mode,don't change it.*/
 	vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
 
-	TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 	TIM_TimeBaseStructure.TIM_Prescaler = usPrescalerValue;
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
