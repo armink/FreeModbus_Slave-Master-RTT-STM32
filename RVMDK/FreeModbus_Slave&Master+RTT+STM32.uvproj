@@ -775,6 +775,11 @@
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
             </File>
+            <File>
+              <FileName>mbfuncholding_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1547,6 +1552,11 @@
               <FileName>porttimer_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncholding_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
             </File>
           </Files>
         </Group>
