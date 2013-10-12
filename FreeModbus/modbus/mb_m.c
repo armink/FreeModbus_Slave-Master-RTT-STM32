@@ -105,8 +105,7 @@ static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
     {MB_FUNC_OTHER_REPORT_SLAVEID, eMBFuncReportSlaveID},
 #endif
 #if MB_FUNC_READ_INPUT_ENABLED > 0
-    //TODO Add Master function define
-    {MB_FUNC_READ_INPUT_REGISTER, eMBFuncReadInputRegister},
+    {MB_FUNC_READ_INPUT_REGISTER, eMBMasterFuncReadInputRegister},
 #endif
 #if MB_FUNC_READ_HOLDING_ENABLED > 0
     {MB_FUNC_READ_HOLDING_REGISTER, eMBMasterFuncReadHoldingRegister},
