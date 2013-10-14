@@ -780,6 +780,16 @@
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
             </File>
+            <File>
+              <FileName>mbfunccoils_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfunccoils_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncinput_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncinput_m.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1557,6 +1567,16 @@
               <FileName>mbfuncholding_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfunccoils_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfunccoils_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncinput_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncinput_m.c</FilePath>
             </File>
           </Files>
         </Group>
