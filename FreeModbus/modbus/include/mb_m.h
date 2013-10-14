@@ -196,14 +196,22 @@ eMBErrorCode    eMBMasterPoll( void );
 eMBMasterReqErrCode
 eMBMasterReqReadInputRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs );
 eMBMasterReqErrCode
-eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT * pusDataBuffer, USHORT usRegAddr );
+eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData );
 eMBMasterReqErrCode
-eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr,USHORT * pusDataBuffer, USHORT usRegAddr, USHORT usNRegs );
+eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, USHORT * pusDataBuffer );
 eMBMasterReqErrCode
 eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs );
 eMBMasterReqErrCode
-eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,USHORT * pusDataBuffer, USHORT usReadRegAddr, USHORT usNReadRegs ,
-		USHORT usWriteRegAddr, USHORT usNWriteRegs);
+eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
+		USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
+		USHORT usWriteRegAddr, USHORT usNWriteRegs );
+eMBMasterReqErrCode
+eMBMasterReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils );
+eMBMasterReqErrCode
+eMBMasterReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData );
+eMBMasterReqErrCode
+eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
+		USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer );
 
 eMBException
 eMBMasterFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );

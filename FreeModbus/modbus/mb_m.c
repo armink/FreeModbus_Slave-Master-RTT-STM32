@@ -120,16 +120,13 @@ static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
     {MB_FUNC_READWRITE_MULTIPLE_REGISTERS, eMBMasterFuncReadWriteMultipleHoldingRegister},
 #endif
 #if MB_FUNC_READ_COILS_ENABLED > 0
-    //TODO Add Master function define
-    {MB_FUNC_READ_COILS, eMBFuncReadCoils},
+    {MB_FUNC_READ_COILS, eMBMasterFuncReadCoils},
 #endif
 #if MB_FUNC_WRITE_COIL_ENABLED > 0
-    //TODO Add Master function define
-    {MB_FUNC_WRITE_SINGLE_COIL, eMBFuncWriteCoil},
+    {MB_FUNC_WRITE_SINGLE_COIL, eMBMasterFuncWriteCoil},
 #endif
 #if MB_FUNC_WRITE_MULTIPLE_COILS_ENABLED > 0
-    //TODO Add Master function define
-    {MB_FUNC_WRITE_MULTIPLE_COILS, eMBFuncWriteMultipleCoils},
+    {MB_FUNC_WRITE_MULTIPLE_COILS, eMBMasterFuncWriteMultipleCoils},
 #endif
 #if MB_FUNC_READ_DISCRETE_INPUTS_ENABLED > 0
     //TODO Add Master function define

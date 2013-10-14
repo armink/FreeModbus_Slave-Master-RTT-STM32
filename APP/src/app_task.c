@@ -10,7 +10,7 @@ extern int __bss_end;
 
 uint8_t CpuUsageMajor, CpuUsageMinor; //CPU使用率
 USHORT  usModbusUserData[MB_PDU_SIZE_MAX];
-
+UCHAR   ucModbusUserData[MB_PDU_SIZE_MAX];
 //====================操作系统各线程优先级==================================
 #define thread_SysMonitor_Prio		    	11
 #define thread_ModbusSlavePoll_Prio      	10
@@ -48,11 +48,15 @@ void thread_entry_SysMonitor(void* parameter)
 		//Test Modbus Master
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
-		eMBMasterReqReadInputRegister(1,3,2);
-//		eMBMasterReqWriteHoldingRegister(1,usModbusUserData,3);
-//		eMBMasterReqWriteMultipleHoldingRegister(1,usModbusUserData,3,2);
+		ucModbusUserData[0] = 0x1F;
+		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData);
+//		eMBMasterReqWriteCoil(1,8,0xFF00);
+//		eMBMasterReqReadCoils(1,3,8);
+//		eMBMasterReqReadInputRegister(1,3,2);
+//		eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0]);
+//		eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData);
 //		eMBMasterReqReadHoldingRegister(1,3,2);
-//		eMBMasterReqReadWriteMultipleHoldingRegister(1,usModbusUserData,3,2,5,2);
+//		eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2);
 	}
 }
 
