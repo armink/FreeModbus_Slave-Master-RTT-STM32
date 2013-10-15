@@ -49,7 +49,8 @@ void thread_entry_SysMonitor(void* parameter)
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
 		ucModbusUserData[0] = 0x1F;
-		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData);
+		eMBMasterReqReadDiscreteInputs(1,3,8);
+//		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData);
 //		eMBMasterReqWriteCoil(1,8,0xFF00);
 //		eMBMasterReqReadCoils(1,3,8);
 //		eMBMasterReqReadInputRegister(1,3,2);
