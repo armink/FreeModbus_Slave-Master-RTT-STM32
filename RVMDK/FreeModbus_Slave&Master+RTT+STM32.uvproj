@@ -790,6 +790,11 @@
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncinput_m.c</FilePath>
             </File>
+            <File>
+              <FileName>mbfuncdisc_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncdisc_m.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -1577,6 +1582,11 @@
               <FileName>mbfuncinput_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncinput_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncdisc_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\modbus\functions\mbfuncdisc_m.c</FilePath>
             </File>
           </Files>
         </Group>

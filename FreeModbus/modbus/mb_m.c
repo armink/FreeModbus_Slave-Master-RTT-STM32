@@ -129,8 +129,7 @@ static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
     {MB_FUNC_WRITE_MULTIPLE_COILS, eMBMasterFuncWriteMultipleCoils},
 #endif
 #if MB_FUNC_READ_DISCRETE_INPUTS_ENABLED > 0
-    //TODO Add Master function define
-    {MB_FUNC_READ_DISCRETE_INPUTS, eMBFuncReadDiscreteInputs},
+    {MB_FUNC_READ_DISCRETE_INPUTS, eMBMasterFuncReadDiscreteInputs},
 #endif
 };
 

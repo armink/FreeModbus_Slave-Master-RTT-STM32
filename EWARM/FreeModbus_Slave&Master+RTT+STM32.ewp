@@ -1896,6 +1896,9 @@
         <name>$PROJ_DIR$\..\FreeModbus\modbus\functions\mbfunccoils_m.c</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\FreeModbus\modbus\functions\mbfuncdisc_m.c</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\FreeModbus\modbus\functions\mbfuncholding_m.c</name>
       </file>
       <file>

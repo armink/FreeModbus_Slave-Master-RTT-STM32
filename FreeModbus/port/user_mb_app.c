@@ -231,7 +231,11 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
                 iNReg--;
             }
 			usNCoils = usNCoils % 8;                            //余下的线圈数
-			xMBUtilSetBits(&pucCoilBuf[iRegIndex++] , iRegBitIndex  , usNCoils , *pucRegBuffer++);
+			if (usNCoils != 0)                                  //xMBUtilSetBits方法 在操作位数量为0时存在bug
+			{
+				xMBUtilSetBits(&pucCoilBuf[iRegIndex++], iRegBitIndex, usNCoils,
+						*pucRegBuffer++);
+			}
 			break;
         }
     }
@@ -294,8 +298,12 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 				xMBUtilSetBits(&pucDiscreteInputBuf[iRegIndex++] , iRegBitIndex  , 8 , *pucRegBuffer++);
 				iNReg--;
 			}
-			usNDiscrete = usNDiscrete % 8;                            //余下的线圈数
-			xMBUtilSetBits(&pucDiscreteInputBuf[iRegIndex++] , iRegBitIndex  , usNDiscrete , *pucRegBuffer++);
+			usNDiscrete = usNDiscrete % 8;                        //余下的线圈数
+			if (usNDiscrete != 0)                                 //xMBUtilSetBits方法 在操作位数量为0时存在bug
+			{
+				xMBUtilSetBits(&pucDiscreteInputBuf[iRegIndex++], iRegBitIndex,
+						usNDiscrete, *pucRegBuffer++);
+			}
 	    }
 	    else
 	    {

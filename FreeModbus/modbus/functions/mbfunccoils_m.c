@@ -118,6 +118,8 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
         usCoilCount = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF] << 8 );
         usCoilCount |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF + 1] );
 
+        /* Test if the quantity of coils is a multiple of 8. If not last
+         * byte is only partially field with unused coils set to zero. */
         if( ( usCoilCount & 0x0007 ) != 0 )
         {
         	ucByteCount = ( UCHAR )( usCoilCount / 8 + 1 );
