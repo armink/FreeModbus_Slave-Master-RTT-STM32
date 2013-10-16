@@ -183,7 +183,6 @@ void USART1_IRQHandler(void)
 	//∑¢ÀÕ÷–∂œ
 	if (USART_GetITStatus(USART1, USART_IT_TXE) == SET)
 	{
-		USART_ClearITPendingBit(USART1, USART_IT_TXE);
 		prvvUARTTxReadyISR();
 	}
 	rt_interrupt_leave();

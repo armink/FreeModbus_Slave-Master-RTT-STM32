@@ -160,7 +160,7 @@ eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLengt
     eMBErrorCode    eStatus = MB_ENOERR;
 
     ENTER_CRITICAL_SECTION(  );
-    assert_param( usRcvBufferPos < MB_SER_PDU_SIZE_MAX );
+    assert_param( usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX );
 
     /* Length and CRC check */
     if( ( usMasterRcvBufferPos >= MB_SER_PDU_SIZE_MIN )
@@ -235,7 +235,7 @@ xMBMasterRTUReceiveFSM( void )
     BOOL            xTaskNeedSwitch = FALSE;
     UCHAR           ucByte;
 
-    assert_param( eSndState == STATE_TX_IDLE );
+    assert_param( eSndState == STATE_M_TX_IDLE );
 
     /* Always read the character. */
     ( void )xMBMasterPortSerialGetByte( ( CHAR * ) & ucByte );
@@ -301,7 +301,7 @@ xMBMasterRTUTransmitFSM( void )
 {
     BOOL            xNeedPoll = FALSE;
 
-    assert_param( eRcvState == STATE_RX_IDLE );
+    assert_param( eRcvState == STATE_M_RX_IDLE );
 
     switch ( eSndState )
     {
