@@ -1,25 +1,47 @@
 #include "user_mb_app.h"
-/* ----------------------- Variables ---------------------------------*/
-//Slave mode use these variables
-USHORT   usSDiscInStart                             = S_DISCRETE_INPUT_START;
-UCHAR    ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES/8];
-USHORT   usSCoilStart                               = S_COIL_START;
-UCHAR    ucSCoilBuf[S_COIL_NCOILS/8]                ;
-USHORT   usSRegInStart                              = S_REG_INPUT_START;
-USHORT   usSRegInBuf[S_REG_INPUT_NREGS]             ;
-USHORT   usSRegHoldStart                            = S_REG_HOLDING_START;
-USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]         ;
-//Master mode use these variables
+/*------------------------Slave mode use these variables----------------------*/
+//Slave mode:DiscreteInputs variables
+USHORT   usSDiscInStart                               = S_DISCRETE_INPUT_START;
+#if S_DISCRETE_INPUT_NDISCRETES%8
+UCHAR    ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES/8+1];
+#else
+UCHAR    ucSDiscInBuf[S_DISCRETE_INPUT_NDISCRETES/8]  ;
+#endif
+//Slave mode:Coils variables
+USHORT   usSCoilStart                                 = S_COIL_START;
+#if S_COIL_NCOILS%8
+UCHAR    ucSCoilBuf[S_COIL_NCOILS/8+1]                ;
+#else
+UCHAR    ucSCoilBuf[S_COIL_NCOILS/8]                  ;
+#endif
+//Slave mode:InputRegister variables
+USHORT   usSRegInStart                                = S_REG_INPUT_START;
+USHORT   usSRegInBuf[S_REG_INPUT_NREGS]               ;
+//Slave mode:HoldingRegister variables
+USHORT   usSRegHoldStart                              = S_REG_HOLDING_START;
+USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]           ;
+/*-----------------------Master mode use these variables----------------------*/
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+//Master mode:DiscreteInputs variables
 USHORT   usMDiscInStart                             = M_DISCRETE_INPUT_START;
+#if      M_DISCRETE_INPUT_NDISCRETES%8
+UCHAR    ucMDiscInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_DISCRETE_INPUT_NDISCRETES/8+1];
+#else
 UCHAR    ucMDiscInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_DISCRETE_INPUT_NDISCRETES/8];
+#endif
+//Master mode:Coils variables
 USHORT   usMCoilStart                               = M_COIL_START;
+#if      M_COIL_NCOILS%8
+UCHAR    ucMCoilBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_COIL_NCOILS/8+1];
+#else
 UCHAR    ucMCoilBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_COIL_NCOILS/8];
+#endif
+//Master mode:InputRegister variables
 USHORT   usMRegInStart                              = M_REG_INPUT_START;
 USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+//Master mode:HoldingRegister variables
 USHORT   usMRegHoldStart                            = M_REG_HOLDING_START;
 USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
-
 #endif
 //******************************输入寄存器回调函数**********************************
 //函数定义: eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )

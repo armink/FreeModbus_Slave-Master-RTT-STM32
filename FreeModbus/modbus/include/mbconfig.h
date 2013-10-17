@@ -112,8 +112,8 @@ PR_BEGIN_EXTERN_C
 /*! \brief If master send a broadcast frame,the master will wait time of convert to delay,
  * then master can send other frame */
 #define MB_MASTER_DELAY_MS_CONVERT              (200 )
-/*! \brief If master send a frame which is not broadcast,the master will wait sometime for slaver.
- * And if slaver is not respond in this time,the master will process this timeout error.
+/*! \brief If master send a frame which is not broadcast,the master will wait sometime for slave.
+ * And if slave is not respond in this time,the master will process this timeout error.
  * Then master can send other frame */
 #define MB_MASTER_TIMEOUT_MS_RESPOND            (2000)
 /*! \brief The total slaves in Modbus Master system.Default 16.
