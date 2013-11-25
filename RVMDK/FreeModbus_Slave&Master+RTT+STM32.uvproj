@@ -761,21 +761,6 @@
               <FilePath>..\FreeModbus\modbus\rtu\mbrtu_m.c</FilePath>
             </File>
             <File>
-              <FileName>portevent_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
-            </File>
-            <File>
-              <FileName>portserial_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
-            </File>
-            <File>
-              <FileName>porttimer_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
-            </File>
-            <File>
               <FileName>mbfuncholding_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
@@ -794,6 +779,26 @@
               <FileName>mbfuncdisc_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncdisc_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_mb_app_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\user_mb_app_m.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1554,21 +1559,6 @@
               <FilePath>..\FreeModbus\modbus\rtu\mbrtu_m.c</FilePath>
             </File>
             <File>
-              <FileName>portevent_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
-            </File>
-            <File>
-              <FileName>portserial_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
-            </File>
-            <File>
-              <FileName>porttimer_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
-            </File>
-            <File>
               <FileName>mbfuncholding_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncholding_m.c</FilePath>
@@ -1587,6 +1577,26 @@
               <FileName>mbfuncdisc_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbus\modbus\functions\mbfuncdisc_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_mb_app_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbus\port\user_mb_app_m.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -136,7 +136,7 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
             ( ucByteCount == pucFrame[MB_PDU_FUNC_READ_COILCNT_OFF] ) )
         {
         	/* Make callback to fill the buffer. */
-            eRegStatus = eMBRegCoilsCB( &pucFrame[MB_PDU_FUNC_READ_VALUES_OFF], usRegAddress, usCoilCount, MB_REG_READ );
+            eRegStatus = eMBMasterRegCoilsCB( &pucFrame[MB_PDU_FUNC_READ_VALUES_OFF], usRegAddress, usCoilCount, MB_REG_READ );
 
             /* If an error occured convert it into a Modbus exception. */
             if( eRegStatus != MB_ENOERR )
@@ -214,7 +214,7 @@ eMBMasterFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen )
                 ucBuf[0] = 0;
             }
             eRegStatus =
-                eMBRegCoilsCB( &ucBuf[0], usRegAddress, 1, MB_REG_WRITE );
+                eMBMasterRegCoilsCB( &ucBuf[0], usRegAddress, 1, MB_REG_WRITE );
 
             /* If an error occured convert it into a Modbus exception. */
             if( eRegStatus != MB_ENOERR )
@@ -318,7 +318,7 @@ eMBMasterFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen )
         if( ( usCoilCnt >= 1 ) && ( ucByteCountVerify == ucByteCount ) )
         {
             eRegStatus =
-                eMBRegCoilsCB( &ucMBFrame[MB_PDU_REQ_WRITE_MUL_VALUES_OFF],
+                eMBMasterRegCoilsCB( &ucMBFrame[MB_PDU_REQ_WRITE_MUL_VALUES_OFF],
                                usRegAddress, usCoilCnt, MB_REG_WRITE );
 
             /* If an error occured convert it into a Modbus exception. */

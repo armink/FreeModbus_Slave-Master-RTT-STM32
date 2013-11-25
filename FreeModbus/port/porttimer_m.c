@@ -27,7 +27,7 @@
 #include "mb_m.h"
 #include "mbport.h"
 
-#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED
+#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 /* ----------------------- Variables ----------------------------------------*/
 static USHORT usT35TimeOut50us;
 static USHORT usPrescalerValue = 0;
