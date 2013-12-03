@@ -235,7 +235,7 @@ xMBMasterRTUReceiveFSM( void )
     BOOL            xTaskNeedSwitch = FALSE;
     UCHAR           ucByte;
 
-    assert_param( eSndState == STATE_M_TX_IDLE );
+    assert_param(( eSndState == STATE_M_TX_IDLE ) || ( eSndState == STATE_M_TX_XFWR ));
 
     /* Always read the character. */
     ( void )xMBMasterPortSerialGetByte( ( CHAR * ) & ucByte );
@@ -369,7 +369,8 @@ xMBMasterRTUTimerExpired(void)
 		/* Function called in an illegal state. */
 	default:
 		assert_param(
-				( eRcvState == STATE_M_RX_INIT ) || ( eRcvState == STATE_M_RX_RCV ) || ( eRcvState == STATE_M_RX_ERROR ));
+				( eRcvState == STATE_M_RX_INIT ) || ( eRcvState == STATE_M_RX_RCV ) ||
+				( eRcvState == STATE_M_RX_ERROR ) || ( eRcvState == STATE_M_RX_IDLE ));
 		break;
 	}
 	eRcvState = STATE_M_RX_IDLE;
@@ -384,7 +385,8 @@ xMBMasterRTUTimerExpired(void)
 		break;
 		/* Function called in an illegal state. */
 	default:
-		assert_param( eSndState == STATE_M_TX_XFWR );
+		assert_param(
+				( eSndState == STATE_M_TX_XFWR ) || ( eSndState == STATE_M_TX_IDLE ));
 		break;
 	}
 	eSndState = STATE_M_TX_IDLE;
