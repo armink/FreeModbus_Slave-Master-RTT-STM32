@@ -292,23 +292,30 @@ eMBMasterPoll( void )
         case EV_MASTER_EXECUTE:
             ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
             eException = MB_EX_ILLEGAL_FUNCTION;
-            for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
-            {
-                /* No more function handlers registered. Abort. */
-                if( xMasterFuncHandlers[i].ucFunctionCode == 0 )
-                {
-                    break;
-                }
-                else if( xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode )
-                {
-                	vMBMasterSetCBRunInMasterMode(TRUE);
-                    eException = xMasterFuncHandlers[i].pxHandler( ucMBFrame, &usLength );
-                    vMBMasterSetCBRunInMasterMode(FALSE);
-                    break;
-                }
-            }
             /* If receive frame has exception .The receive function code highest bit is 1.*/
-            if(ucFunctionCode >> 7) eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
+            if(ucFunctionCode >> 7) {
+            	eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
+            }
+			else
+			{
+				for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
+				{
+					/* No more function handlers registered. Abort. */
+					if (xMasterFuncHandlers[i].ucFunctionCode == 0)
+					{
+						break;
+					}
+					else if (xMasterFuncHandlers[i].ucFunctionCode
+							== ucFunctionCode)
+					{
+						vMBMasterSetCBRunInMasterMode(TRUE);
+						eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame,
+								&usLength);
+						vMBMasterSetCBRunInMasterMode(FALSE);
+						break;
+					}
+				}
+			}
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
             else vMBMasterSetIsBusy( FALSE );
