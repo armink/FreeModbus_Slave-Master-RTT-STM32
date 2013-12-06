@@ -184,6 +184,7 @@ eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eM
 	if( ( usAddress >= COIL_START ) &&
         ( usAddress + usNCoils <= COIL_START + COIL_NCOILS ) )
     {
+		usAddress-=usCoilStart;  //计算绝对地址
         iRegIndex    = ( int )( usAddress - usCoilStart ) / 8 ;    //每个寄存器存8个
 		iRegBitIndex = ( int )( usAddress - usCoilStart ) % 8 ;	   //相对于寄存器内部的位地址
         switch ( eMode )
@@ -253,6 +254,7 @@ eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscre
     if( ( usAddress >= DISCRETE_INPUT_START )
         && ( usAddress + usNDiscrete <= DISCRETE_INPUT_START + DISCRETE_INPUT_NDISCRETES ) )
     {
+    	usAddress-=usDiscreteInputStart;  //计算绝对地址
         iRegIndex    = ( int )( usAddress - usDiscreteInputStart ) / 8 ;    //每个寄存器存8个
 		iRegBitIndex = ( int )( usAddress - usDiscreteInputStart ) % 8 ;	   //相对于寄存器内部的位地址
 
