@@ -54,7 +54,7 @@ eMBErrorCode
 eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex;
+    USHORT          iRegIndex;
     USHORT *        pusRegInputBuf;
     UCHAR           REG_INPUT_START;
     UCHAR           REG_INPUT_NREGS;
@@ -65,10 +65,11 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 	REG_INPUT_NREGS = S_REG_INPUT_NREGS;
 	usRegInStart = usSRegInStart;
 
+	usAddress--;//FreeModbus功能函数中已经加1，为保证与缓冲区首地址一致，故减1
     if( ( usAddress >= REG_INPUT_START )
         && ( usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS ) )
     {
-        iRegIndex = ( int )( usAddress - usRegInStart );
+        iRegIndex = usAddress - usRegInStart;
         while( usNRegs > 0 )
         {
 			*pucRegBuffer++ = (unsigned char) (pusRegInputBuf[iRegIndex] >> 8);
@@ -100,7 +101,7 @@ eMBErrorCode
 eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex;
+    USHORT          iRegIndex;
     USHORT *        pusRegHoldingBuf;
     UCHAR           REG_HOLDING_START;
     UCHAR           REG_HOLDING_NREGS;
@@ -111,10 +112,11 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
 	REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
 	usRegHoldStart = usSRegHoldStart;
 
+	usAddress--;//FreeModbus功能函数中已经加1，为保证与缓冲区首地址一致，故减1
     if( ( usAddress >= REG_HOLDING_START ) &&
         ( usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS ) )
     {
-        iRegIndex = ( int )( usAddress - usRegHoldStart );
+        iRegIndex = usAddress - usRegHoldStart;
         switch ( eMode )
         {
             /* Pass current register values to the protocol stack. */
@@ -163,7 +165,7 @@ eMBErrorCode
 eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
-    int             iRegIndex , iRegBitIndex , iNReg;
+    USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucCoilBuf;
     UCHAR           COIL_START;
     UCHAR           COIL_NCOILS;
@@ -175,10 +177,10 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
 	COIL_NCOILS = S_COIL_NCOILS;
 	usCoilStart = usSCoilStart;
 
+	usAddress--;//FreeModbus功能函数中已经加1，为保证与缓冲区首地址一致，故减1
     if( ( usAddress >= COIL_START ) &&
         ( usAddress + usNCoils <= COIL_START + COIL_NCOILS ) )
     {
-    	usAddress-=usCoilStart;  //计算绝对地址
         iRegIndex    = ( int )( usAddress - usCoilStart ) / 8 ;    //每个寄存器存8个
 		iRegBitIndex = ( int )( usAddress - usCoilStart ) % 8 ;	   //相对于寄存器内部的位地址
         switch ( eMode )
@@ -233,7 +235,7 @@ eMBErrorCode
 eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
-	int             iRegIndex , iRegBitIndex , iNReg;
+	USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucDiscreteInputBuf;
     UCHAR           DISCRETE_INPUT_START;
     UCHAR           DISCRETE_INPUT_NDISCRETES;
@@ -245,10 +247,10 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 	DISCRETE_INPUT_NDISCRETES = S_DISCRETE_INPUT_NDISCRETES;
 	usDiscreteInputStart = usSDiscInStart;
 
+	usAddress--;//FreeModbus功能函数中已经加1，为保证与缓冲区首地址一致，故减1
     if( ( usAddress >= DISCRETE_INPUT_START )
         && ( usAddress + usNDiscrete <= DISCRETE_INPUT_START + DISCRETE_INPUT_NDISCRETES ) )
     {
-    	usAddress-=usDiscreteInputStart;  //计算绝对地址
         iRegIndex    = ( int )( usAddress - usDiscreteInputStart ) / 8 ;    //每个寄存器存8个
 		iRegBitIndex = ( int )( usAddress - usDiscreteInputStart ) % 8 ;	   //相对于寄存器内部的位地址
 
