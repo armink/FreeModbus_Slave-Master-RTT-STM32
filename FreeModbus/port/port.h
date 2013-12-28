@@ -1,6 +1,6 @@
 /*
  * FreeModbus Libary: BARE Port
- * Copyright (C) 2006 Christian Walter <wolti@sil.at>
+ * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,9 +43,6 @@
 #define ENTER_CRITICAL_SECTION()	EnterCriticalSection()
 #define EXIT_CRITICAL_SECTION()    ExitCriticalSection()
 
-void EnterCriticalSection(void);
-void ExitCriticalSection(void);
-
 typedef uint8_t BOOL;
 
 typedef unsigned char UCHAR;
@@ -64,5 +61,9 @@ typedef int32_t LONG;
 #ifndef FALSE
 #define FALSE           0
 #endif
+
+void EnterCriticalSection(void);
+void ExitCriticalSection(void);
+void vMBDelay(ULONG nCount);
 
 #endif
