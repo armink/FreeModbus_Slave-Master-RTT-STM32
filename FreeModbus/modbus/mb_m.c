@@ -65,7 +65,6 @@
 
 static UCHAR    ucMBMasterDestAddress;
 static BOOL     xMBRunInMasterMode = FALSE;
-static BOOL     xMasterIsBusy = FALSE;
 
 static enum
 {
@@ -185,6 +184,8 @@ eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
 		{
 			eMBState = STATE_DISABLED;
 		}
+		/* initialize the Mobus Master mutex */
+		vMBasterRunMutexInit();
 	}
 	return eStatus;
 }
@@ -318,33 +319,23 @@ eMBMasterPoll( void )
 			}
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
-            else vMBMasterSetIsBusy( FALSE );
+            else vMBasterRunMutexUnlock();
             break;
 
         case EV_MASTER_FRAME_SENT:
         	/* Master is busy now. */
-        	vMBMasterSetIsBusy( TRUE );
         	vMBMasterGetPDUSndBuf( &ucMBFrame );
 			eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, ucMBMasterGetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
-        	vMBMasterSetIsBusy( FALSE );
+        	vMBasterRunMutexUnlock();
         	break;
         }
     }
     return MB_ENOERR;
 }
-/* Get whether the Modbus Master is busy.*/
-BOOL xMBMasterGetIsBusy( void )
-{
-	return xMasterIsBusy;
-}
-/* Set whether the Modbus Master is busy.*/
-void vMBMasterSetIsBusy( BOOL IsBusy )
-{
-	xMasterIsBusy = IsBusy;
-}
+
 /* Get whether the Modbus Master is run in master mode.*/
 BOOL xMBMasterGetCBRunInMasterMode( void )
 {

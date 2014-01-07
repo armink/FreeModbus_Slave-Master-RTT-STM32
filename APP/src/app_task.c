@@ -49,15 +49,15 @@ void thread_entry_SysMonitor(void* parameter)
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
 		ucModbusUserData[0] = 0x1F;
-		eMBMasterReqReadDiscreteInputs(1,3,8);
-//		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData);
-//		eMBMasterReqWriteCoil(1,8,0xFF00);
-//		eMBMasterReqReadCoils(1,3,8);
-//		eMBMasterReqReadInputRegister(1,3,2);
-//		eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0]);
-//		eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData);
-//		eMBMasterReqReadHoldingRegister(1,3,2);
-//		eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2);
+		eMBMasterReqReadDiscreteInputs(1,3,8,MB_WAITING_FOREVER);
+//		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,MB_WAITING_FOREVER);
+//		eMBMasterReqWriteCoil(1,8,0xFF00,MB_WAITING_FOREVER);
+//		eMBMasterReqReadCoils(1,3,8,MB_WAITING_FOREVER);
+//		eMBMasterReqReadInputRegister(1,3,2,MB_WAITING_FOREVER);
+//		eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],MB_WAITING_FOREVER);
+//		eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,MB_WAITING_FOREVER);
+//		eMBMasterReqReadHoldingRegister(1,3,2,MB_WAITING_FOREVER);
+//		eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,MB_WAITING_FOREVER);
 	}
 }
 
