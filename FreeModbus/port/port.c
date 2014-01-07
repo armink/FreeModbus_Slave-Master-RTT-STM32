@@ -1,6 +1,6 @@
  /*
-  * FreeModbus Libary: LPC214X Port
-  * Copyright (C) 2007 Tiago Prado Lone <tiago@maxwellbohr.com.br>
+  * FreeModbus Libary: STM32 Port
+  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
   *
   * This library is free software; you can redistribute it and/or
   * modify it under the terms of the GNU Lesser General Public
@@ -16,7 +16,7 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   *
-  * File: $Id: port.c,v 1.1 2007/04/24 23:15:18 wolti Exp $
+  * File: $Id: portevent.c,v 1.60 2013/12/28 9:18:05 Armink $
   */
 
 /* ----------------------- System includes --------------------------------*/
@@ -37,3 +37,9 @@ void ExitCriticalSection(void)
 	//开启全局中断
 	__enable_irq();
 }
+
+void vMBDelay(ULONG nCount)
+{
+  for(; nCount > 0;nCount--);
+}
+
