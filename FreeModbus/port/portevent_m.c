@@ -65,7 +65,7 @@ xMBMasterPortEventGet( eMBMasterEventType * eEvent )
  * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
  *
  */
-void vMBasterRunResInit( void )
+void vMBMasterRunResInit( void )
 {
 	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
 }
@@ -78,7 +78,7 @@ void vMBasterRunResInit( void )
  *
  * @return resource taked result
  */
-BOOL xMBasterRunResTake( LONG lTimeOut )
+BOOL xMBMasterRunResTake( LONG lTimeOut )
 {
 	/*If waiting time is -1 .It will wait forever */
 	return rt_sem_take(&xMasterRunRes, lTimeOut) ? FALSE : TRUE ;
@@ -89,7 +89,7 @@ BOOL xMBasterRunResTake( LONG lTimeOut )
  * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
  *
  */
-void vMBasterRunResRelease( void )
+void vMBMasterRunResRelease( void )
 {
 	/* Clear up resource when need release resource. */
 	rt_sem_control(&xMasterRunRes, RT_IPC_CMD_RESET, 0);
