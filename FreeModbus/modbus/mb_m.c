@@ -184,8 +184,8 @@ eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
 		{
 			eMBState = STATE_DISABLED;
 		}
-		/* initialize the Mobus Master mutex */
-		vMBasterRunMutexInit();
+		/* initialize the Mobus Master running resource. */
+		vMBasterRunResInit();
 	}
 	return eStatus;
 }
@@ -319,7 +319,7 @@ eMBMasterPoll( void )
 			}
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
-            else vMBasterRunMutexUnlock();
+            else vMBasterRunResRelease();
             break;
 
         case EV_MASTER_FRAME_SENT:
@@ -329,7 +329,7 @@ eMBMasterPoll( void )
             break;
 
         case EV_MASTER_ERROR_PROCESS:
-        	vMBasterRunMutexUnlock();
+        	vMBasterRunResRelease();
         	break;
         }
     }

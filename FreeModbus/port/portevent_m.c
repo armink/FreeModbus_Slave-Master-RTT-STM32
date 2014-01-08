@@ -26,9 +26,9 @@
 
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 /* ----------------------- Variables ----------------------------------------*/
-static eMBMasterEventType eMasterQueuedEvent;
-static BOOL               xMasterEventInQueue;
-static struct rt_mutex    xMasterRunMutex;
+static eMBMasterEventType  eMasterQueuedEvent;
+static BOOL                xMasterEventInQueue;
+static struct rt_semaphore xMasterRunRes;
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL
@@ -61,37 +61,39 @@ xMBMasterPortEventGet( eMBMasterEventType * eEvent )
 }
 
 /**
- * This function is initialize the Mobus Master mutex .
- * Note:The mutex is define by Operating System.If you not use Opearting System this function can be empty.
+ * This function is initialize the Mobus Master running resource .
+ * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
  *
  */
-void vMBasterRunMutexInit( void )
+void vMBasterRunResInit( void )
 {
-	rt_mutex_init(&xMasterRunMutex, "master run", RT_IPC_FLAG_PRIO);
+	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
 }
 
 /**
- * This function is lock Mobus Master mutex.
- * Note:The mutex is define by Operating System.If you not use Opearting System this function can be just return TRUE.
+ * This function is take Mobus Master running resource.
+ * Note:The resource is define by Operating System.If you not use Opearting System this function can be just return TRUE.
  *
  * @param lTimeOut the waiting time.
  *
- * @return mutex lock result
+ * @return resource taked result
  */
-BOOL xMBasterRunMutexLock( LONG lTimeOut )
+BOOL xMBasterRunResTake( LONG lTimeOut )
 {
 	/*If waiting time is -1 .It will wait forever */
-	return rt_mutex_take(&xMasterRunMutex, lTimeOut) ? FALSE : TRUE ;
+	return rt_sem_take(&xMasterRunRes, lTimeOut) ? FALSE : TRUE ;
 }
 
 /**
- * This function is unlock Mobus Master mutex.
- * Note:The mutex is define by Operating System.If you not use Opearting System this function can be empty.
+ * This function is release Mobus Master running resource.
+ * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
  *
  */
-void vMBasterRunMutexUnlock( void )
+void vMBasterRunResRelease( void )
 {
-	rt_mutex_release(&xMasterRunMutex);
+	/* Clear up resource when need release resource. */
+	rt_sem_control(&xMasterRunRes, RT_IPC_CMD_RESET, 0);
+	rt_sem_release(&xMasterRunRes);
 }
 
 #endif

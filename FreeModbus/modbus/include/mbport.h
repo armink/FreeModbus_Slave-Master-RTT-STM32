@@ -92,11 +92,11 @@ BOOL            xMBMasterPortEventPost( eMBMasterEventType eEvent );
 
 BOOL            xMBMasterPortEventGet(  /*@out@ */ eMBMasterEventType * eEvent );
 
-void            vMBasterRunMutexInit( void );
+void            vMBasterRunResInit( void );
 
-BOOL            xMBasterRunMutexLock( int32_t time );
+BOOL            xMBasterRunResTake( int32_t time );
 
-void            vMBasterRunMutexUnlock( void );
+void            vMBasterRunResRelease( void );
 
 /* ----------------------- Serial port functions ----------------------------*/
 
