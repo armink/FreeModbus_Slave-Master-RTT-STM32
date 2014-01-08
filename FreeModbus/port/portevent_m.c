@@ -91,8 +91,7 @@ BOOL xMBMasterRunResTake( LONG lTimeOut )
  */
 void vMBMasterRunResRelease( void )
 {
-	/* Clear up resource when need release resource. */
-	rt_sem_control(&xMasterRunRes, RT_IPC_CMD_RESET, 0);
+	/* release resource */
 	rt_sem_release(&xMasterRunRes);
 }
 
