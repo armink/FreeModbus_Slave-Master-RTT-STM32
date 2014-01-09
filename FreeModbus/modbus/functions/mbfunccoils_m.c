@@ -74,6 +74,16 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 #if MB_FUNC_READ_COILS_ENABLED > 0
 
+/**
+ * This function will request read coil.
+ *
+ * @param ucSndAddr salve address
+ * @param usCoilAddr coil start address
+ * @param usNCoils coil total number
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils ,LONG lTimeOut )
 {
@@ -161,6 +171,18 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_WRITE_COIL_ENABLED > 0
 
+/**
+ * This function will request write one coil.
+ *
+ * @param ucSndAddr salve address
+ * @param usCoilAddr coil start address
+ * @param usCoilData data to be written
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ *
+ * @see eMBMasterReqWriteMultipleCoils
+ */
 eMBMasterReqErrCode
 eMBMasterReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData, LONG lTimeOut )
 {
@@ -240,6 +262,19 @@ eMBMasterFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_WRITE_MULTIPLE_COILS_ENABLED > 0
 
+/**
+ * This function will request write multiple coils.
+ *
+ * @param ucSndAddr salve address
+ * @param usCoilAddr coil start address
+ * @param usNCoils coil total number
+ * @param usCoilData data to be written
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ *
+ * @see eMBMasterReqWriteCoil
+ */
 eMBMasterReqErrCode
 eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
 		USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, LONG lTimeOut)
