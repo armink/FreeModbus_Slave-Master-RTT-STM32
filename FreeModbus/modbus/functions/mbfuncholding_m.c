@@ -86,6 +86,16 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
 
+/**
+ * This function will request write holding register.
+ *
+ * @param ucSndAddr salve address
+ * @param usRegAddr register start address
+ * @param usRegData register data to be written
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData, LONG lTimeOut )
 {
@@ -143,6 +153,17 @@ eMBMasterFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED > 0
 
+/**
+ * This function will request write multiple holding register.
+ *
+ * @param ucSndAddr salve address
+ * @param usRegAddr register start address
+ * @param usNRegs register total number
+ * @param pusDataBuffer data to be written
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr,
 		USHORT usRegAddr, USHORT usNRegs, USHORT * pusDataBuffer, LONG lTimeOut )
@@ -227,6 +248,16 @@ eMBMasterFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_READ_HOLDING_ENABLED > 0
 
+/**
+ * This function will request read holding register.
+ *
+ * @param ucSndAddr salve address
+ * @param usRegAddr register start address
+ * @param usNRegs register total number
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, LONG lTimeOut )
 {
@@ -300,6 +331,19 @@ eMBMasterFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_READWRITE_HOLDING_ENABLED > 0
 
+/**
+ * This function will request read and write holding register.
+ *
+ * @param ucSndAddr salve address
+ * @param usReadRegAddr read register start address
+ * @param usNReadRegs read register total number
+ * @param pusDataBuffer data to be written
+ * @param usWriteRegAddr write register start address
+ * @param usNWriteRegs write register total number
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
 		USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
