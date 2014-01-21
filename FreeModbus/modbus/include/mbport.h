@@ -41,7 +41,7 @@ PR_BEGIN_EXTERN_C
 /*! \ingroup modbus
  * \brief used for master mode.
  *
- * the mxMBasterRunMutexLock() parameter definitions
+ * the xMBMasterRunResTake() parameter definitions
  */
 #define MB_WAITING_FOREVER              -1              /*!< Block forever until get resource. */
 #define MB_WAITING_NO                   0               /*!< Non-block. */
@@ -64,6 +64,13 @@ typedef enum
     EV_MASTER_FRAME_SENT,              /*!< Frame sent. */
     EV_MASTER_ERROR_PROCESS            /*!< Frame error process*/
 } eMBMasterEventType;
+
+typedef enum
+{
+    EV_ERROR_RESPOND_TIMEOUT,         /*!< Slave respond timeout. */
+    EV_ERROR_RECEIVE_DATA,            /*!< Receive frame data erroe. */
+    EV_ERROR_EXECUTE_FUNCTION,        /*!< Execute function error. */
+} eMBMasterErrorEventType;
 
 /*! \ingroup modbus
  * \brief Parity used for characters in serial mode.
@@ -146,6 +153,16 @@ INLINE void     vMBMasterPortTimersConvertDelayEnable( void );
 INLINE void     vMBMasterPortTimersRespondTimeoutEnable( void );
 
 INLINE void     vMBMasterPortTimersDisable( void );
+
+/* ----------------- Callback for the master error process ------------------*/
+void            vMBMasterErrorCBRespondTimeout( UCHAR ucDestAddress, const UCHAR* pucPDUData,
+                                                USHORT ucPDULength );
+
+void            vMBMasterErrorCBReceiveData( UCHAR ucDestAddress, const UCHAR* pucPDUData,
+                                             USHORT ucPDULength );
+
+void            vMBMasterErrorCBExecuteFunction( UCHAR ucDestAddress, const UCHAR* pucPDUData,
+                                                 USHORT ucPDULength );
 
 /* ----------------------- Callback for the protocol stack ------------------*/
 

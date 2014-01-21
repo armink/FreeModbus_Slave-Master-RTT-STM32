@@ -65,6 +65,7 @@
 
 static UCHAR    ucMBMasterDestAddress;
 static BOOL     xMBRunInMasterMode = FALSE;
+static eMBMasterErrorEventType eMBMasterCurErrorType;
 
 static enum
 {
@@ -261,6 +262,7 @@ eMBMasterPoll( void )
     int             i;
     eMBErrorCode    eStatus = MB_ENOERR;
     eMBMasterEventType    eEvent;
+    eMBMasterErrorEventType errorType;
 
     /* Check if the protocol stack is ready. */
     if( eMBState != STATE_ENABLED )
@@ -286,6 +288,7 @@ eMBMasterPoll( void )
 			}
 			else
 			{
+				vMBMasterSetErrorType(EV_ERROR_RECEIVE_DATA);
 				( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
 			}
 			break;
@@ -318,18 +321,38 @@ eMBMasterPoll( void )
 				}
 			}
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
-            if (eException != MB_EX_NONE) ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+            if (eException != MB_EX_NONE) {
+            	vMBMasterSetErrorType(EV_ERROR_EXECUTE_FUNCTION);
+            	( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+            }
             else vMBMasterRunResRelease();
             break;
 
         case EV_MASTER_FRAME_SENT:
         	/* Master is busy now. */
         	vMBMasterGetPDUSndBuf( &ucMBFrame );
-			eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, ucMBMasterGetPDUSndLength() );
+			eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, usMBMasterGetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
-        	vMBMasterRunResRelease();
+        	/* Execute specified error process callback function. */
+			errorType = eMBMasterGetErrorType();
+			vMBMasterGetPDUSndBuf( &ucMBFrame );
+			switch (errorType) {
+			case EV_ERROR_RESPOND_TIMEOUT:
+				vMBMasterErrorCBRespondTimeout(ucMBMasterGetDestAddress(),
+						ucMBFrame, usMBMasterGetPDUSndLength());
+				break;
+			case EV_ERROR_RECEIVE_DATA:
+				vMBMasterErrorCBReceiveData(ucMBMasterGetDestAddress(),
+						ucMBFrame, usMBMasterGetPDUSndLength());
+				break;
+			case EV_ERROR_EXECUTE_FUNCTION:
+				vMBMasterErrorCBExecuteFunction(ucMBMasterGetDestAddress(),
+						ucMBFrame, usMBMasterGetPDUSndLength());
+				break;
+			}
+			vMBMasterRunResRelease();
         	break;
         }
     }
@@ -346,15 +369,27 @@ void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode )
 {
 	xMBRunInMasterMode = IsMasterMode;
 }
-/* Get Modbus Master send destination address*/
+/* Get Modbus Master send destination address. */
 UCHAR ucMBMasterGetDestAddress( void )
 {
 	return ucMBMasterDestAddress;
 }
-/* Set Modbus Master send destination address*/
+/* Set Modbus Master send destination address. */
 void vMBMasterSetDestAddress( UCHAR Address )
 {
 	ucMBMasterDestAddress = Address;
 }
+/* Get Modbus Master current error event type. */
+eMBMasterErrorEventType eMBMasterGetErrorType( void )
+{
+	return eMBMasterCurErrorType;
+}
+/* Set Modbus Master current error event type. */
+void vMBMasterSetErrorType( eMBMasterErrorEventType errorType )
+{
+	eMBMasterCurErrorType = errorType;
+}
+
+
 
 #endif

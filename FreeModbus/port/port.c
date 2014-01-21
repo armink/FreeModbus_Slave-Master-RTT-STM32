@@ -43,3 +43,17 @@ void vMBDelay(ULONG nCount)
   for(; nCount > 0;nCount--);
 }
 
+void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+
+}
+
+void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+
+}
+
+void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+
+}

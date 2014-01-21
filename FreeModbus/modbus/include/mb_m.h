@@ -389,9 +389,11 @@ UCHAR ucMBMasterGetDestAddress( void );
 void vMBMasterSetDestAddress( UCHAR Address );
 BOOL xMBMasterGetCBRunInMasterMode( void );
 void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode );
-UCHAR ucMBMasterGetPDUSndLength( void );
-void vMBMasterSetPDUSndLength( UCHAR SendPDULength );
+USHORT usMBMasterGetPDUSndLength( void );
+void vMBMasterSetPDUSndLength( USHORT SendPDULength );
 void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
+eMBMasterErrorEventType eMBMasterGetErrorType( void );
+void vMBMasterSetErrorType( eMBMasterErrorEventType errorType );
 
 /* ----------------------- Callback -----------------------------------------*/
 
