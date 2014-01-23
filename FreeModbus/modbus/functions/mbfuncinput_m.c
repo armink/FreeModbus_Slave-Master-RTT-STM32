@@ -59,6 +59,16 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 #if MB_FUNC_READ_INPUT_ENABLED > 0
 
+/**
+ * This function will request read input register.
+ *
+ * @param ucSndAddr salve address
+ * @param usRegAddr register start address
+ * @param usNRegs register total number
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqReadInputRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, LONG lTimeOut )
 {

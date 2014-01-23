@@ -59,6 +59,16 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 #if MB_FUNC_READ_DISCRETE_INPUTS_ENABLED > 0
 
+/**
+ * This function will request read discrete inputs.
+ *
+ * @param ucSndAddr salve address
+ * @param usDiscreteAddr discrete start address
+ * @param usNDiscreteIn discrete total number
+ * @param lTimeOut timeout (-1 will waiting forever)
+ *
+ * @return error code
+ */
 eMBMasterReqErrCode
 eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr, USHORT usDiscreteAddr, USHORT usNDiscreteIn, LONG lTimeOut )
 {
