@@ -178,6 +178,11 @@ void prvvUARTRxISR(void)
 void USART1_IRQHandler(void)
 {
 	rt_interrupt_enter();
+	//溢出错误
+	if (USART_GetFlagStatus(USART1, USART_FLAG_ORE) == SET)
+	{
+		prvvUARTRxISR();
+	}
 	//接收中断
 	if (USART_GetITStatus(USART1, USART_IT_RXNE) == SET)
 	{
