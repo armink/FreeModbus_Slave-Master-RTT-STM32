@@ -42,27 +42,3 @@ void vMBDelay(ULONG nCount)
 {
   for(; nCount > 0;nCount--);
 }
-
-#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
-/**
- *
- * Just use it for modbus master.
- * @note There functions will block modbus master poll while execute OS waiting.
- * So,for real-time of system.Do not execute too much waiting process.
- *
- */
-void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
-		USHORT ucPDULength) {
-
-}
-
-void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
-		USHORT ucPDULength) {
-
-}
-
-void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
-		USHORT ucPDULength) {
-
-}
-#endif

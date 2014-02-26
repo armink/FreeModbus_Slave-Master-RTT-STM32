@@ -21,15 +21,21 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
+#include "mb_m.h"
 #include "mbport.h"
 #include "port.h"
 
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+/* ----------------------- Defines ------------------------------------------*/
+#define EVENT_MASTER_PROCESS_SUCESS          1<<0 //master request process success event
+#define EVENT_MASTER_ERROR_RESPOND_TIMEOUT   1<<1 //master request respond timeout event
+#define EVENT_MASTER_ERROR_RECEIVE_DATA      1<<2 //master request receive data error event
+#define EVENT_MASTER_ERROR_EXECUTE_FUNCTION  1<<3 //master request execute function error event
 /* ----------------------- Variables ----------------------------------------*/
 static eMBMasterEventType  eMasterQueuedEvent;
 static BOOL                xMasterEventInQueue;
 static struct rt_semaphore xMasterRunRes;
-
+static struct rt_event     xMasterOsEvent;
 /* ----------------------- Start implementation -----------------------------*/
 BOOL
 xMBMasterPortEventInit( void )
@@ -61,18 +67,19 @@ xMBMasterPortEventGet( eMBMasterEventType * eEvent )
 }
 
 /**
- * This function is initialize the Mobus Master running resource .
- * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
+ * This function is initialize the OS resource for modbus master.
+ * Note:The resource is define by OS.If you not use OS this function can be empty.
  *
  */
-void vMBMasterRunResInit( void )
+void vMBMasterOsResInit( void )
 {
+	rt_event_init(&xMasterOsEvent,"master event",RT_IPC_FLAG_PRIO);
 	rt_sem_init(&xMasterRunRes, "master res", 0x01 , RT_IPC_FLAG_PRIO);
 }
 
 /**
  * This function is take Mobus Master running resource.
- * Note:The resource is define by Operating System.If you not use Opearting System this function can be just return TRUE.
+ * Note:The resource is define by Operating System.If you not use OS this function can be just return TRUE.
  *
  * @param lTimeOut the waiting time.
  *
@@ -86,13 +93,138 @@ BOOL xMBMasterRunResTake( LONG lTimeOut )
 
 /**
  * This function is release Mobus Master running resource.
- * Note:The resource is define by Operating System.If you not use Opearting System this function can be empty.
+ * Note:The resource is define by Operating System.If you not use OS this function can be empty.
  *
  */
 void vMBMasterRunResRelease( void )
 {
 	/* release resource */
 	rt_sem_release(&xMasterRunRes);
+}
+
+/**
+ * This is modbus master respond timeout error process callback function.
+ * @note There functions will block modbus master poll while execute OS waiting.
+ * So,for real-time of system.Do not execute too much waiting process.
+ *
+ * @param ucDestAddress destination salve address
+ * @param pucPDUData PDU buffer data
+ * @param ucPDULength PDU buffer length
+ *
+ */
+void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+	/**
+	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+	 * If you don't use OS, you can change it.
+	 */
+	rt_event_send(&xMasterOsEvent, EVENT_MASTER_ERROR_RESPOND_TIMEOUT);
+
+	/* You can add your code under here. */
+
+}
+
+/**
+ * This is modbus master receive data error process callback function.
+ * @note There functions will block modbus master poll while execute OS waiting.
+ * So,for real-time of system.Do not execute too much waiting process.
+ *
+ * @param ucDestAddress destination salve address
+ * @param pucPDUData PDU buffer data
+ * @param ucPDULength PDU buffer length
+ *
+ */
+void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+	/**
+	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+	 * If you don't use OS, you can change it.
+	 */
+	rt_event_send(&xMasterOsEvent, EVENT_MASTER_ERROR_RECEIVE_DATA);
+
+	/* You can add your code under here. */
+
+}
+
+/**
+ * This is modbus master execute function error process callback function.
+ * @note There functions will block modbus master poll while execute OS waiting.
+ * So,for real-time of system.Do not execute too much waiting process.
+ *
+ * @param ucDestAddress destination salve address
+ * @param pucPDUData PDU buffer data
+ * @param ucPDULength PDU buffer length
+ *
+ */
+void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+		USHORT ucPDULength) {
+	/**
+	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+	 * If you don't use OS, you can change it.
+	 */
+	rt_event_send(&xMasterOsEvent, EVENT_MASTER_ERROR_EXECUTE_FUNCTION);
+
+	/* You can add your code under here. */
+
+}
+
+/**
+ * This is modbus master request process success callback function.
+ * @note There functions will block modbus master poll while execute OS waiting.
+ * So,for real-time of system.Do not execute too much waiting process.
+ *
+ */
+void vMBMasterCBRequestScuuess( void ) {
+	/**
+	 * @note This code is use OS's event mechanism for modbus master protocol stack.
+	 * If you don't use OS, you can change it.
+	 */
+	rt_event_send(&xMasterOsEvent, EVENT_MASTER_PROCESS_SUCESS);
+
+	/* You can add your code under here. */
+
+}
+
+/**
+ * This function is wait for modbus master request finish and return result.
+ * Waiting result include request process success, request respond timeout,
+ * receive data error and execute function error.You can use the above callback function.
+ * @note If you are use OS, you can use OS's event mechanism. Otherwise you have to run
+ * much user custom delay for waiting.
+ *
+ * @return request error code
+ */
+eMBMasterReqErrCode vMBMasterWaitRequestFinish( void ) {
+    eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
+    rt_uint32_t recvedEvent;
+    /* waiting for OS event */
+	rt_event_recv(&xMasterOsEvent,
+			EVENT_MASTER_PROCESS_SUCESS | EVENT_MASTER_ERROR_RESPOND_TIMEOUT
+					| EVENT_MASTER_ERROR_RECEIVE_DATA
+					| EVENT_MASTER_ERROR_EXECUTE_FUNCTION,
+			RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER,
+			&recvedEvent);
+	switch (recvedEvent)
+	{
+	case EVENT_MASTER_PROCESS_SUCESS:
+		break;
+	case EVENT_MASTER_ERROR_RESPOND_TIMEOUT:
+	{
+		eErrStatus = MB_MRE_TIMEDOUT;
+		break;
+	}
+	case EVENT_MASTER_ERROR_RECEIVE_DATA:
+	{
+		eErrStatus = MB_MRE_REV_DATA;
+		break;
+	}
+	case EVENT_MASTER_ERROR_EXECUTE_FUNCTION:
+	{
+		eErrStatus = MB_MRE_EXE_FUN;
+		break;
+	}
+	}
+    return eErrStatus;
 }
 
 #endif

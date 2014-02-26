@@ -38,7 +38,7 @@
 #define RT_USING_MUTEX
 
 /* Using Event */
-//#define RT_USING_EVENT
+#define RT_USING_EVENT
 
 /* Using MailBox */
 //#define RT_USING_MAILBOX

@@ -38,14 +38,6 @@ PR_BEGIN_EXTERN_C
 
 /* ----------------------- Defines ------------------------------------------*/
 
-/*! \ingroup modbus
- * \brief used for master mode.
- *
- * the xMBMasterRunResTake() parameter definitions
- */
-#define MB_WAITING_FOREVER              -1              /*!< Block forever until get resource. */
-#define MB_WAITING_NO                   0               /*!< Non-block. */
-
 /* ----------------------- Type definitions ---------------------------------*/
 
 typedef enum
@@ -99,7 +91,7 @@ BOOL            xMBMasterPortEventPost( eMBMasterEventType eEvent );
 
 BOOL            xMBMasterPortEventGet(  /*@out@ */ eMBMasterEventType * eEvent );
 
-void            vMBMasterRunResInit( void );
+void            vMBMasterOsResInit( void );
 
 BOOL            xMBMasterRunResTake( int32_t time );
 
@@ -163,6 +155,8 @@ void            vMBMasterErrorCBReceiveData( UCHAR ucDestAddress, const UCHAR* p
 
 void            vMBMasterErrorCBExecuteFunction( UCHAR ucDestAddress, const UCHAR* pucPDUData,
                                                  USHORT ucPDULength );
+
+void            vMBMasterCBRequestScuuess( void );
 
 /* ----------------------- Callback for the protocol stack ------------------*/
 

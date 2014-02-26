@@ -185,8 +185,8 @@ eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
 		{
 			eMBState = STATE_DISABLED;
 		}
-		/* initialize the Mobus Master running resource. */
-		vMBMasterRunResInit();
+		/* initialize the OS resource for modbus master. */
+		vMBMasterOsResInit();
 	}
 	return eStatus;
 }
@@ -325,7 +325,10 @@ eMBMasterPoll( void )
             	vMBMasterSetErrorType(EV_ERROR_EXECUTE_FUNCTION);
             	( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
             }
-            else vMBMasterRunResRelease();
+            else {
+            	vMBMasterCBRequestScuuess( );
+            	vMBMasterRunResRelease( );
+            }
             break;
 
         case EV_MASTER_FRAME_SENT:

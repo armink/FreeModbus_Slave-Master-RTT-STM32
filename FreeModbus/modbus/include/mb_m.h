@@ -77,13 +77,10 @@ typedef enum
     MB_MRE_NO_ERR,                  /*!< no error. */
     MB_MRE_NO_REG,                  /*!< illegal register address. */
     MB_MRE_ILL_ARG,                 /*!< illegal argument. */
-    MB_MRE_PORT_ERR,                /*!< porting layer error. */
-    MB_MRE_NO_RES,                  /*!< insufficient resources. */
-    MB_MRE_IO,                      /*!< I/O error. */
-    MB_MRE_ILL_STATE,               /*!< protocol stack in illegal state. */
+    MB_MRE_REV_DATA,                /*!< receive data error. */
     MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
     MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
-    MB_MRE_SLAVE_EXCE               /*!< slave has exception. */
+    MB_MRE_EXE_FUN                  /*!< execute function error. */
 } eMBMasterReqErrCode;
 /*! \ingroup modbus
  *  \brief TimerMode is Master 3 kind of Timer modes.
@@ -394,6 +391,7 @@ void vMBMasterSetPDUSndLength( USHORT SendPDULength );
 void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
 eMBMasterErrorEventType eMBMasterGetErrorType( void );
 void vMBMasterSetErrorType( eMBMasterErrorEventType errorType );
+eMBMasterReqErrCode vMBMasterWaitRequestFinish( void );
 
 /* ----------------------- Callback -----------------------------------------*/
 
