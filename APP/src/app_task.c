@@ -33,6 +33,8 @@ struct rt_thread thread_ModbusMasterPoll;
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {
+	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+	uint16_t errorCount = 0;
 	while (1)
 	{
 		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
@@ -49,15 +51,19 @@ void thread_entry_SysMonitor(void* parameter)
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
 		ucModbusUserData[0] = 0x1F;
-		eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
-//		eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
-//		eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
-//		eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
-//		eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
-//		eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
-//		eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
-//		eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
-//		eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
+		errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
+//		errorCode = eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
+		//记录出错次数
+		if (errorCode != MB_MRE_NO_ERR) {
+			errorCount++;
+		}
 	}
 }
 
