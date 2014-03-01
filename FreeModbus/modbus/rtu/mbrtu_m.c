@@ -395,10 +395,9 @@ xMBMasterRTUTimerExpired(void)
 	eSndState = STATE_M_TX_IDLE;
 
 	vMBMasterPortTimersDisable( );
-	/* If timer mode is convert delay ,then Master is idel now. */
+	/* If timer mode is convert delay, the master event then turns EV_MASTER_EXECUTE status. */
 	if (eMasterCurTimerMode == MB_TMODE_CONVERT_DELAY) {
-		vMBMasterCBRequestScuuess( );
-		vMBMasterRunResRelease( );
+		xNeedPoll = xMBMasterPortEventPost( EV_MASTER_EXECUTE );
 	}
 
 	return xNeedPoll;
@@ -432,6 +431,11 @@ USHORT usMBMasterGetPDUSndLength( void )
 void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode )
 {
 	eMasterCurTimerMode = eMBTimerMode;
+}
+
+/* The master request is broadcast? */
+BOOL xMBMasterRequestIsBroadcast( void ){
+	return xFrameIsBroadcast;
 }
 #endif
 

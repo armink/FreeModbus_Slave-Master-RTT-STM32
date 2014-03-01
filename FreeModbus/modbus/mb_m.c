@@ -259,7 +259,7 @@ eMBMasterPoll( void )
     static USHORT   usLength;
     static eMBException eException;
 
-    int             i;
+    int             i , j;
     eMBErrorCode    eStatus = MB_ENOERR;
     eMBMasterEventType    eEvent;
     eMBMasterErrorEventType errorType;
@@ -305,16 +305,24 @@ eMBMasterPoll( void )
 				for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
 				{
 					/* No more function handlers registered. Abort. */
-					if (xMasterFuncHandlers[i].ucFunctionCode == 0)
-					{
+					if (xMasterFuncHandlers[i].ucFunctionCode == 0)	{
 						break;
 					}
-					else if (xMasterFuncHandlers[i].ucFunctionCode
-							== ucFunctionCode)
-					{
+					else if (xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode) {
 						vMBMasterSetCBRunInMasterMode(TRUE);
-						eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame,
-								&usLength);
+						/* If master request is broadcast,
+						 * the master need execute function for all slave.
+						 */
+						if ( xMBMasterRequestIsBroadcast() ) {
+							usLength = usMBMasterGetPDUSndLength();
+							for(j = 1; j <= MB_MASTER_TOTAL_SLAVE_NUM; j++){
+								vMBMasterSetDestAddress(j);
+								eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+							}
+						}
+						else {
+							eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+						}
 						vMBMasterSetCBRunInMasterMode(FALSE);
 						break;
 					}

@@ -120,7 +120,12 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
     eMBException    eStatus = MB_EX_NONE;
     eMBErrorCode    eRegStatus;
 
-    if( *usLen >= MB_PDU_SIZE_MIN + MB_PDU_FUNC_READ_SIZE_MIN )
+    /* If this request is broadcast, and it's read mode. This request don't need execute. */
+    if ( xMBMasterRequestIsBroadcast() )
+    {
+    	eStatus = MB_EX_NONE;
+    }
+    else if ( *usLen >= MB_PDU_SIZE_MIN + MB_PDU_FUNC_READ_SIZE_MIN )
     {
     	vMBMasterGetPDUSndBuf(&ucMBFrame);
         usRegAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF] << 8 );
