@@ -337,7 +337,8 @@ eMBMasterFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen )
     eMBException    eStatus = MB_EX_NONE;
     eMBErrorCode    eRegStatus;
 
-    if( *usLen == MB_PDU_FUNC_WRITE_MUL_SIZE )
+    /* If this request is broadcast, the *usLen is not need check. */
+    if( ( *usLen == MB_PDU_FUNC_WRITE_MUL_SIZE ) || xMBMasterRequestIsBroadcast() )
     {
     	vMBMasterGetPDUSndBuf(&ucMBFrame);
         usRegAddress = ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_MUL_ADDR_OFF] << 8 );
