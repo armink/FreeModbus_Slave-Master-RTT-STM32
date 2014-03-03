@@ -62,7 +62,7 @@ eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
     UCHAR           REG_INPUT_NREGS;
     UCHAR           usRegInStart;
 
-	pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress()];
+	pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress() - 1];
 	REG_INPUT_START = M_REG_INPUT_START;
 	REG_INPUT_NREGS = M_REG_INPUT_NREGS;
 	usRegInStart = usMRegInStart;
@@ -109,7 +109,7 @@ eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, e
     UCHAR           REG_HOLDING_NREGS;
     UCHAR           usRegHoldStart;
 
-	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress()];
+	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress() - 1];
 	REG_HOLDING_START = M_REG_HOLDING_START;
 	REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
 	usRegHoldStart = usMRegHoldStart;
@@ -176,7 +176,7 @@ eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eM
     UCHAR           usCoilStart;
     iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
 
-	pucCoilBuf = ucMCoilBuf[ucMBMasterGetDestAddress()];
+	pucCoilBuf = ucMCoilBuf[ucMBMasterGetDestAddress() - 1];
 	COIL_START = M_COIL_START;
 	COIL_NCOILS = M_COIL_NCOILS;
 	usCoilStart = usMCoilStart;
@@ -248,7 +248,7 @@ eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscre
     UCHAR           usDiscreteInputStart;
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
 
-	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterGetDestAddress()];
+	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterGetDestAddress() - 1];
 	DISCRETE_INPUT_START = M_DISCRETE_INPUT_START;
 	DISCRETE_INPUT_NDISCRETES = M_DISCRETE_INPUT_NDISCRETES;
 	usDiscreteInputStart = usMDiscInStart;
