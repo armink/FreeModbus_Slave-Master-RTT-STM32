@@ -392,7 +392,7 @@ void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
 BOOL xMBMasterRequestIsBroadcast( void );
 eMBMasterErrorEventType eMBMasterGetErrorType( void );
 void vMBMasterSetErrorType( eMBMasterErrorEventType errorType );
-eMBMasterReqErrCode vMBMasterWaitRequestFinish( void );
+eMBMasterReqErrCode eMBMasterWaitRequestFinish( void );
 
 /* ----------------------- Callback -----------------------------------------*/
 

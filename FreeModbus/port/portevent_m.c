@@ -194,7 +194,7 @@ void vMBMasterCBRequestScuuess( void ) {
  *
  * @return request error code
  */
-eMBMasterReqErrCode vMBMasterWaitRequestFinish( void ) {
+eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
     eMBMasterReqErrCode    eErrStatus = MB_MRE_NO_ERR;
     rt_uint32_t recvedEvent;
     /* waiting for OS event */
