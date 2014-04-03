@@ -87,6 +87,8 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
+[Breakpoints2]
+Count=0
 [Trace2]
 Enabled=0
 ShowSource=0
@@ -111,5 +113,3 @@ Mode=3
 Graph=0
 Symbiont=0
 Exclusions=
-[Breakpoints2]
-Count=0
