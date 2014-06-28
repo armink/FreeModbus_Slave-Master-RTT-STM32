@@ -299,8 +299,11 @@ eMBMasterReqErrCode eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr,
 这里只介绍主机的正常使用流程，在使用主机前，需要先把协议栈移植到自己的项目中去，包括上述的软件及硬件部分，移植完成后的使用流程如下
 
 1、调用`eMBMasterInit`方法初始化Modbus主机协议栈，主机涉及到的一些硬件就在这个时候做了初始化
+
 2、调用`eMBMasterEnable`方法启动Modbus主机
+
 3、通过在线程或者定时器轮训调用`eMBMasterPoll`方法，轮训周期决定了命令的响应时间。
+
 4、调用主机请求API方法，设定一定的请求超时时间，直到方法有结果后才会返回。如果方法执行成功并且命令是读命令，可以通过查看Modbus主机的数据缓冲区，获取最新从机数据。
 
 ### 4.3、异常处理流程
