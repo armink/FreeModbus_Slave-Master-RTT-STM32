@@ -33,10 +33,8 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if (xRxEnable)
 	{
-		/* 485通信时，等待串口移位寄存器中的数据发送完成后，再去使能485的接收、失能485的发送
-		 * 该延时时间可以结合CPU主频及串口波特率做适当调整
-		 * */
-		vMBDelay(1000);
+		/* 485通信时，等待串口移位寄存器中的数据发送完成后，再去使能485的接收、失能485的发送*/
+		while (!USART_GetFlagStatus(USART1,USART_FLAG_TC));
 		SLAVE_RS485_RECEIVE_MODE;
 		USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);
 	}
