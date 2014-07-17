@@ -356,9 +356,10 @@ xMBMasterRTUTimerExpired(void)
 		xNeedPoll = xMBMasterPortEventPost(EV_MASTER_READY);
 		break;
 
-		/* A frame was received and t35 expired. Notify the listener that
+		/* A frame was received and t35 expired. Close serial receive and notify the listener that
 		 * a new frame was received. */
 	case STATE_M_RX_RCV:
+		vMBMasterPortSerialEnable( FALSE, FALSE );
 		xNeedPoll = xMBMasterPortEventPost(EV_MASTER_FRAME_RECEIVED);
 		break;
 
