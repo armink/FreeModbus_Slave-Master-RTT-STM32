@@ -56,9 +56,9 @@ eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex;
     USHORT *        pusRegInputBuf;
-    UCHAR           REG_INPUT_START;
-    UCHAR           REG_INPUT_NREGS;
-    UCHAR           usRegInStart;
+    USHORT          REG_INPUT_START;
+    USHORT          REG_INPUT_NREGS;
+    USHORT          usRegInStart;
 
 	pusRegInputBuf = usSRegInBuf;
 	REG_INPUT_START = S_REG_INPUT_START;
@@ -103,9 +103,9 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegi
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex;
     USHORT *        pusRegHoldingBuf;
-    UCHAR           REG_HOLDING_START;
-    UCHAR           REG_HOLDING_NREGS;
-    UCHAR           usRegHoldStart;
+    USHORT          REG_HOLDING_START;
+    USHORT          REG_HOLDING_NREGS;
+    USHORT          usRegHoldStart;
 
 	pusRegHoldingBuf = usSRegHoldBuf;
 	REG_HOLDING_START = S_REG_HOLDING_START;
@@ -167,9 +167,9 @@ eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegis
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucCoilBuf;
-    UCHAR           COIL_START;
-    UCHAR           COIL_NCOILS;
-    UCHAR           usCoilStart;
+	USHORT          COIL_START;
+	USHORT          COIL_NCOILS;
+	USHORT          usCoilStart;
     iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
 
 	pucCoilBuf = ucSCoilBuf;
@@ -237,9 +237,9 @@ eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
     eMBErrorCode    eStatus = MB_ENOERR;
 	USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucDiscreteInputBuf;
-    UCHAR           DISCRETE_INPUT_START;
-    UCHAR           DISCRETE_INPUT_NDISCRETES;
-    UCHAR           usDiscreteInputStart;
+	USHORT          DISCRETE_INPUT_START;
+	USHORT          DISCRETE_INPUT_NDISCRETES;
+	USHORT          usDiscreteInputStart;
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
 
 	pucDiscreteInputBuf = ucSDiscInBuf;

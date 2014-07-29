@@ -58,9 +58,9 @@ eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex;
     USHORT *        pusRegInputBuf;
-    UCHAR           REG_INPUT_START;
-    UCHAR           REG_INPUT_NREGS;
-    UCHAR           usRegInStart;
+    USHORT          REG_INPUT_START;
+    USHORT          REG_INPUT_NREGS;
+    USHORT          usRegInStart;
 
 	pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress() - 1];
 	REG_INPUT_START = M_REG_INPUT_START;
@@ -105,9 +105,9 @@ eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, e
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex;
     USHORT *        pusRegHoldingBuf;
-    UCHAR           REG_HOLDING_START;
-    UCHAR           REG_HOLDING_NREGS;
-    UCHAR           usRegHoldStart;
+    USHORT          REG_HOLDING_START;
+    USHORT          REG_HOLDING_NREGS;
+    USHORT          usRegHoldStart;
 
 	pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress() - 1];
 	REG_HOLDING_START = M_REG_HOLDING_START;
@@ -171,9 +171,9 @@ eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eM
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucCoilBuf;
-    UCHAR           COIL_START;
-    UCHAR           COIL_NCOILS;
-    UCHAR           usCoilStart;
+	USHORT          COIL_START;
+	USHORT          COIL_NCOILS;
+	USHORT          usCoilStart;
     iNReg =  usNCoils / 8 + 1;        //占用寄存器数量
 
 	pucCoilBuf = ucMCoilBuf[ucMBMasterGetDestAddress() - 1];
@@ -243,9 +243,9 @@ eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscre
     eMBErrorCode    eStatus = MB_ENOERR;
 	USHORT          iRegIndex , iRegBitIndex , iNReg;
 	UCHAR *         pucDiscreteInputBuf;
-    UCHAR           DISCRETE_INPUT_START;
-    UCHAR           DISCRETE_INPUT_NDISCRETES;
-    UCHAR           usDiscreteInputStart;
+	USHORT          DISCRETE_INPUT_START;
+	USHORT          DISCRETE_INPUT_NDISCRETES;
+	USHORT          usDiscreteInputStart;
 	iNReg =  usNDiscrete / 8 + 1;        //占用寄存器数量
 
 	pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterGetDestAddress() - 1];
