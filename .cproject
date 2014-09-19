@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?fileVersion 4.0.0?>
-
-<cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="iar.arm.toolchain.project.exe.configuration.debug.v5.4.0.1797449233">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="iar.arm.toolchain.project.exe.configuration.debug.v5.4.0.1797449233" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="com.iar.cdt.errorParser.com.iar.cdt.errorParser.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
@@ -98,6 +96,9 @@
 								<option id="iar.arm.toolchain.linker.option.logFileLibrarySelections.v5.5.0.898693966" name="Log automatic library selection" superClass="iar.arm.toolchain.linker.option.logFileLibrarySelections.v5.5.0"/>
 								<option id="iar.arm.toolchain.linker.option.logFileRedirectedSymbols.v5.5.0.2004719335" name="Log redirected symbols" superClass="iar.arm.toolchain.linker.option.logFileRedirectedSymbols.v5.5.0"/>
 								<option id="iar.arm.toolchain.linker.option.logFileUnusedFragments.v5.5.0.2065199898" name="Log unused section fragments" superClass="iar.arm.toolchain.linker.option.logFileUnusedFragments.v5.5.0"/>
+								<option id="iar.arm.toolchain.linker.option.outFormat.v5.5.2.931069005" name="Output format:" superClass="iar.arm.toolchain.linker.option.outFormat.v5.5.2" value="iar.arm.toolchain.linker.option.outFormat.binary.v5.5.2" valueType="enumerated"/>
+								<option id="iar.arm.toolchain.linker.option.overrideDefaultOutputFile.v5.5.2.322318916" name="Override default output file" superClass="iar.arm.toolchain.linker.option.overrideDefaultOutputFile.v5.5.2"/>
+								<option id="iar.arm.toolchain.linker.option.generateAdditonalOutput.v5.5.2.1745350807" name="Generate additional output" superClass="iar.arm.toolchain.linker.option.generateAdditonalOutput.v5.5.2" value="false" valueType="boolean"/>
 								<inputType id="iar.arm.toolchain.linker.inputType.object.v5.4.0.585833279" name="IAR Linker Input Type for ARM (o)" superClass="iar.arm.toolchain.linker.inputType.object.v5.4.0">
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
@@ -117,8 +118,8 @@
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="iar.arm.toolchain.project.exe.configuration.release.v5.4.0.1401199975" moduleId="org.eclipse.cdt.core.settings" name="Release">
 				<externalSettings/>
 				<extensions>
-					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 					<extension id="com.iar.cdt.errorParser.com.iar.cdt.errorParser.ErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
