@@ -401,11 +401,6 @@
               <FilePath>..\APP\src\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>cpuusage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\cpuusage.c</FilePath>
-            </File>
-            <File>
               <FileName>delay_conf.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\APP\inc\delay_conf.h</FilePath>
@@ -431,24 +426,14 @@
               <FilePath>..\BSP\src\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>backtrace.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\common\backtrace.c</FilePath>
-            </File>
-            <File>
-              <FileName>showmem.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\common\showmem.c</FilePath>
+              <FileName>context_rvds.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\context_rvds.S</FilePath>
             </File>
             <File>
               <FileName>cpuport.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\cortex-m3\cpuport.c</FilePath>
-            </File>
-            <File>
-              <FileName>context_rvds.S</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\cortex-m3\context_rvds.S</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -593,77 +578,117 @@
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\clock.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpuusage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\src\cpuusage.c</FilePath>
             </File>
             <File>
               <FileName>device.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\device.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\device.c</FilePath>
             </File>
             <File>
               <FileName>idle.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\idle.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\idle.c</FilePath>
             </File>
             <File>
               <FileName>ipc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\ipc.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\ipc.c</FilePath>
             </File>
             <File>
               <FileName>irq.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\irq.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\irq.c</FilePath>
             </File>
             <File>
               <FileName>kservice.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\kservice.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\kservice.c</FilePath>
             </File>
             <File>
               <FileName>mem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\mem.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\mem.c</FilePath>
             </File>
             <File>
               <FileName>memheap.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\memheap.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\memheap.c</FilePath>
             </File>
             <File>
               <FileName>mempool.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\mempool.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\mempool.c</FilePath>
             </File>
             <File>
               <FileName>module.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\module.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\module.c</FilePath>
             </File>
             <File>
               <FileName>object.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\object.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\object.c</FilePath>
             </File>
             <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\scheduler.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\scheduler.c</FilePath>
             </File>
             <File>
               <FileName>slab.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\slab.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\slab.c</FilePath>
             </File>
             <File>
               <FileName>thread.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\thread.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\thread.c</FilePath>
             </File>
             <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\timer.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RT-Thread Drivers</GroupName>
+          <Files>
+            <File>
+              <FileName>completion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\completion.c</FilePath>
+            </File>
+            <File>
+              <FileName>dataqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\dataqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>pipe.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\pipe.c</FilePath>
+            </File>
+            <File>
+              <FileName>portal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\portal.c</FilePath>
+            </File>
+            <File>
+              <FileName>ringbuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\ringbuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>wrokqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\wrokqueue.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1128,7 +1153,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>0</interw>
-            <Optim>2</Optim>
+            <Optim>1</Optim>
             <oTime>1</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -1143,7 +1168,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Libaries\CMSIS_MDK\CM3\CoreSupport;..\Libaries\CMSIS_MDK\CM3\DeviceSupport\ST\STM32F10x;..\Libaries\STM32F10x_StdPeriph_Driver\inc;..\Libaries\USB-FS-Device_Driver\inc;..\BSP\inc;..\APP\inc;..\RT-Thread-1.1.1\include;..\RT-Thread-1.1.1\libcpu\arm\stm32;..\FreeModbus\modbus\include;..\FreeModbus\modbus\rtu;..\FreeModbus\port</IncludePath>
+              <IncludePath>..\Libaries\CMSIS_MDK\CM3\CoreSupport;..\Libaries\CMSIS_MDK\CM3\DeviceSupport\ST\STM32F10x;..\Libaries\STM32F10x_StdPeriph_Driver\inc;..\Libaries\USB-FS-Device_Driver\inc;..\BSP\inc;..\APP\inc;..\RT-Thread-1.2.2\include;..\RT-Thread-1.2.2\components\drivers\include;..\RT-Thread-1.2.2\components\drivers\include\drivers;..\FreeModbus\modbus\include;..\FreeModbus\modbus\rtu;..\FreeModbus\port</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1199,11 +1224,6 @@
               <FilePath>..\APP\src\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>cpuusage.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\APP\src\cpuusage.c</FilePath>
-            </File>
-            <File>
               <FileName>delay_conf.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\APP\inc\delay_conf.h</FilePath>
@@ -1229,24 +1249,14 @@
               <FilePath>..\BSP\src\bsp.c</FilePath>
             </File>
             <File>
-              <FileName>backtrace.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\common\backtrace.c</FilePath>
-            </File>
-            <File>
-              <FileName>showmem.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\common\showmem.c</FilePath>
+              <FileName>context_rvds.S</FileName>
+              <FileType>2</FileType>
+              <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\context_rvds.S</FilePath>
             </File>
             <File>
               <FileName>cpuport.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\cortex-m3\cpuport.c</FilePath>
-            </File>
-            <File>
-              <FileName>context_rvds.S</FileName>
-              <FileType>2</FileType>
-              <FilePath>..\RT-Thread-1.1.1\libcpu\arm\cortex-m3\context_rvds.S</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1391,77 +1401,117 @@
             <File>
               <FileName>clock.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\clock.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\clock.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpuusage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\src\cpuusage.c</FilePath>
             </File>
             <File>
               <FileName>device.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\device.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\device.c</FilePath>
             </File>
             <File>
               <FileName>idle.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\idle.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\idle.c</FilePath>
             </File>
             <File>
               <FileName>ipc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\ipc.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\ipc.c</FilePath>
             </File>
             <File>
               <FileName>irq.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\irq.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\irq.c</FilePath>
             </File>
             <File>
               <FileName>kservice.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\kservice.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\kservice.c</FilePath>
             </File>
             <File>
               <FileName>mem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\mem.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\mem.c</FilePath>
             </File>
             <File>
               <FileName>memheap.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\memheap.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\memheap.c</FilePath>
             </File>
             <File>
               <FileName>mempool.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\mempool.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\mempool.c</FilePath>
             </File>
             <File>
               <FileName>module.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\module.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\module.c</FilePath>
             </File>
             <File>
               <FileName>object.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\object.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\object.c</FilePath>
             </File>
             <File>
               <FileName>scheduler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\scheduler.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\scheduler.c</FilePath>
             </File>
             <File>
               <FileName>slab.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\slab.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\slab.c</FilePath>
             </File>
             <File>
               <FileName>thread.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\thread.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\thread.c</FilePath>
             </File>
             <File>
               <FileName>timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RT-Thread-1.1.1\src\timer.c</FilePath>
+              <FilePath>..\RT-Thread-1.2.2\src\timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RT-Thread Drivers</GroupName>
+          <Files>
+            <File>
+              <FileName>completion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\completion.c</FilePath>
+            </File>
+            <File>
+              <FileName>dataqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\dataqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>pipe.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\pipe.c</FilePath>
+            </File>
+            <File>
+              <FileName>portal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\portal.c</FilePath>
+            </File>
+            <File>
+              <FileName>ringbuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\ringbuffer.c</FilePath>
+            </File>
+            <File>
+              <FileName>wrokqueue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\src\wrokqueue.c</FilePath>
             </File>
           </Files>
         </Group>
