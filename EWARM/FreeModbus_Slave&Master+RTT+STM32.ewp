@@ -1871,6 +1871,9 @@
     <file>
       <name>$PROJ_DIR$\..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\BSP\src\usart.c</name>
+    </file>
   </group>
   <group>
     <name>CMSIS</name>
@@ -1904,13 +1907,13 @@
     <group>
       <name>Port</name>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\portevent_m.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\portevent_m.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\portserial_m.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\portserial_m.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\porttimer_m.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\porttimer_m.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\FreeModbus\port\user_mb_app_m.c</name>
@@ -1958,13 +1961,13 @@
         <name>$PROJ_DIR$\..\FreeModbus\port\port.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\portevent.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\portevent.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\portserial.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\portserial.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\porttimer.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\porttimer.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\FreeModbus\port\user_mb_app.c</name>
@@ -1989,6 +1992,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\src\ringbuffer.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\serial\serial.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\src\wrokqueue.c</name>

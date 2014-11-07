@@ -16,53 +16,52 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * File: $Id: portevent.c,v 1.60 2013/08/13 15:07:05 Armink $
+ * File: $Id: porttimer.c,v 1.60 2013/08/13 15:07:05 Armink $
  */
+
+/* ----------------------- Platform includes --------------------------------*/
+#include "port.h"
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
 #include "mbport.h"
 
-/* ----------------------- Variables ----------------------------------------*/
-static struct rt_event     xSlaveOsEvent;
+/* ----------------------- static functions ---------------------------------*/
+static struct rt_timer timer;
+static void prvvTIMERExpiredISR(void);
+static void timer_timeout_ind(void* parameter);
+
 /* ----------------------- Start implementation -----------------------------*/
-BOOL
-xMBPortEventInit( void )
+BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)
 {
-	rt_event_init(&xSlaveOsEvent,"slave event",RT_IPC_FLAG_PRIO);
+    rt_timer_init(&timer, "plc_recv_timer",
+                   timer_timeout_ind, /* bind timeout callback function */
+                   RT_NULL,
+                   (50*usTim1Timerout50us)/(1000*1000/RT_TICK_PER_SECOND),
+                   RT_TIMER_FLAG_ONE_SHOT); /* one shot */
     return TRUE;
 }
 
-BOOL
-xMBPortEventPost( eMBEventType eEvent )
+void vMBPortTimersEnable()
 {
-	rt_event_send(&xSlaveOsEvent, eEvent);
-    return TRUE;
+    rt_timer_start(&timer);
 }
 
-BOOL
-xMBPortEventGet( eMBEventType * eEvent )
+void vMBPortTimersDisable()
 {
-    rt_uint32_t recvedEvent;
-    /* waiting forever OS event */
-	rt_event_recv(&xSlaveOsEvent,
-			EV_READY | EV_FRAME_RECEIVED | EV_EXECUTE | EV_FRAME_SENT,
-			RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER,
-			&recvedEvent);
-	switch (recvedEvent)
-	{
-	case EV_READY:
-		*eEvent = EV_READY;
-		break;
-	case EV_FRAME_RECEIVED:
-		*eEvent = EV_FRAME_RECEIVED;
-		break;
-	case EV_EXECUTE:
-		*eEvent = EV_EXECUTE;
-		break;
-	case EV_FRAME_SENT:
-		*eEvent = EV_FRAME_SENT;
-		break;
-	}
-    return TRUE;
+    rt_timer_stop(&timer);
+}
+
+void prvvTIMERExpiredISR(void)
+{
+    (void) pxMBPortCBTimerExpired();
+}
+/**
+ * This function is PLC uart receive timer callback function
+ *
+ * @param parameter null
+ */
+static void timer_timeout_ind(void* parameter)
+{
+    prvvTIMERExpiredISR();
 }

@@ -46,6 +46,10 @@
 #define STM32_SRAM_SIZE         20
 #define STM32_SRAM_END          (0x20000000 + STM32_SRAM_SIZE * 1024)
 
+/* RT_USING_UART */
+#define RT_USING_UART3
+#define RT_USING_UART1
+#define RT_UART_RX_BUFFER_SIZE	64
 
 #define LED_LED1_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_11)  	   //LED1 
 #define LED_LED1_OFF               GPIO_ResetBits(GPIOA,GPIO_Pin_11) 	   //LED1
@@ -94,13 +98,7 @@ void IWDG_Feed(void);
 void BSP_Init(void);
 
 void rt_hw_board_init(void);
-static void RCC_Configuration(void);
-static void NVIC_Configuration(void);
-static void GPIO_Configuration(void);
-static void USART1_Configuration(void);
-static void IWDG_Configuration(void);
 void IWDG_Feed(void);
-static void SysTick_Configuration(void);
 void rt_hw_timer_handler(void);
 
 uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)(),uint8_t ConditionValue);
