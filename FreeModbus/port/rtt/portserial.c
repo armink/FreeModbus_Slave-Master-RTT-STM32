@@ -131,22 +131,18 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
     rt_uint32_t recved_event;
-    uint32_t irq_type;
     if (xRxEnable)
     {
         /* waiting for last transmit complete */
         while (1)
         {
-            irq_type = RT_DEVICE_FLAG_INT_TX;
-            serial->ops->control(serial, RT_DEVICE_CTRL_GET_FLAG, &irq_type);
-            if (irq_type)
+            if (serial->ops->control(serial, RT_DEVICE_CTRL_GET_FLAG, (void *)RT_DEVICE_FLAG_INT_TX))
             {
                 break;
             }
         }
         /* enable RX interrupt */
-        irq_type = RT_DEVICE_FLAG_INT_RX;
-        serial->ops->control(serial, RT_DEVICE_CTRL_SET_INT, &irq_type);
+        serial->ops->control(serial, RT_DEVICE_CTRL_SET_INT, (void *)RT_DEVICE_FLAG_INT_RX);
         /* switch 485 to receive mode */
         SLAVE_RS485_RECEIVE_MODE;
     }
@@ -155,14 +151,12 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
         /* switch 485 to transmit mode */
         SLAVE_RS485_TRANS_MODE;
         /* disable RX interrupt */
-        irq_type = RT_DEVICE_FLAG_INT_RX;
-        serial->ops->control(serial, RT_DEVICE_CTRL_CLR_INT, &irq_type);
+        serial->ops->control(serial, RT_DEVICE_CTRL_CLR_INT, (void *)RT_DEVICE_FLAG_INT_RX);
     }
     if (xTxEnable)
     {
         /* start serial transmit */
         rt_event_send(&event_serial, EVENT_SERIAL_TRANS_START);
-        irq_type = RT_DEVICE_FLAG_INT_TX;
     }
     else
     {
@@ -170,7 +164,6 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
         rt_event_recv(&event_serial, EVENT_SERIAL_TRANS_START,
                 RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, 0,
                 &recved_event);
-        irq_type = RT_DEVICE_FLAG_INT_TX;
     }
 }
 
