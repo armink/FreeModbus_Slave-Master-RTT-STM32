@@ -34,7 +34,7 @@ static void timer_timeout_ind(void* parameter);
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBPortTimersInit(USHORT usTim1Timerout50us)
 {
-    rt_timer_init(&timer, "plc_recv_timer",
+    rt_timer_init(&timer, "slave timer",
                    timer_timeout_ind, /* bind timeout callback function */
                    RT_NULL,
                    (50*usTim1Timerout50us)/(1000*1000/RT_TICK_PER_SECOND),

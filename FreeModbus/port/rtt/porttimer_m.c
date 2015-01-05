@@ -43,7 +43,7 @@ BOOL xMBMasterPortTimersInit(USHORT usTimeOut50us)
     /* backup T35 ticks */
     usT35TimeOut50us = usTimeOut50us;
 
-    rt_timer_init(&timer, "plc_recv_timer",
+    rt_timer_init(&timer, "master timer",
                    timer_timeout_ind, /* bind timeout callback function */
                    RT_NULL,
                    (50 * usT35TimeOut50us) / (1000 * 1000 / RT_TICK_PER_SECOND),
