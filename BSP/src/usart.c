@@ -12,6 +12,7 @@
  * 2009-01-05     Bernard      the first version
  * 2010-03-29     Bernard      remove interrupt Tx and DMA Rx mode
  * 2013-05-13     aozima       update for kehong-lingtai.
+ * 2015-01-31     armink       make sure the serial transmit complete in putc()
  */
 
 #include "stm32f10x.h"
@@ -44,8 +45,6 @@ struct stm32_uart
 {
     USART_TypeDef* uart_device;
     IRQn_Type irq;
-    /* transmit interrupt type */
-    rt_uint32_t tx_irq_type;
 };
 
 static rt_err_t stm32_configure(struct rt_serial_device *serial, struct serial_configure *cfg)
@@ -93,7 +92,6 @@ static rt_err_t stm32_configure(struct rt_serial_device *serial, struct serial_c
 static rt_err_t stm32_control(struct rt_serial_device *serial, int cmd, void *arg)
 {
     struct stm32_uart* uart;
-    rt_uint32_t irq_type = (rt_uint32_t)(arg);
 
     RT_ASSERT(serial != RT_NULL);
     uart = (struct stm32_uart *)serial->parent.user_data;
@@ -102,75 +100,20 @@ static rt_err_t stm32_control(struct rt_serial_device *serial, int cmd, void *ar
     {
         /* disable interrupt */
     case RT_DEVICE_CTRL_CLR_INT:
-
-        if (irq_type == RT_DEVICE_FLAG_INT_RX)
-        {
-            /* disable rx irq */
-            USART_ITConfig(uart->uart_device, USART_IT_RXNE, DISABLE);
-        }
-        else if (irq_type == RT_DEVICE_FLAG_INT_TX)
-        {
-            /* disable tx irq */
-            USART_ITConfig(uart->uart_device, uart->tx_irq_type, DISABLE);
-        }
-        else if (irq_type == RT_NULL)
-        {
-            /* disable irq */
-            UART_DISABLE_IRQ(uart->irq);
-        }
+        /* disable rx irq */
+        UART_DISABLE_IRQ(uart->irq);
+        /* disable interrupt */
+        USART_ITConfig(uart->uart_device, USART_IT_RXNE, DISABLE);
         break;
         /* enable interrupt */
     case RT_DEVICE_CTRL_SET_INT:
-        if (irq_type == RT_DEVICE_FLAG_INT_RX)
-        {
-            /* enable rx irq */
-            USART_ITConfig(uart->uart_device, USART_IT_RXNE, ENABLE);
-        }
-        else if (irq_type == RT_DEVICE_FLAG_INT_TX)
-        {
-            /* enable tx irq */
-            USART_ITConfig(uart->uart_device, uart->tx_irq_type, ENABLE);
-        }
-        else if (irq_type == RT_NULL)
-        {
-            /* enable irq */
-            UART_ENABLE_IRQ(uart->irq);
-        }
-        break;
-        /* get interrupt flag */
-    case RT_DEVICE_CTRL_GET_INT:
-        if (irq_type == RT_DEVICE_FLAG_INT_RX)
-        {
-            /* return rx irq flag */
-            return USART_GetITStatus(uart->uart_device, USART_IT_RXNE);
-        }
-        else if (irq_type == RT_DEVICE_FLAG_INT_TX)
-        {
-            /* return tx irq flag */
-            return USART_GetITStatus(uart->uart_device, uart->tx_irq_type);
-        }
-    break;
-         /* get USART flag */
-    case RT_DEVICE_CTRL_GET_FLAG:
-        if (irq_type == RT_DEVICE_FLAG_INT_RX)
-        {
-            /* return rx irq flag */
-			return USART_GetFlagStatus(uart->uart_device, USART_FLAG_RXNE);
-        }
-        else if (irq_type == RT_DEVICE_FLAG_INT_TX)
-        {
-            /* return tx flag */
-            if (uart->tx_irq_type == USART_IT_TC)
-            {
-				return USART_GetFlagStatus(uart->uart_device, USART_FLAG_TC);
-            }
-            else if (uart->tx_irq_type == USART_IT_TXE)
-            {
-				return USART_GetFlagStatus(uart->uart_device, USART_FLAG_TXE);
-            }
-        }
+        /* enable rx irq */
+        UART_ENABLE_IRQ(uart->irq);
+        /* enable interrupt */
+        USART_ITConfig(uart->uart_device, USART_IT_RXNE, ENABLE);
         break;
     }
+
     return RT_EOK;
 }
 
@@ -181,8 +124,8 @@ static int stm32_putc(struct rt_serial_device *serial, char c)
     RT_ASSERT(serial != RT_NULL);
     uart = (struct stm32_uart *)serial->parent.user_data;
 
-    while (!(uart->uart_device->SR & USART_FLAG_TXE));
     uart->uart_device->DR = c;
+    while (!(uart->uart_device->SR & USART_FLAG_TC));
 
     return 1;
 }
@@ -218,7 +161,6 @@ struct stm32_uart uart1 =
 {
     USART1,
     USART1_IRQn,
-    USART_IT_TC,
 };
 struct rt_serial_device serial1;
 
@@ -237,14 +179,10 @@ void USART1_IRQHandler(void)
         USART_ClearITPendingBit(uart->uart_device, USART_IT_RXNE);
     }
 
-    if (USART_GetITStatus(uart->uart_device, uart->tx_irq_type) != RESET)
+    if (USART_GetITStatus(uart->uart_device, USART_IT_TC) != RESET)
     {
         /* clear interrupt */
-        rt_hw_serial_isr(&serial1, RT_SERIAL_EVENT_TX_DONE);
-        if (uart->tx_irq_type == USART_IT_TC)
-        {
-            USART_ClearITPendingBit(uart->uart_device, uart->tx_irq_type);
-        }
+        USART_ClearITPendingBit(uart->uart_device, USART_IT_TC);
     }
     if (USART_GetFlagStatus(uart->uart_device, USART_FLAG_ORE) == SET)
     {
@@ -261,7 +199,6 @@ struct stm32_uart uart2 =
 {
     USART2,
     USART2_IRQn,
-    USART_IT_TC,
 };
 struct rt_serial_device serial2;
 
@@ -279,13 +216,10 @@ void USART2_IRQHandler(void)
         /* clear interrupt */
         USART_ClearITPendingBit(uart->uart_device, USART_IT_RXNE);
     }
-    if (USART_GetITStatus(uart->uart_device, uart->tx_irq_type) != RESET)
+    if (USART_GetITStatus(uart->uart_device, USART_IT_TC) != RESET)
     {
         /* clear interrupt */
-        if (uart->tx_irq_type == USART_IT_TC)
-        {
-            USART_ClearITPendingBit(uart->uart_device, uart->tx_irq_type);
-        }
+        USART_ClearITPendingBit(uart->uart_device, USART_IT_TC);
     }
     if (USART_GetFlagStatus(uart->uart_device, USART_FLAG_ORE) == SET)
     {
@@ -303,7 +237,6 @@ struct stm32_uart uart3 =
 {
     USART3,
     USART3_IRQn,
-    USART_IT_TC,
 };
 struct rt_serial_device serial3;
 
@@ -321,13 +254,10 @@ void USART3_IRQHandler(void)
         /* clear interrupt */
         USART_ClearITPendingBit(uart->uart_device, USART_IT_RXNE);
     }
-    if (USART_GetITStatus(uart->uart_device, uart->tx_irq_type) != RESET)
+    if (USART_GetITStatus(uart->uart_device, USART_IT_TC) != RESET)
     {
         /* clear interrupt */
-        if (uart->tx_irq_type == USART_IT_TC)
-        {
-            USART_ClearITPendingBit(uart->uart_device, uart->tx_irq_type);
-        }
+        USART_ClearITPendingBit(uart->uart_device, USART_IT_TC);
     }
     if (USART_GetFlagStatus(uart->uart_device, USART_FLAG_ORE) == SET)
     {
@@ -395,7 +325,7 @@ static void GPIO_Configuration(void)
     GPIO_Init(UART1_GPIO_REMAP, &GPIO_InitStructure);
 #endif /* RT_USING_UART1 */
 
-#ifdef RT_USING_UART2
+#if defined(RT_USING_UART2)
     /* Configure USART Rx/tx PIN */
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_InitStructure.GPIO_Pin = UART2_GPIO_RX;
@@ -406,7 +336,7 @@ static void GPIO_Configuration(void)
     GPIO_Init(UART2_GPIO, &GPIO_InitStructure);
 #endif /* RT_USING_UART2 */
 
-#ifdef RT_USING_UART3
+#if defined(RT_USING_UART3)
     /* Configure USART Rx/tx PIN */
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_InitStructure.GPIO_Pin = UART3_GPIO_RX;
@@ -453,7 +383,7 @@ void rt_hw_usart_init(void)
                           uart);
 #endif /* RT_USING_UART1 */
 
-#ifdef RT_USING_UART2
+#if defined(RT_USING_UART2)
     uart = &uart2;
 
     config.baud_rate = BAUD_RATE_115200;
@@ -468,7 +398,7 @@ void rt_hw_usart_init(void)
                           uart);
 #endif /* RT_USING_UART2 */
 
-#ifdef RT_USING_UART3
+#if defined(RT_USING_UART3)
     uart = &uart3;
 
     config.baud_rate = BAUD_RATE_115200;

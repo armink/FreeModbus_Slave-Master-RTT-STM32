@@ -131,14 +131,6 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
     rt_uint32_t recved_event;
     if (xRxEnable)
     {
-        /* waiting for last transmit complete */
-        while (1)
-        {
-            if (serial->ops->control(serial, RT_DEVICE_CTRL_GET_FLAG, (void *)RT_DEVICE_FLAG_INT_TX))
-            {
-                break;
-            }
-        }
         /* enable RX interrupt */
         serial->ops->control(serial, RT_DEVICE_CTRL_SET_INT, (void *)RT_DEVICE_FLAG_INT_RX);
         /* switch 485 to receive mode */
