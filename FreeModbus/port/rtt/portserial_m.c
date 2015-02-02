@@ -53,13 +53,11 @@ static void serial_soft_trans_irq(void* parameter);
 BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
         eMBParity eParity)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
-
-    /* set 485 model receive and transmit control IO */
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    /**
+     * set 485 mode receive and transmit control IO
+     * @note MODBUS_MASTER_RT_CONTROL_PIN_INDEX need be defined by user
+     */
+	rt_pin_mode(MODBUS_MASTER_RT_CONTROL_PIN_INDEX, PIN_MODE_OUTPUT);
 
     /* set serial name */
     if (ucPORT == 1) {
@@ -98,13 +96,9 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
         break;
     }
     }
-    /* disable all interrupt */
-    ENTER_CRITICAL_SECTION();
     /* set serial configure */
     serial->ops->configure(serial, &(serial->config));
 
-    /* resume all interrupt */
-    EXIT_CRITICAL_SECTION();
     /* open serial device */
     if (!serial->parent.open(&serial->parent,
             RT_DEVICE_OFLAG_RDWR | RT_DEVICE_FLAG_INT_RX )) {
@@ -135,12 +129,12 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
         /* enable RX interrupt */
         serial->ops->control(serial, RT_DEVICE_CTRL_SET_INT, (void *)RT_DEVICE_FLAG_INT_RX);
         /* switch 485 to receive mode */
-        SLAVE_RS485_RECEIVE_MODE;
+		rt_pin_write(MODBUS_MASTER_RT_CONTROL_PIN_INDEX, PIN_LOW);
     }
     else
     {
         /* switch 485 to transmit mode */
-        SLAVE_RS485_TRANS_MODE;
+    	rt_pin_write(MODBUS_MASTER_RT_CONTROL_PIN_INDEX, PIN_HIGH);
         /* disable RX interrupt */
         serial->ops->control(serial, RT_DEVICE_CTRL_CLR_INT, (void *)RT_DEVICE_FLAG_INT_RX);
     }

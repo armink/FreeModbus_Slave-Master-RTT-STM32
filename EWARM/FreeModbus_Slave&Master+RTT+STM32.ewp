@@ -1872,6 +1872,9 @@
       <name>$PROJ_DIR$\..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\BSP\src\gpio.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\BSP\src\usart.c</name>
     </file>
   </group>
@@ -1958,7 +1961,7 @@
     <group>
       <name>Port</name>
       <file>
-        <name>$PROJ_DIR$\..\FreeModbus\port\port.c</name>
+        <name>$PROJ_DIR$\..\FreeModbus\port\rtt\port.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\FreeModbus\port\rtt\portevent.c</name>
@@ -1983,6 +1986,9 @@
       </file>
       <file>
         <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\src\dataqueue.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\misc\pin.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\RT-Thread-1.2.2\components\drivers\src\pipe.c</name>

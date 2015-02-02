@@ -440,6 +440,11 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\gpio.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -700,6 +705,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\components\drivers\serial\serial.c</FilePath>
             </File>
+            <File>
+              <FileName>pin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\misc\pin.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -758,7 +768,7 @@
             <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\port.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\port.c</FilePath>
             </File>
             <File>
               <FileName>portevent.c</FileName>
@@ -1273,6 +1283,11 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\usart.c</FilePath>
             </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\gpio.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1533,6 +1548,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\components\drivers\serial\serial.c</FilePath>
             </File>
+            <File>
+              <FileName>pin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\misc\pin.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1591,7 +1611,7 @@
             <File>
               <FileName>port.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\port.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\port.c</FilePath>
             </File>
             <File>
               <FileName>portevent.c</FileName>

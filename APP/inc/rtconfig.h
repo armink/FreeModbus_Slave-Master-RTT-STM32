@@ -64,6 +64,9 @@
 // <bool name="RT_USING_SERIAL" description="Using Serial" default="true" />
 #define RT_USING_SERIAL
 
+/* Using GPIO pin framework */
+#define RT_USING_PIN
+
 /* SECTION: Console options */
 /* the buffer size of console*/
 #define RT_CONSOLEBUF_SIZE	128

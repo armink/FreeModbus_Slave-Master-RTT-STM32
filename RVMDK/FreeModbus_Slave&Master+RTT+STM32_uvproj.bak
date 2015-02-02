@@ -435,6 +435,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</FilePath>
             </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -690,6 +695,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\components\drivers\src\wrokqueue.c</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\serial\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -753,17 +763,17 @@
             <File>
               <FileName>portevent.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portevent.c</FilePath>
             </File>
             <File>
               <FileName>portserial.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portserial.c</FilePath>
             </File>
             <File>
               <FileName>porttimer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\porttimer.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app.c</FileName>
@@ -808,17 +818,17 @@
             <File>
               <FileName>portevent_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portevent_m.c</FilePath>
             </File>
             <File>
               <FileName>portserial_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portserial_m.c</FilePath>
             </File>
             <File>
               <FileName>porttimer_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\porttimer_m.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app_m.c</FileName>
@@ -1258,6 +1268,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\libcpu\arm\cortex-m3\cpuport.c</FilePath>
             </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\usart.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1513,6 +1528,11 @@
               <FileType>1</FileType>
               <FilePath>..\RT-Thread-1.2.2\components\drivers\src\wrokqueue.c</FilePath>
             </File>
+            <File>
+              <FileName>serial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RT-Thread-1.2.2\components\drivers\serial\serial.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1576,17 +1596,17 @@
             <File>
               <FileName>portevent.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portevent.c</FilePath>
             </File>
             <File>
               <FileName>portserial.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portserial.c</FilePath>
             </File>
             <File>
               <FileName>porttimer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\porttimer.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app.c</FileName>
@@ -1631,17 +1651,17 @@
             <File>
               <FileName>portevent_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portevent_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portevent_m.c</FilePath>
             </File>
             <File>
               <FileName>portserial_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\portserial_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\portserial_m.c</FilePath>
             </File>
             <File>
               <FileName>porttimer_m.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbus\port\porttimer_m.c</FilePath>
+              <FilePath>..\FreeModbus\port\rtt\porttimer_m.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app_m.c</FileName>

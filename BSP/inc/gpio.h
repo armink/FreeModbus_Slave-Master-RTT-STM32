@@ -1,7 +1,7 @@
 /*
- * File      : usart.h
+ * File      : gpio.h
  * This file is part of RT-Thread RTOS
- * COPYRIGHT (C) 2009, RT-Thread Development Team
+ * COPYRIGHT (C) 2015, RT-Thread Development Team
  *
  * The license and distribution terms for this file may be
  * found in the file LICENSE in this distribution or at
@@ -9,12 +9,11 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2009-01-05     Bernard      the first version
+ * 2015-02-02     Armink      the first version
  */
+#ifndef GPIO_H__
+#define GPIO_H__
 
-#ifndef __USART_H__
-#define __USART_H__
-
-void stm32_hw_usart_init(void);
+int stm32_hw_pin_init(void);
 
 #endif

@@ -47,7 +47,8 @@
 void rt_hw_board_init()
 {
 	BSP_Init();
-	rt_hw_usart_init();
+	stm32_hw_usart_init();
+	stm32_hw_pin_init();
 }
 
 /*******************************************************************************

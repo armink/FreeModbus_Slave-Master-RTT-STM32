@@ -15,11 +15,12 @@
  * 2015-01-31     armink       make sure the serial transmit complete in putc()
  */
 
-#include "stm32f10x.h"
-#include "usart.h"
-
-#include "bsp.h"
+#include <rthw.h>
 #include <rtdevice.h>
+#include "bsp.h"
+
+#define UART_ENABLE_IRQ(n)            NVIC_EnableIRQ((n))
+#define UART_DISABLE_IRQ(n)           NVIC_DisableIRQ((n))
 
 /* USART1 */
 #define UART1_GPIO_TX        GPIO_Pin_9
@@ -360,7 +361,7 @@ static void NVIC_Configuration(struct stm32_uart* uart)
     NVIC_Init(&NVIC_InitStructure);
 }
 
-void rt_hw_usart_init(void)
+void stm32_hw_usart_init(void)
 {
     struct stm32_uart* uart;
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
