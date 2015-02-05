@@ -28,11 +28,11 @@ static rt_base_t level;
 /* ----------------------- Start implementation -----------------------------*/
 void EnterCriticalSection(void)
 {
-	level = rt_hw_interrupt_disable();
+    level = rt_hw_interrupt_disable();
 }
 
 void ExitCriticalSection(void)
 {
-	rt_hw_interrupt_enable(level);
+    rt_hw_interrupt_enable(level);
 }
 
