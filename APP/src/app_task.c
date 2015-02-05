@@ -46,7 +46,7 @@ void thread_entry_SysMonitor(void* parameter)
 		LED_LED1_OFF;
 		LED_LED2_OFF;
 		rt_thread_delay(DELAY_SYS_RUN_LED);
-		IWDG_Feed(); //Î¹¹·
+		IWDG_Feed(); //feed the dog
 		//Test Modbus Master
 		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
 		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);

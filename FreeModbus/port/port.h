@@ -58,6 +58,5 @@ typedef int32_t LONG;
 
 void EnterCriticalSection(void);
 void ExitCriticalSection(void);
-void vMBDelay(ULONG nCount);
 
 #endif
