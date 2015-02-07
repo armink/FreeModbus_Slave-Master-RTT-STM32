@@ -124,8 +124,11 @@ Modbus一共有4种不同的数据类型，所有的Modbus功能都围绕这些�
 |vMBMasterPortTimersRespondTimeoutEnable |设置定时器按照响应超时时间开始计数|
 |vMBMasterPortTimersDisable              |失能定时器，定时器将停止计数|
 |prvvTIMERExpiredISR                     |定时器中断服务程序接口，按照默认方式，直接引用`pxMBMasterPortCBTimerExpired`方法即可|
+
 > 注：
+
 1、`usPrescalerValue`及`usT35TimeOut50us`在文件顶部有定义
+
 2、转换延时时间及响应超时时间在`FreeModbus\modbus\include\mbconfig.h`，用户可以根据自己系统的特点自行设置。
 
 除上面接口方法外，用户需要在文件末尾增加CPU的自带的定时器中断服务程序，将上表中的定时器中断服务程序接口放进去。

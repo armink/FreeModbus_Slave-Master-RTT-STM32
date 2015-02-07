@@ -16,7 +16,7 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
   *
-  * File: $Id: portevent.c,v 1.60 2015/02/01 9:18:05 Armink $
+  * File: $Id: port.c,v 1.60 2015/02/01 9:18:05 Armink $
   */
 
 /* ----------------------- System includes --------------------------------*/
