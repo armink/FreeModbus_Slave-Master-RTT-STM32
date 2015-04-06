@@ -80,7 +80,6 @@ void thread_entry_ModbusSlavePoll(void* parameter)
 	while (1)
 	{
 		eMBPoll();
-		rt_thread_delay(DELAY_MB_SLAVE_POLL);
 	}
 }
 
@@ -97,7 +96,6 @@ void thread_entry_ModbusMasterPoll(void* parameter)
 	while (1)
 	{
 		eMBMasterPoll();
-		rt_thread_delay(DELAY_MB_MASTER_POLL);
 	}
 }
 
