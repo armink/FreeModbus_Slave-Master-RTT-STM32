@@ -30,7 +30,7 @@ struct pin_index
 static const struct pin_index pins[] =
 {
     { 0, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_1},
-    { 1, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_2},
+    { 1, RCC_APB2Periph_GPIOB, GPIOB, GPIO_Pin_1},
 };
 
 #define ITEM_NUM(items) sizeof(items)/sizeof(items[0])

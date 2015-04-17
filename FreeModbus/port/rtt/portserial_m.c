@@ -36,7 +36,7 @@ static rt_uint8_t serial_soft_trans_irq_stack[512];
 static struct rt_thread thread_serial_soft_trans_irq;
 /* serial event */
 static struct rt_event event_serial;
-/* modbus slave serial device */
+/* modbus master serial device */
 static rt_serial_t *serial;
 
 /* ----------------------- Defines ------------------------------------------*/
@@ -109,14 +109,14 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
 
     /* software initialize */
     rt_thread_init(&thread_serial_soft_trans_irq,
-                   "slave trans",
+                   "master trans",
                    serial_soft_trans_irq,
                    RT_NULL,
                    serial_soft_trans_irq_stack,
                    sizeof(serial_soft_trans_irq_stack),
                    10, 5);
     rt_thread_startup(&thread_serial_soft_trans_irq);
-    rt_event_init(&event_serial, "slave event", RT_IPC_FLAG_PRIO);
+    rt_event_init(&event_serial, "master event", RT_IPC_FLAG_PRIO);
 
     return TRUE;
 }
