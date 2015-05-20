@@ -15,8 +15,8 @@ FreeModbus是一款开源的Modbus协议栈，但是只有从机开源，主机�
 
 |源文件                                        |描述   |
 |:------------------------------               |:----- |
-|FreeModbus\modbus\mb.c                        |给应用层提供Modbus从机设置及轮训相关接口|
-|FreeModbus\modbus\mb_m.c                      |给应用层提供Modbus主机设置及轮训相关接口|
+|FreeModbus\modbus\mb.c                        |给应用层提供Modbus从机设置及轮询相关接口|
+|FreeModbus\modbus\mb_m.c                      |给应用层提供Modbus主机设置及轮询相关接口|
 |FreeModbus\modbus\ascii\mbascii.c             |ASCII模式设置及其状态机|
 |FreeModbus\modbus\functions\mbfunccoils.c     |从机线圈相关功能|
 |FreeModbus\modbus\functions\mbfunccoils_m.c   |主机线圈相关功能|
@@ -124,11 +124,8 @@ Modbus一共有4种不同的数据类型，所有的Modbus功能都围绕这些�
 |vMBMasterPortTimersRespondTimeoutEnable |设置定时器按照响应超时时间开始计数|
 |vMBMasterPortTimersDisable              |失能定时器，定时器将停止计数|
 |prvvTIMERExpiredISR                     |定时器中断服务程序接口，按照默认方式，直接引用`pxMBMasterPortCBTimerExpired`方法即可|
-
 > 注：
-
 1、`usPrescalerValue`及`usT35TimeOut50us`在文件顶部有定义
-
 2、转换延时时间及响应超时时间在`FreeModbus\modbus\include\mbconfig.h`，用户可以根据自己系统的特点自行设置。
 
 除上面接口方法外，用户需要在文件末尾增加CPU的自带的定时器中断服务程序，将上表中的定时器中断服务程序接口放进去。
@@ -300,13 +297,9 @@ eMBMasterReqErrCode eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr,
 
 ### 4.2、正常使用流程
 这里只介绍主机的正常使用流程，在使用主机前，需要先把协议栈移植到自己的项目中去，包括上述的软件及硬件部分，移植完成后的使用流程如下
-
 1、调用`eMBMasterInit`方法初始化Modbus主机协议栈，主机涉及到的一些硬件就在这个时候做了初始化
-
 2、调用`eMBMasterEnable`方法启动Modbus主机
-
-3、通过在线程或者定时器轮训调用`eMBMasterPoll`方法，轮训周期决定了命令的响应时间。
-
+3、通过在线程或者定时器轮询调用`eMBMasterPoll`方法，轮询周期决定了命令的响应时间。
 4、调用主机请求API方法，设定一定的请求超时时间，直到方法有结果后才会返回。如果方法执行成功并且命令是读命令，可以通过查看Modbus主机的数据缓冲区，获取最新从机数据。
 
 ### 4.3、异常处理流程
