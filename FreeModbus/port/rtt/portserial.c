@@ -107,6 +107,7 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
     }
 
     /* software initialize */
+    rt_event_init(&event_serial, "slave event", RT_IPC_FLAG_PRIO);
     rt_thread_init(&thread_serial_soft_trans_irq,
                    "slave trans",
                    serial_soft_trans_irq,
@@ -115,7 +116,6 @@ BOOL xMBPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,
                    sizeof(serial_soft_trans_irq_stack),
                    10, 5);
     rt_thread_startup(&thread_serial_soft_trans_irq);
-    rt_event_init(&event_serial, "slave event", RT_IPC_FLAG_PRIO);
 
     return TRUE;
 }
