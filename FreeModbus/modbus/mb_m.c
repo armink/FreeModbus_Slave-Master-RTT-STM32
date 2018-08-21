@@ -71,7 +71,8 @@ static enum
 {
     STATE_ENABLED,
     STATE_DISABLED,
-    STATE_NOT_INITIALIZED
+    STATE_NOT_INITIALIZED,
+	STATE_ESTABLISHED,
 } eMBState = STATE_NOT_INITIALIZED;
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
@@ -233,7 +234,7 @@ eMBMasterDisable( void )
 {
     eMBErrorCode    eStatus;
 
-    if( eMBState == STATE_ENABLED )
+    if(( eMBState == STATE_ENABLED ) || ( eMBState == STATE_ESTABLISHED))
     {
         pvMBMasterFrameStopCur(  );
         eMBState = STATE_DISABLED;
@@ -250,6 +251,20 @@ eMBMasterDisable( void )
     return eStatus;
 }
 
+BOOL
+eMBMasterIsEstablished( void )
+{
+    if(eMBState == STATE_ESTABLISHED)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+
 eMBErrorCode
 eMBMasterPoll( void )
 {
@@ -265,7 +280,7 @@ eMBMasterPoll( void )
     eMBMasterErrorEventType errorType;
 
     /* Check if the protocol stack is ready. */
-    if( eMBState != STATE_ENABLED )
+    if(( eMBState != STATE_ENABLED ) && ( eMBState != STATE_ESTABLISHED))
     {
         return MB_EILLSTATE;
     }
@@ -277,6 +292,7 @@ eMBMasterPoll( void )
         switch ( eEvent )
         {
         case EV_MASTER_READY:
+		    eMBState = STATE_ESTABLISHED;
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
