@@ -296,8 +296,8 @@ eMBMasterPoll( void )
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
-			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
-			/* Check if the frame is for us. If not ,send an error process event. */
+            eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
+            /* Check if the frame is for us. If not ,send an error process event. */
             if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterGetDestAddress() ) )
             {
                 ( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
