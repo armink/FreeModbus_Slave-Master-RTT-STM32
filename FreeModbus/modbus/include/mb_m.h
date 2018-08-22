@@ -173,6 +173,18 @@ eMBErrorCode    eMBMasterEnable( void );
 eMBErrorCode    eMBMasterDisable( void );
 
 /*! \ingroup modbus
+ * \brief Check the Modbus Master protocol stack has established or not.
+ *
+ * This function must be called and check the return value before calling
+ * any other functions.
+ *
+ * \return If the protocol stack has been established or not
+ *  TRUE.  the protocol stack has established
+ *  FALSE. the protocol stack hasn't established
+ */
+BOOL            eMBMasterIsEstablished( void );
+
+/*! \ingroup modbus
  * \brief The main pooling loop of the Modbus Master protocol stack.
  *
  * This function must be called periodically. The timer interval required
