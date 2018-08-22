@@ -72,7 +72,7 @@ static enum
     STATE_ENABLED,
     STATE_DISABLED,
     STATE_NOT_INITIALIZED,
-	STATE_ESTABLISHED,
+    STATE_ESTABLISHED,
 } eMBState = STATE_NOT_INITIALIZED;
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
@@ -292,22 +292,22 @@ eMBMasterPoll( void )
         switch ( eEvent )
         {
         case EV_MASTER_READY:
-		    eMBState = STATE_ESTABLISHED;
+            eMBState = STATE_ESTABLISHED;
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
 			eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
 			/* Check if the frame is for us. If not ,send an error process event. */
-			if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterGetDestAddress() ) )
-			{
-				( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
-			}
-			else
-			{
-				vMBMasterSetErrorType(EV_ERROR_RECEIVE_DATA);
-				( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
-			}
-			break;
+            if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterGetDestAddress() ) )
+            {
+                ( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
+            }
+            else
+            {
+                vMBMasterSetErrorType(EV_ERROR_RECEIVE_DATA);
+                ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+            }
+            break;
 
         case EV_MASTER_EXECUTE:
             ucFunctionCode = ucMBFrame[MB_PDU_FUNC_OFF];
