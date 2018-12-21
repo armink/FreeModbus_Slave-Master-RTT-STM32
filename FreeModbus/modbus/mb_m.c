@@ -381,8 +381,9 @@ eMBMasterPoll( void )
 			}
 			vMBMasterRunResRelease();
         	break;
+            
         default:
-        break;
+            break;
         }
 
     }
