@@ -381,7 +381,10 @@ eMBMasterPoll( void )
 			}
 			vMBMasterRunResRelease();
         	break;
+        default:
+        break;
         }
+
     }
     return MB_ENOERR;
 }
