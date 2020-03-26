@@ -204,6 +204,8 @@ eMBMasterRTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength 
      */
     if( eRcvState == STATE_M_RX_IDLE )
     {
+        usMasterRcvBufferPos = 0;
+
         /* First byte before the Modbus-PDU is the slave address. */
         pucMasterSndBufferCur = ( UCHAR * ) pucFrame - 1;
         usMasterSndBufferCount = 1;
@@ -268,7 +270,6 @@ xMBMasterRTUReceiveFSM( void )
     	vMBMasterPortTimersDisable( );
     	eSndState = STATE_M_TX_IDLE;
 
-        usMasterRcvBufferPos = 0;
         ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
         eRcvState = STATE_M_RX_RCV;
 
