@@ -24,15 +24,15 @@
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "port.h"
 /* ----------------------- Variables ----------------------------------------*/
-static rt_base_t level;
+
 /* ----------------------- Start implementation -----------------------------*/
 void EnterCriticalSection(void)
 {
-    level = rt_hw_interrupt_disable();
+    rt_enter_critical();
 }
 
 void ExitCriticalSection(void)
 {
-    rt_hw_interrupt_enable(level);
+    rt_exit_critical();
 }
 
