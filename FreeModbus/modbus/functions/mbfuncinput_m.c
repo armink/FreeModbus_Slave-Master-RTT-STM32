@@ -79,6 +79,7 @@ eMBMasterReqReadInputRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_READ_INPUT_REGISTER;

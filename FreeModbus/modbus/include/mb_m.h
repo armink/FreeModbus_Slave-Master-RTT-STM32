@@ -405,6 +405,7 @@ BOOL xMBMasterRequestIsBroadcast( void );
 eMBMasterErrorEventType eMBMasterGetErrorType( void );
 void vMBMasterSetErrorType( eMBMasterErrorEventType errorType );
 eMBMasterReqErrCode eMBMasterWaitRequestFinish( void );
+void eMBMasterEventClear( void );
 
 /* ----------------------- Callback -----------------------------------------*/
 
