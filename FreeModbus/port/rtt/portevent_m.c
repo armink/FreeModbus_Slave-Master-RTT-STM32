@@ -236,4 +236,21 @@ eMBMasterReqErrCode eMBMasterWaitRequestFinish( void ) {
     return eErrStatus;
 }
 
+/**
+ * This function is used for clear all events at last modbus operation.
+ * @note If you are use OS, you can use OS's event mechanism. Otherwise you have to run
+ * much user custom delay for waiting.
+ */
+void eMBMasterEventClear( void )
+{
+    rt_uint32_t recvedEvent;
+
+    rt_event_recv(&xMasterOsEvent,
+            EV_MASTER_PROCESS_SUCESS | EV_MASTER_ERROR_RESPOND_TIMEOUT
+                    | EV_MASTER_ERROR_RECEIVE_DATA
+                    | EV_MASTER_ERROR_EXECUTE_FUNCTION,
+            RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO,
+            &recvedEvent);
+}
+
 #endif

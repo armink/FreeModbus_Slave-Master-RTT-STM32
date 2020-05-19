@@ -106,6 +106,7 @@ eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRe
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_WRITE_REGISTER;
@@ -177,6 +178,7 @@ eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr,
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                     = MB_FUNC_WRITE_MULTIPLE_REGISTERS;
@@ -271,6 +273,7 @@ eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRe
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_READ_HOLDING_REGISTER;
@@ -366,6 +369,7 @@ eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                           = MB_FUNC_READWRITE_MULTIPLE_REGISTERS;

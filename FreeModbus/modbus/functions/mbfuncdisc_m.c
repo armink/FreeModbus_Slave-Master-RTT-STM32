@@ -79,6 +79,7 @@ eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr, USHORT usDiscreteAddr, USHORT u
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
+		eMBMasterEventClear();
 		vMBMasterGetPDUSndBuf(&ucMBFrame);
 		vMBMasterSetDestAddress(ucSndAddr);
 		ucMBFrame[MB_PDU_FUNC_OFF]                 = MB_FUNC_READ_DISCRETE_INPUTS;
