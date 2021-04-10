@@ -46,9 +46,9 @@
 /** This function will initial STM32 board**/
 void rt_hw_board_init()
 {
-	BSP_Init();
-	stm32_hw_usart_init();
-	stm32_hw_pin_init();
+    BSP_Init();
+    stm32_hw_usart_init();
+    stm32_hw_pin_init();
 }
 
 /*******************************************************************************
@@ -60,20 +60,20 @@ void rt_hw_board_init()
 *******************************************************************************/
 static void RCC_Configuration(void)
 {
-    //ÏÂÃæÊÇ¸ø¸÷Ä£¿é¿ªÆôÊ±ÖÓ
-    //Æô¶¯GPIO
+    //ä¸‹é¢æ˜¯ç»™å„æ¨¡å—å¼€å¯æ—¶é’Ÿ
+    //å¯åŠ¨GPIO
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB | \
                            RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOD | \
-						   RCC_APB2Periph_GPIOE ,
+                           RCC_APB2Periph_GPIOE ,
                            ENABLE);
-    //Æô¶¯AFIO
+    //å¯åŠ¨AFIO
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-	//ÅäÖÃADC×ª»»Ê±ÖÓ
-	RCC_ADCCLKConfig(RCC_PCLK2_Div8); //9M
-    //Æô¶¯DMAÊ±ÖÓ
-    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//Ê¹ÄÜDMAÊ±ÖÓ
-	/* Enable ADC1 and GPIOC clock */
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 , ENABLE);
+    //é…ç½®ADCè½¬æ¢æ—¶é’Ÿ
+    RCC_ADCCLKConfig(RCC_PCLK2_Div8); //9M
+    //å¯åŠ¨DMAæ—¶é’Ÿ
+    RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//ä½¿èƒ½DMAæ—¶é’Ÿ
+    /* Enable ADC1 and GPIOC clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 , ENABLE);
 }
 
 /*******************************************************************************
@@ -90,7 +90,7 @@ static void NVIC_Configuration(void)
 #ifdef  VECT_TAB_RAM
     // Set the Vector Table base location at 0x20000000
     NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0);
-#else  // VECT_TAB_FLASH  
+#else  // VECT_TAB_FLASH
     // Set the Vector Table base location at 0x08000000
     NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
 #endif
@@ -104,55 +104,55 @@ static void NVIC_Configuration(void)
 *******************************************************************************/
 static void GPIO_Configuration(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-	/***************Êı×ÖÊä³öIO³õÊ¼»¯*********************/
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+    /***************æ•°å­—è¾“å‡ºIOåˆå§‹åŒ–*********************/
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_12;  //¼ÌµçÆ÷1  LED1  LED2
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_12;  //ç»§ç”µå™¨1  LED1  LED2
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //·äÃùÆ÷ ¼ÌµçÆ÷3   ¼ÌµçÆ÷2
-    GPIO_Init(GPIOB, &GPIO_InitStructure); 
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //èœ‚é¸£å™¨ ç»§ç”µå™¨3   ç»§ç”µå™¨2
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-	/*************Êı×ÖÊäÈëIO³õÊ¼»¯*********************/	
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;  
+    /*************æ•°å­—è¾“å…¥IOåˆå§‹åŒ–*********************/
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_6;
-	GPIO_Init(GPIOG, &GPIO_InitStructure);
+    GPIO_Init(GPIOG, &GPIO_InitStructure);
 
 }
 
- //*******************³õÊ¼»¯¶ÀÁ¢¿´ÃÅ¹·*************************************
-//º¯Êı¶¨Òå: void IWDG_Configuration(void) 
-//Ãè    Êö£º³õÊ¼»¯¶ÀÁ¢¿´ÃÅ¹·
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£º·ÖÆµÒò×Ó=4*2^prer.µ«×î´óÖµÖ»ÄÜÊÇ256!Ê±¼ä¼ÆËã(´ó¸Å):Tout=40K/((4*2^prer)*rlr)Öµ	 2S³¬Ê±
-//Editor£ºliuqh 2013-1-16  Company: BXXJS
+ //*******************åˆå§‹åŒ–ç‹¬ç«‹çœ‹é—¨ç‹—*************************************
+//å‡½æ•°å®šä¹‰: void IWDG_Configuration(void)
+//æ    è¿°ï¼šåˆå§‹åŒ–ç‹¬ç«‹çœ‹é—¨ç‹—
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šåˆ†é¢‘å› å­=4*2^prer.ä½†æœ€å¤§å€¼åªèƒ½æ˜¯256!æ—¶é—´è®¡ç®—(å¤§æ¦‚):Tout=40K/((4*2^prer)*rlr)å€¼    2Sè¶…æ—¶
+//Editorï¼šliuqh 2013-1-16  Company: BXXJS
 //*******************************************************************
-static void IWDG_Configuration(void) 
+static void IWDG_Configuration(void)
 {
-	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);//Ê¹ÄÜ¶ÔIWDG->PRºÍIWDG->RLRµÄĞ´
-	IWDG_SetPrescaler(IWDG_Prescaler_64);//64·ÖÆµ
-	IWDG_SetReload(1300);
-	IWDG_ReloadCounter();
-	IWDG_Enable();		
+    IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);//ä½¿èƒ½å¯¹IWDG->PRå’ŒIWDG->RLRçš„å†™
+    IWDG_SetPrescaler(IWDG_Prescaler_64);//64åˆ†é¢‘
+    IWDG_SetReload(1300);
+    IWDG_ReloadCounter();
+    IWDG_Enable();
 }
-//*******************Î¹¶ÀÁ¢¿´ÃÅ¹·*************************************
-//º¯Êı¶¨Òå: void IWDG_Feed(void)
-//Ãè    Êö£º³õÊ¼»¯¶ÀÁ¢¿´ÃÅ¹·
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºprer:·ÖÆµÊı:0~7(Ö»ÓĞµÍ3Î»ÓĞĞ§!)£¬rlr:ÖØ×°ÔØ¼Ä´æÆ÷Öµ:µÍ11Î»ÓĞĞ§.
-//±¸    ×¢£º·ÖÆµÒò×Ó=4*2^prer.µ«×î´óÖµÖ»ÄÜÊÇ256!Ê±¼ä¼ÆËã(´ó¸Å):Tout=40K/((4*2^prer)*rlr)Öµ
-//Editor£ºliuqh 2013-1-16  Company: BXXJS
+//*******************å–‚ç‹¬ç«‹çœ‹é—¨ç‹—*************************************
+//å‡½æ•°å®šä¹‰: void IWDG_Feed(void)
+//æ    è¿°ï¼šåˆå§‹åŒ–ç‹¬ç«‹çœ‹é—¨ç‹—
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šprer:åˆ†é¢‘æ•°:0~7(åªæœ‰ä½3ä½æœ‰æ•ˆ!)ï¼Œrlr:é‡è£…è½½å¯„å­˜å™¨å€¼:ä½11ä½æœ‰æ•ˆ.
+//å¤‡    æ³¨ï¼šåˆ†é¢‘å› å­=4*2^prer.ä½†æœ€å¤§å€¼åªèƒ½æ˜¯256!æ—¶é—´è®¡ç®—(å¤§æ¦‚):Tout=40K/((4*2^prer)*rlr)å€¼
+//Editorï¼šliuqh 2013-1-16  Company: BXXJS
 //*******************************************************************
 
 void IWDG_Feed(void)
 {
-	IWDG_ReloadCounter();//reload											   
+    IWDG_ReloadCounter();//reload
 }
 
 
@@ -165,15 +165,15 @@ void IWDG_Feed(void)
  *******************************************************************************/
 void  SysTick_Configuration(void)
 {
-	RCC_ClocksTypeDef  rcc_clocks;
-	rt_uint32_t         cnts;
+    RCC_ClocksTypeDef  rcc_clocks;
+    rt_uint32_t         cnts;
 
-	RCC_GetClocksFreq(&rcc_clocks);
+    RCC_GetClocksFreq(&rcc_clocks);
 
-	cnts = (rt_uint32_t)rcc_clocks.HCLK_Frequency / RT_TICK_PER_SECOND;
+    cnts = (rt_uint32_t)rcc_clocks.HCLK_Frequency / RT_TICK_PER_SECOND;
 
-	SysTick_Config(cnts);
-	SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
+    SysTick_Config(cnts);
+    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK);
 }
 /**
  * This is the timer interrupt service routine.
@@ -181,13 +181,13 @@ void  SysTick_Configuration(void)
  */
 void rt_hw_timer_handler(void)
 {
-	/* enter interrupt */
-	rt_interrupt_enter();
+    /* enter interrupt */
+    rt_interrupt_enter();
 
-	rt_tick_increase();
+    rt_tick_increase();
 
-	/* leave interrupt */
-	rt_interrupt_leave();
+    /* leave interrupt */
+    rt_interrupt_leave();
 }
 
 /*
@@ -215,46 +215,46 @@ void rt_hw_timer_handler(void)
 
 void  BSP_Init (void)
 {
-	RCC_Configuration();
-	NVIC_Configuration();
-	SysTick_Configuration();
-	GPIO_Configuration();
-//	TODO  ·½±ãµ÷ÊÔ£¬ÔİÊ±×¢ÊÍ¿´ÃÅ¹·£¬ÕıÊ½·¢²¼Ê±ĞèÒª´ò¿ª
-// 	IWDG_Configuration();
+    RCC_Configuration();
+    NVIC_Configuration();
+    SysTick_Configuration();
+    GPIO_Configuration();
+//  TODO  æ–¹ä¾¿è°ƒè¯•ï¼Œæš‚æ—¶æ³¨é‡Šçœ‹é—¨ç‹—ï¼Œæ­£å¼å‘å¸ƒæ—¶éœ€è¦æ‰“å¼€
+//  IWDG_Configuration();
 }
-//****************************·À³¬Ê±³ÌĞò********************************
-//º¯Êı¶¨Òå: uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)())
-//Ãè    Êö£ºÔÚTimeOfTimeoutÊ±¼äÄÚ£¬Ã¿PeriodÊ±¼ä¼ì²âÒ»´ÎDetectCondition()·µ»ØµÄÖµÊÇ·ñÓĞĞ§
-//Èë¿Ú²ÎÊı£ºTimeOfTimeout£º·À³¬Ê±×ÜÊ±¼ä£¨µ¥Î»£ºsystick£©
-//          Period       £ºÃ¿PeriodÊ±¼ä¼ì²âÒ»´Î£¬¼´Ê±¼äÒò×Ó£¨µ¥Î»£ºsystick£©
-//          (*DetectCondition)()£º¼ì²âÌõ¼ş£¬µÈÓÚConditionValueÔòÌõ¼şÂú×ã£¬¼ì²â½áÊø£¬·ñÔòÑÓÊ±PeriodÊ±¼ä¼ÌĞø¼ì²â
-//          ConditionValue      £»Ìõ¼ş³ÉÁ¢µÄÖµ
-//³ö¿Ú²ÎÊı£º0£ºÔÚTimeOfTimeoutÊ±¼äÄÚ£¬¼ì²âµ½Ìõ¼ş³ÉÁ¢
-//          1£ºÔÚTimeOfTimeoutÊ±¼äÄÚ£¬Ã»ÓĞ¼ì²âµ½Ìõ¼ş³ÉÁ¢
-//±¸    ×¢£ºEditor£ºArmink 2012-03-09    Company: BXXJS
+//****************************é˜²è¶…æ—¶ç¨‹åº********************************
+//å‡½æ•°å®šä¹‰: uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)())
+//æ    è¿°ï¼šåœ¨TimeOfTimeoutæ—¶é—´å†…ï¼Œæ¯Periodæ—¶é—´æ£€æµ‹ä¸€æ¬¡DetectCondition()è¿”å›çš„å€¼æ˜¯å¦æœ‰æ•ˆ
+//å…¥å£å‚æ•°ï¼šTimeOfTimeoutï¼šé˜²è¶…æ—¶æ€»æ—¶é—´ï¼ˆå•ä½ï¼šsystickï¼‰
+//          Period       ï¼šæ¯Periodæ—¶é—´æ£€æµ‹ä¸€æ¬¡ï¼Œå³æ—¶é—´å› å­ï¼ˆå•ä½ï¼šsystickï¼‰
+//          (*DetectCondition)()ï¼šæ£€æµ‹æ¡ä»¶ï¼Œç­‰äºConditionValueåˆ™æ¡ä»¶æ»¡è¶³ï¼Œæ£€æµ‹ç»“æŸï¼Œå¦åˆ™å»¶æ—¶Periodæ—¶é—´ç»§ç»­æ£€æµ‹
+//          ConditionValue      ï¼›æ¡ä»¶æˆç«‹çš„å€¼
+//å‡ºå£å‚æ•°ï¼š0ï¼šåœ¨TimeOfTimeoutæ—¶é—´å†…ï¼Œæ£€æµ‹åˆ°æ¡ä»¶æˆç«‹
+//          1ï¼šåœ¨TimeOfTimeoutæ—¶é—´å†…ï¼Œæ²¡æœ‰æ£€æµ‹åˆ°æ¡ä»¶æˆç«‹
+//å¤‡    æ³¨ï¼šEditorï¼šArmink 2012-03-09    Company: BXXJS
 //**********************************************************************
 uint8_t AvoidTimeout(uint32_t TimeOfTimeout,uint32_t Period,uint8_t (*DetectCondition)(),uint8_t ConditionValue)
 {
-	uint32_t LastTimeLocal, CurTimeLocal;
-	uint8_t ConditionValueLocal;
-	LastTimeLocal = rt_tick_get();
-	CurTimeLocal  =  LastTimeLocal;
-	while(CurTimeLocal - LastTimeLocal < TimeOfTimeout)
-	{	 
-		CurTimeLocal = rt_tick_get();
-		ConditionValueLocal = DetectCondition();
-		if (ConditionValueLocal == ConditionValue) return 0;
-		rt_thread_delay(Period);
-	}	
-	return 1;
-} 
+    uint32_t LastTimeLocal, CurTimeLocal;
+    uint8_t ConditionValueLocal;
+    LastTimeLocal = rt_tick_get();
+    CurTimeLocal  =  LastTimeLocal;
+    while(CurTimeLocal - LastTimeLocal < TimeOfTimeout)
+    {
+        CurTimeLocal = rt_tick_get();
+        ConditionValueLocal = DetectCondition();
+        if (ConditionValueLocal == ConditionValue) return 0;
+        rt_thread_delay(Period);
+    }
+    return 1;
+}
 
 
-//************************************ÑÓÊ±º¯Êı**************************************
-//º¯Êı¶¨Òå: void Delay(vu32 nCount)
-//Èë¿Ú²ÎÊı£ºnCount £ºÑÓÊ±º¯ÊıÖĞ£¬Ñ­»·µÄ´ÎÊı
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºArmink 2011-03-18    Company: BXXJS
+//************************************å»¶æ—¶å‡½æ•°**************************************
+//å‡½æ•°å®šä¹‰: void Delay(vu32 nCount)
+//å…¥å£å‚æ•°ï¼šnCount ï¼šå»¶æ—¶å‡½æ•°ä¸­ï¼Œå¾ªç¯çš„æ¬¡æ•°
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šArmink 2011-03-18    Company: BXXJS
 //**********************************************************************************
 void Delay(vu32 nCount)
 {
