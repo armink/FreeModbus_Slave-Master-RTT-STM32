@@ -1,4 +1,4 @@
-/* 
+/*
  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  * All rights reserved.
@@ -87,9 +87,9 @@ typedef enum
  */
 typedef enum
 {
-	MB_TMODE_T35,                   /*!< Master receive frame T3.5 timeout. */
-	MB_TMODE_RESPOND_TIMEOUT,       /*!< Master wait respond for slave. */
-	MB_TMODE_CONVERT_DELAY          /*!< Master sent broadcast ,then delay sometime.*/
+    MB_TMODE_T35,                   /*!< Master receive frame T3.5 timeout. */
+    MB_TMODE_RESPOND_TIMEOUT,       /*!< Master wait respond for slave. */
+    MB_TMODE_CONVERT_DELAY          /*!< Master sent broadcast ,then delay sometime.*/
 }eMBMasterTimerMode;
 
 /* ----------------------- Function prototypes ------------------------------*/
@@ -115,7 +115,7 @@ typedef enum
  *    - eMBErrorCode::MB_EPORTERR IF the porting layer returned an error.
  */
 eMBErrorCode    eMBMasterInit( eMBMode eMode, UCHAR ucPort,
-		                 ULONG ulBaudRate, eMBParity eParity );
+                         ULONG ulBaudRate, eMBParity eParity );
 
 /*! \ingroup modbus
  * \brief Initialize the Modbus Master protocol stack for Modbus TCP.
@@ -137,10 +137,10 @@ eMBErrorCode    eMBMasterTCPInit( USHORT usTCPPort );
  * \brief Release resources used by the protocol stack.
  *
  * This function disables the Modbus Master protocol stack and release all
- * hardware resources. It must only be called when the protocol stack 
- * is disabled. 
+ * hardware resources. It must only be called when the protocol stack
+ * is disabled.
  *
- * \note Note all ports implement this function. A port which wants to 
+ * \note Note all ports implement this function. A port which wants to
  *   get an callback must define the macro MB_PORT_HAS_CLOSE to 1.
  *
  * \return If the resources where released it return eMBErrorCode::MB_ENOERR.
@@ -155,8 +155,8 @@ eMBErrorCode    eMBMasterClose( void );
  * This function enables processing of Modbus Master frames. Enabling the protocol
  * stack is only possible if it is in the disabled state.
  *
- * \return If the protocol stack is now in the state enabled it returns 
- *   eMBErrorCode::MB_ENOERR. If it was not in the disabled state it 
+ * \return If the protocol stack is now in the state enabled it returns
+ *   eMBErrorCode::MB_ENOERR. If it was not in the disabled state it
  *   return eMBErrorCode::MB_EILLSTATE.
  */
 eMBErrorCode    eMBMasterEnable( void );
@@ -166,7 +166,7 @@ eMBErrorCode    eMBMasterEnable( void );
  *
  * This function disables processing of Modbus frames.
  *
- * \return If the protocol stack has been disabled it returns 
+ * \return If the protocol stack has been disabled it returns
  *  eMBErrorCode::MB_ENOERR. If it was not in the enabled state it returns
  *  eMBErrorCode::MB_EILLSTATE.
  */
@@ -190,10 +190,10 @@ BOOL            eMBMasterIsEstablished( void );
  * This function must be called periodically. The timer interval required
  * is given by the application dependent Modbus slave timeout. Internally the
  * function calls xMBMasterPortEventGet() and waits for an event from the receiver or
- * transmitter state machines. 
+ * transmitter state machines.
  *
  * \return If the protocol stack is not in the enabled state the function
- *   returns eMBErrorCode::MB_EILLSTATE. Otherwise it returns 
+ *   returns eMBErrorCode::MB_EILLSTATE. Otherwise it returns
  *   eMBErrorCode::MB_ENOERR.
  */
 eMBErrorCode    eMBMasterPoll( void );
@@ -260,7 +260,7 @@ eMBErrorCode    eMBMasterRegisterCB( UCHAR ucFunctionCode,
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
 eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
-		USHORT usNRegs );
+        USHORT usNRegs );
 
 /*! \ingroup modbus_registers
  * \brief Callback function used if a <em>Holding Register</em> value is
@@ -289,7 +289,7 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
 eMBErrorCode eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
-		USHORT usNRegs, eMBRegisterMode eMode );
+        USHORT usNRegs, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
  * \brief Callback function used if a <em>Coil Register</em> value is
@@ -318,7 +318,7 @@ eMBErrorCode eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
 eMBErrorCode eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
-		USHORT usNCoils, eMBRegisterMode eMode );
+        USHORT usNCoils, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
  * \brief Callback function used if a <em>Input Discrete Register</em> value is
@@ -341,7 +341,7 @@ eMBErrorCode eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
 eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress,
-		USHORT usNDiscrete );
+        USHORT usNDiscrete );
 
 /*! \ingroup modbus
  *\brief These Modbus functions are called for user when Modbus run in Master Mode.
@@ -352,20 +352,20 @@ eMBMasterReqErrCode
 eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr,
-		USHORT usNRegs, USHORT * pusDataBuffer, LONG lTimeOut );
+        USHORT usNRegs, USHORT * pusDataBuffer, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
-		USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
-		USHORT usWriteRegAddr, USHORT usNWriteRegs, LONG lTimeOut );
+        USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
+        USHORT usWriteRegAddr, USHORT usNWriteRegs, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
-		USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, LONG lTimeOut );
+        USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, LONG lTimeOut );
 eMBMasterReqErrCode
 eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr, USHORT usDiscreteAddr, USHORT usNDiscreteIn, LONG lTimeOut );
 
@@ -390,7 +390,7 @@ eMBMasterFuncReadDiscreteInputs( UCHAR * pucFrame, USHORT * usLen );
 eMBException
 eMBMasterFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
 
-/*£¡ \ingroup modbus
+/*! \ingroup modbus
  *\brief These functions are interface for Modbus Master
  */
 void vMBMasterGetPDUSndBuf( UCHAR ** pucFrame );

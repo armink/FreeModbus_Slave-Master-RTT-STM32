@@ -1,4 +1,4 @@
-/* 
+/*
  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  * All rights reserved.
@@ -102,7 +102,7 @@ BOOL( *pxMBMasterFrameCBTransmitFSMCur ) ( void );
  */
 static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
 #if MB_FUNC_OTHER_REP_SLAVEID_ENABLED > 0
-	//TODO Add Master function define
+    //TODO Add Master function define
     {MB_FUNC_OTHER_REPORT_SLAVEID, eMBFuncReportSlaveID},
 #endif
 #if MB_FUNC_READ_INPUT_ENABLED > 0
@@ -140,56 +140,56 @@ eMBMasterInit( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
-	switch (eMode)
-	{
+    switch (eMode)
+    {
 #if MB_MASTER_RTU_ENABLED > 0
-	case MB_RTU:
-		pvMBMasterFrameStartCur = eMBMasterRTUStart;
-		pvMBMasterFrameStopCur = eMBMasterRTUStop;
-		peMBMasterFrameSendCur = eMBMasterRTUSend;
-		peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
-		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
-		pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
-		pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
-		pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerExpired;
+    case MB_RTU:
+        pvMBMasterFrameStartCur = eMBMasterRTUStart;
+        pvMBMasterFrameStopCur = eMBMasterRTUStop;
+        peMBMasterFrameSendCur = eMBMasterRTUSend;
+        peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
+        pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+        pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
+        pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
+        pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerExpired;
 
-		eStatus = eMBMasterRTUInit(ucPort, ulBaudRate, eParity);
-		break;
+        eStatus = eMBMasterRTUInit(ucPort, ulBaudRate, eParity);
+        break;
 #endif
 #if MB_MASTER_ASCII_ENABLED > 0
-		case MB_ASCII:
-		pvMBMasterFrameStartCur = eMBMasterASCIIStart;
-		pvMBMasterFrameStopCur = eMBMasterASCIIStop;
-		peMBMasterFrameSendCur = eMBMasterASCIISend;
-		peMBMasterFrameReceiveCur = eMBMasterASCIIReceive;
-		pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
-		pxMBMasterFrameCBByteReceived = xMBMasterASCIIReceiveFSM;
-		pxMBMasterFrameCBTransmitterEmpty = xMBMasterASCIITransmitFSM;
-		pxMBMasterPortCBTimerExpired = xMBMasterASCIITimerT1SExpired;
+        case MB_ASCII:
+        pvMBMasterFrameStartCur = eMBMasterASCIIStart;
+        pvMBMasterFrameStopCur = eMBMasterASCIIStop;
+        peMBMasterFrameSendCur = eMBMasterASCIISend;
+        peMBMasterFrameReceiveCur = eMBMasterASCIIReceive;
+        pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
+        pxMBMasterFrameCBByteReceived = xMBMasterASCIIReceiveFSM;
+        pxMBMasterFrameCBTransmitterEmpty = xMBMasterASCIITransmitFSM;
+        pxMBMasterPortCBTimerExpired = xMBMasterASCIITimerT1SExpired;
 
-		eStatus = eMBMasterASCIIInit(ucPort, ulBaudRate, eParity );
-		break;
+        eStatus = eMBMasterASCIIInit(ucPort, ulBaudRate, eParity );
+        break;
 #endif
-	default:
-		eStatus = MB_EINVAL;
-		break;
-	}
+    default:
+        eStatus = MB_EINVAL;
+        break;
+    }
 
-	if (eStatus == MB_ENOERR)
-	{
-		if (!xMBMasterPortEventInit())
-		{
-			/* port dependent event module initalization failed. */
-			eStatus = MB_EPORTERR;
-		}
-		else
-		{
-			eMBState = STATE_DISABLED;
-		}
-		/* initialize the OS resource for modbus master. */
-		vMBMasterOsResInit();
-	}
-	return eStatus;
+    if (eStatus == MB_ENOERR)
+    {
+        if (!xMBMasterPortEventInit())
+        {
+            /* port dependent event module initalization failed. */
+            eStatus = MB_EPORTERR;
+        }
+        else
+        {
+            eMBState = STATE_DISABLED;
+        }
+        /* initialize the OS resource for modbus master. */
+        vMBMasterOsResInit();
+    }
+    return eStatus;
 }
 
 eMBErrorCode
@@ -314,74 +314,74 @@ eMBMasterPoll( void )
             eException = MB_EX_ILLEGAL_FUNCTION;
             /* If receive frame has exception .The receive function code highest bit is 1.*/
             if(ucFunctionCode >> 7) {
-            	eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
+                eException = (eMBException)ucMBFrame[MB_PDU_DATA_OFF];
             }
-			else
-			{
-				for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
-				{
-					/* No more function handlers registered. Abort. */
-					if (xMasterFuncHandlers[i].ucFunctionCode == 0)	{
-						break;
-					}
-					else if (xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode) {
-						vMBMasterSetCBRunInMasterMode(TRUE);
-						/* If master request is broadcast,
-						 * the master need execute function for all slave.
-						 */
-						if ( xMBMasterRequestIsBroadcast() ) {
-							usLength = usMBMasterGetPDUSndLength();
-							for(j = 1; j <= MB_MASTER_TOTAL_SLAVE_NUM; j++){
-								vMBMasterSetDestAddress(j);
-								eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
-							}
-						}
-						else {
-							eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
-						}
-						vMBMasterSetCBRunInMasterMode(FALSE);
-						break;
-					}
-				}
-			}
+            else
+            {
+                for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
+                {
+                    /* No more function handlers registered. Abort. */
+                    if (xMasterFuncHandlers[i].ucFunctionCode == 0) {
+                        break;
+                    }
+                    else if (xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode) {
+                        vMBMasterSetCBRunInMasterMode(TRUE);
+                        /* If master request is broadcast,
+                         * the master need execute function for all slave.
+                         */
+                        if ( xMBMasterRequestIsBroadcast() ) {
+                            usLength = usMBMasterGetPDUSndLength();
+                            for(j = 1; j <= MB_MASTER_TOTAL_SLAVE_NUM; j++){
+                                vMBMasterSetDestAddress(j);
+                                eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+                            }
+                        }
+                        else {
+                            eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+                        }
+                        vMBMasterSetCBRunInMasterMode(FALSE);
+                        break;
+                    }
+                }
+            }
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) {
-            	vMBMasterSetErrorType(EV_ERROR_EXECUTE_FUNCTION);
-            	( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+                vMBMasterSetErrorType(EV_ERROR_EXECUTE_FUNCTION);
+                ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
             }
             else {
-            	vMBMasterCBRequestScuuess( );
-            	vMBMasterRunResRelease( );
+                vMBMasterCBRequestScuuess( );
+                vMBMasterRunResRelease( );
             }
             break;
 
         case EV_MASTER_FRAME_SENT:
-        	/* Master is busy now. */
-        	vMBMasterGetPDUSndBuf( &ucMBFrame );
-			eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, usMBMasterGetPDUSndLength() );
+            /* Master is busy now. */
+            vMBMasterGetPDUSndBuf( &ucMBFrame );
+            eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, usMBMasterGetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
-        	/* Execute specified error process callback function. */
-			errorType = eMBMasterGetErrorType();
-			vMBMasterGetPDUSndBuf( &ucMBFrame );
-			switch (errorType) {
-			case EV_ERROR_RESPOND_TIMEOUT:
-				vMBMasterErrorCBRespondTimeout(ucMBMasterGetDestAddress(),
-						ucMBFrame, usMBMasterGetPDUSndLength());
-				break;
-			case EV_ERROR_RECEIVE_DATA:
-				vMBMasterErrorCBReceiveData(ucMBMasterGetDestAddress(),
-						ucMBFrame, usMBMasterGetPDUSndLength());
-				break;
-			case EV_ERROR_EXECUTE_FUNCTION:
-				vMBMasterErrorCBExecuteFunction(ucMBMasterGetDestAddress(),
-						ucMBFrame, usMBMasterGetPDUSndLength());
-				break;
-			}
-			vMBMasterRunResRelease();
-        	break;
-            
+            /* Execute specified error process callback function. */
+            errorType = eMBMasterGetErrorType();
+            vMBMasterGetPDUSndBuf( &ucMBFrame );
+            switch (errorType) {
+            case EV_ERROR_RESPOND_TIMEOUT:
+                vMBMasterErrorCBRespondTimeout(ucMBMasterGetDestAddress(),
+                        ucMBFrame, usMBMasterGetPDUSndLength());
+                break;
+            case EV_ERROR_RECEIVE_DATA:
+                vMBMasterErrorCBReceiveData(ucMBMasterGetDestAddress(),
+                        ucMBFrame, usMBMasterGetPDUSndLength());
+                break;
+            case EV_ERROR_EXECUTE_FUNCTION:
+                vMBMasterErrorCBExecuteFunction(ucMBMasterGetDestAddress(),
+                        ucMBFrame, usMBMasterGetPDUSndLength());
+                break;
+            }
+            vMBMasterRunResRelease();
+            break;
+
         default:
             break;
         }
@@ -393,32 +393,32 @@ eMBMasterPoll( void )
 /* Get whether the Modbus Master is run in master mode.*/
 BOOL xMBMasterGetCBRunInMasterMode( void )
 {
-	return xMBRunInMasterMode;
+    return xMBRunInMasterMode;
 }
 /* Set whether the Modbus Master is run in master mode.*/
 void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode )
 {
-	xMBRunInMasterMode = IsMasterMode;
+    xMBRunInMasterMode = IsMasterMode;
 }
 /* Get Modbus Master send destination address. */
 UCHAR ucMBMasterGetDestAddress( void )
 {
-	return ucMBMasterDestAddress;
+    return ucMBMasterDestAddress;
 }
 /* Set Modbus Master send destination address. */
 void vMBMasterSetDestAddress( UCHAR Address )
 {
-	ucMBMasterDestAddress = Address;
+    ucMBMasterDestAddress = Address;
 }
 /* Get Modbus Master current error event type. */
 eMBMasterErrorEventType eMBMasterGetErrorType( void )
 {
-	return eMBMasterCurErrorType;
+    return eMBMasterCurErrorType;
 }
 /* Set Modbus Master current error event type. */
 void vMBMasterSetErrorType( eMBMasterErrorEventType errorType )
 {
-	eMBMasterCurErrorType = errorType;
+    eMBMasterCurErrorType = errorType;
 }
 
 

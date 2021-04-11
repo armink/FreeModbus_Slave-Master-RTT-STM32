@@ -168,11 +168,11 @@ BOOL xMBPortSerialGetByte(CHAR * pucByte)
     return TRUE;
 }
 
-/* 
+/*
  * Create an interrupt handler for the transmit buffer empty interrupt
  * (or an equivalent) for your target processor. This function should then
  * call pxMBFrameCBTransmitterEmpty( ) which tells the protocol stack that
- * a new character can be sent. The protocol stack will then call 
+ * a new character can be sent. The protocol stack will then call
  * xMBPortSerialPutByte( ) to send the character.
  */
 void prvvUARTTxReadyISR(void)
@@ -180,7 +180,7 @@ void prvvUARTTxReadyISR(void)
     pxMBFrameCBTransmitterEmpty();
 }
 
-/* 
+/*
  * Create an interrupt handler for the receive interrupt for your target
  * processor. This function should then call pxMBFrameCBByteReceived( ). The
  * protocol stack will then call xMBPortSerialGetByte( ) to retrieve the

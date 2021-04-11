@@ -1,4 +1,4 @@
-/* 
+/*
  * FreeModbus Libary: A portable Modbus implementation for Modbus ASCII/RTU.
  * Copyright (C) 2013 Armink <armink.ztl@gmail.com>
  * All rights reserved.
@@ -94,16 +94,16 @@ eMBMasterReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils ,LONG
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
-		vMBMasterGetPDUSndBuf(&ucMBFrame);
-		vMBMasterSetDestAddress(ucSndAddr);
-		ucMBFrame[MB_PDU_FUNC_OFF]                 = MB_FUNC_READ_COILS;
-		ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF]        = usCoilAddr >> 8;
-		ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF + 1]    = usCoilAddr;
-		ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF ]    = usNCoils >> 8;
-		ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF + 1] = usNCoils;
-		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_READ_SIZE );
-		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
-		eErrStatus = eMBMasterWaitRequestFinish( );
+        vMBMasterGetPDUSndBuf(&ucMBFrame);
+        vMBMasterSetDestAddress(ucSndAddr);
+        ucMBFrame[MB_PDU_FUNC_OFF]                 = MB_FUNC_READ_COILS;
+        ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF]        = usCoilAddr >> 8;
+        ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF + 1]    = usCoilAddr;
+        ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF ]    = usNCoils >> 8;
+        ucMBFrame[MB_PDU_REQ_READ_COILCNT_OFF + 1] = usNCoils;
+        vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_READ_SIZE );
+        ( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+        eErrStatus = eMBMasterWaitRequestFinish( );
 
     }
     return eErrStatus;
@@ -123,11 +123,11 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
     /* If this request is broadcast, and it's read mode. This request don't need execute. */
     if ( xMBMasterRequestIsBroadcast() )
     {
-    	eStatus = MB_EX_NONE;
+        eStatus = MB_EX_NONE;
     }
     else if ( *usLen >= MB_PDU_SIZE_MIN + MB_PDU_FUNC_READ_SIZE_MIN )
     {
-    	vMBMasterGetPDUSndBuf(&ucMBFrame);
+        vMBMasterGetPDUSndBuf(&ucMBFrame);
         usRegAddress = ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF] << 8 );
         usRegAddress |= ( USHORT )( ucMBFrame[MB_PDU_REQ_READ_ADDR_OFF + 1] );
         usRegAddress++;
@@ -139,20 +139,20 @@ eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen )
          * byte is only partially field with unused coils set to zero. */
         if( ( usCoilCount & 0x0007 ) != 0 )
         {
-        	ucByteCount = ( UCHAR )( usCoilCount / 8 + 1 );
+            ucByteCount = ( UCHAR )( usCoilCount / 8 + 1 );
         }
         else
         {
-        	ucByteCount = ( UCHAR )( usCoilCount / 8 );
+            ucByteCount = ( UCHAR )( usCoilCount / 8 );
         }
 
         /* Check if the number of registers to read is valid. If not
-         * return Modbus illegal data value exception. 
+         * return Modbus illegal data value exception.
          */
         if( ( usCoilCount >= 1 ) &&
             ( ucByteCount == pucFrame[MB_PDU_FUNC_READ_COILCNT_OFF] ) )
         {
-        	/* Make callback to fill the buffer. */
+            /* Make callback to fill the buffer. */
             eRegStatus = eMBMasterRegCoilsCB( &pucFrame[MB_PDU_FUNC_READ_VALUES_OFF], usRegAddress, usCoilCount, MB_REG_READ );
 
             /* If an error occured convert it into a Modbus exception. */
@@ -201,16 +201,16 @@ eMBMasterReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData, LO
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
-		vMBMasterGetPDUSndBuf(&ucMBFrame);
-		vMBMasterSetDestAddress(ucSndAddr);
-		ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_WRITE_SINGLE_COIL;
-		ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF]      = usCoilAddr >> 8;
-		ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF + 1]  = usCoilAddr;
-		ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF ]    = usCoilData >> 8;
-		ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF + 1] = usCoilData;
-		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_SIZE );
-		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
-		eErrStatus = eMBMasterWaitRequestFinish( );
+        vMBMasterGetPDUSndBuf(&ucMBFrame);
+        vMBMasterSetDestAddress(ucSndAddr);
+        ucMBFrame[MB_PDU_FUNC_OFF]                = MB_FUNC_WRITE_SINGLE_COIL;
+        ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF]      = usCoilAddr >> 8;
+        ucMBFrame[MB_PDU_REQ_WRITE_ADDR_OFF + 1]  = usCoilAddr;
+        ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF ]    = usCoilData >> 8;
+        ucMBFrame[MB_PDU_REQ_WRITE_VALUE_OFF + 1] = usCoilData;
+        vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_SIZE );
+        ( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+        eErrStatus = eMBMasterWaitRequestFinish( );
     }
     return eErrStatus;
 }
@@ -285,7 +285,7 @@ eMBMasterFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen )
  */
 eMBMasterReqErrCode
 eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
-		USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, LONG lTimeOut)
+        USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, LONG lTimeOut)
 {
     UCHAR                 *ucMBFrame;
     USHORT                 usRegIndex = 0;
@@ -297,30 +297,30 @@ eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
     else if ( xMBMasterRunResTake( lTimeOut ) == FALSE ) eErrStatus = MB_MRE_MASTER_BUSY;
     else
     {
-		vMBMasterGetPDUSndBuf(&ucMBFrame);
-		vMBMasterSetDestAddress(ucSndAddr);
-		ucMBFrame[MB_PDU_FUNC_OFF]                      = MB_FUNC_WRITE_MULTIPLE_COILS;
-		ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF]        = usCoilAddr >> 8;
-		ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF + 1]    = usCoilAddr;
-		ucMBFrame[MB_PDU_REQ_WRITE_MUL_COILCNT_OFF]     = usNCoils >> 8;
-		ucMBFrame[MB_PDU_REQ_WRITE_MUL_COILCNT_OFF + 1] = usNCoils ;
-		if( ( usNCoils & 0x0007 ) != 0 )
+        vMBMasterGetPDUSndBuf(&ucMBFrame);
+        vMBMasterSetDestAddress(ucSndAddr);
+        ucMBFrame[MB_PDU_FUNC_OFF]                      = MB_FUNC_WRITE_MULTIPLE_COILS;
+        ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF]        = usCoilAddr >> 8;
+        ucMBFrame[MB_PDU_REQ_WRITE_MUL_ADDR_OFF + 1]    = usCoilAddr;
+        ucMBFrame[MB_PDU_REQ_WRITE_MUL_COILCNT_OFF]     = usNCoils >> 8;
+        ucMBFrame[MB_PDU_REQ_WRITE_MUL_COILCNT_OFF + 1] = usNCoils ;
+        if( ( usNCoils & 0x0007 ) != 0 )
         {
-			ucByteCount = ( UCHAR )( usNCoils / 8 + 1 );
+            ucByteCount = ( UCHAR )( usNCoils / 8 + 1 );
         }
         else
         {
-        	ucByteCount = ( UCHAR )( usNCoils / 8 );
+            ucByteCount = ( UCHAR )( usNCoils / 8 );
         }
-		ucMBFrame[MB_PDU_REQ_WRITE_MUL_BYTECNT_OFF]     = ucByteCount;
-		ucMBFrame += MB_PDU_REQ_WRITE_MUL_VALUES_OFF;
-		while( ucByteCount > usRegIndex)
-		{
-			*ucMBFrame++ = pucDataBuffer[usRegIndex++];
-		}
-		vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_MUL_SIZE_MIN + ucByteCount );
-		( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
-		eErrStatus = eMBMasterWaitRequestFinish( );
+        ucMBFrame[MB_PDU_REQ_WRITE_MUL_BYTECNT_OFF]     = ucByteCount;
+        ucMBFrame += MB_PDU_REQ_WRITE_MUL_VALUES_OFF;
+        while( ucByteCount > usRegIndex)
+        {
+            *ucMBFrame++ = pucDataBuffer[usRegIndex++];
+        }
+        vMBMasterSetPDUSndLength( MB_PDU_SIZE_MIN + MB_PDU_REQ_WRITE_MUL_SIZE_MIN + ucByteCount );
+        ( void ) xMBMasterPortEventPost( EV_MASTER_FRAME_SENT );
+        eErrStatus = eMBMasterWaitRequestFinish( );
     }
     return eErrStatus;
 }
@@ -340,7 +340,7 @@ eMBMasterFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen )
     /* If this request is broadcast, the *usLen is not need check. */
     if( ( *usLen == MB_PDU_FUNC_WRITE_MUL_SIZE ) || xMBMasterRequestIsBroadcast() )
     {
-    	vMBMasterGetPDUSndBuf(&ucMBFrame);
+        vMBMasterGetPDUSndBuf(&ucMBFrame);
         usRegAddress = ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_MUL_ADDR_OFF] << 8 );
         usRegAddress |= ( USHORT )( pucFrame[MB_PDU_FUNC_WRITE_MUL_ADDR_OFF + 1] );
         usRegAddress++;

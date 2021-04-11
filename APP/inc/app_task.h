@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <rthw.h>	
+#include <rthw.h>
 #include <rtthread.h>
 #include <stm32f10x_conf.h>
 #include "bsp.h"
@@ -15,7 +15,7 @@
 #include "user_mb_app.h"
 
 /*******************************************************************************************************/
-//                           DEFINES                                                                   
+//                           DEFINES
 /*******************************************************************************************************/
 
 
@@ -37,7 +37,7 @@ extern uint16_t   usSRegHoldBuf[] ;
 extern void cpu_usage_get(rt_uint8_t *major, rt_uint8_t *minor);
 extern void cpu_usage_init(void);
 
- 
+
 
 void rtthread_startup(void);
 

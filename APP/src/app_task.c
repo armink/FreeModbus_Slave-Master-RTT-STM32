@@ -8,15 +8,15 @@ extern int Image$$RW_IRAM1$$ZI$$Limit;
 extern int __bss_end;
 #endif
 
-uint8_t CpuUsageMajor, CpuUsageMinor; //CPUÊ¹ÓÃÂÊ
+uint8_t CpuUsageMajor, CpuUsageMinor; //CPUä½¿ç”¨ç‡
 USHORT  usModbusUserData[MB_PDU_SIZE_MAX];
 UCHAR   ucModbusUserData[MB_PDU_SIZE_MAX];
-//====================²Ù×÷ÏµÍ³¸÷Ïß³ÌÓÅÏÈ¼¶==================================
-#define thread_SysMonitor_Prio		    	11
-#define thread_ModbusSlavePoll_Prio      	10
-#define thread_ModbusMasterPoll_Prio      	 9
+//====================æ“ä½œç³»ç»Ÿå„çº¿ç¨‹ä¼˜å…ˆçº§==================================
+#define thread_SysMonitor_Prio              11
+#define thread_ModbusSlavePoll_Prio         10
+#define thread_ModbusMasterPoll_Prio         9
 ALIGN(RT_ALIGN_SIZE)
-//====================²Ù×÷ÏµÍ³¸÷Ïß³Ì¶ÑÕ»====================================
+//====================æ“ä½œç³»ç»Ÿå„çº¿ç¨‹å †æ ˆ====================================
 static rt_uint8_t thread_SysMonitor_stack[256];
 static rt_uint8_t thread_ModbusSlavePoll_stack[512];
 static rt_uint8_t thread_ModbusMasterPoll_stack[512];
@@ -25,170 +25,170 @@ struct rt_thread thread_SysMonitor;
 struct rt_thread thread_ModbusSlavePoll;
 struct rt_thread thread_ModbusMasterPoll;
 
-//***************************ÏµÍ³¼à¿ØÏß³Ì***************************
-//º¯Êı¶¨Òå: void thread_entry_SysRunLed(void* parameter)
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºArmink   2013-08-02   Company: BXXJS
+//***************************ç³»ç»Ÿç›‘æ§çº¿ç¨‹***************************
+//å‡½æ•°å®šä¹‰: void thread_entry_SysRunLed(void* parameter)
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šArmink   2013-08-02   Company: BXXJS
 //******************************************************************
 void thread_entry_SysMonitor(void* parameter)
 {
-	eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
-	uint16_t errorCount = 0;
-	while (1)
-	{
-		cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
-		usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
-		usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
-		LED_LED1_ON;
-		LED_LED2_ON;
-		rt_thread_delay(DELAY_SYS_RUN_LED);
-		LED_LED1_OFF;
-		LED_LED2_OFF;
-		rt_thread_delay(DELAY_SYS_RUN_LED);
-		IWDG_Feed(); //feed the dog
-		//Test Modbus Master
-		usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
-		usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
-		ucModbusUserData[0] = 0x1F;
-//		errorCode = eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
-		errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
-//		errorCode = eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
-		//¼ÇÂ¼³ö´í´ÎÊı
-		if (errorCode != MB_MRE_NO_ERR) {
-			errorCount++;
-		}
-	}
+    eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+    uint16_t errorCount = 0;
+    while (1)
+    {
+        cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
+        usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
+        usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
+        LED_LED1_ON;
+        LED_LED2_ON;
+        rt_thread_delay(DELAY_SYS_RUN_LED);
+        LED_LED1_OFF;
+        LED_LED2_OFF;
+        rt_thread_delay(DELAY_SYS_RUN_LED);
+        IWDG_Feed(); //feed the dog
+        //Test Modbus Master
+        usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
+        usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
+        ucModbusUserData[0] = 0x1F;
+//      errorCode = eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
+        errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
+        //è®°å½•å‡ºé”™æ¬¡æ•°
+        if (errorCode != MB_MRE_NO_ERR) {
+            errorCount++;
+        }
+    }
 }
 
-//************************ Modbus´Ó»úÂÖÑµÏß³Ì***************************
-//º¯Êı¶¨Òå: void thread_entry_ModbusSlavePoll(void* parameter)
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºArmink   2013-08-02    Company: BXXJS
+//************************ Modbusä»æœºè½®è®­çº¿ç¨‹***************************
+//å‡½æ•°å®šä¹‰: void thread_entry_ModbusSlavePoll(void* parameter)
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šArmink   2013-08-02    Company: BXXJS
 //******************************************************************
 void thread_entry_ModbusSlavePoll(void* parameter)
 {
-	eMBInit(MB_RTU, 0x01, 1, 115200,  MB_PAR_EVEN);
-	eMBEnable();
-	while (1)
-	{
-		eMBPoll();
-	}
+    eMBInit(MB_RTU, 0x01, 1, 115200,  MB_PAR_EVEN);
+    eMBEnable();
+    while (1)
+    {
+        eMBPoll();
+    }
 }
 
-//************************ ModbusÖ÷»úÂÖÑµÏß³Ì***************************
-//º¯Êı¶¨Òå: void thread_entry_ModbusMasterPoll(void* parameter)
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºArmink   2013-08-28    Company: BXXJS
+//************************ Modbusä¸»æœºè½®è®­çº¿ç¨‹***************************
+//å‡½æ•°å®šä¹‰: void thread_entry_ModbusMasterPoll(void* parameter)
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šArmink   2013-08-28    Company: BXXJS
 //******************************************************************
 void thread_entry_ModbusMasterPoll(void* parameter)
 {
-	eMBMasterInit(MB_RTU, 2, 115200,  MB_PAR_EVEN);
-	eMBMasterEnable();
-	while (1)
-	{
-		eMBMasterPoll();
-	}
+    eMBMasterInit(MB_RTU, 2, 115200,  MB_PAR_EVEN);
+    eMBMasterEnable();
+    while (1)
+    {
+        eMBMasterPoll();
+    }
 }
 
-//**********************ÏµÍ³³õÊ¼»¯º¯Êı********************************
-//º¯Êı¶¨Òå: int rt_application_init(void)
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºLiuqiuhu   2013-1-31   Company: BXXJS
+//**********************ç³»ç»Ÿåˆå§‹åŒ–å‡½æ•°********************************
+//å‡½æ•°å®šä¹‰: int rt_application_init(void)
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šLiuqiuhu   2013-1-31   Company: BXXJS
 //********************************************************************
 int rt_application_init(void)
 {
-	rt_thread_init(&thread_SysMonitor, "SysMonitor", thread_entry_SysMonitor,
-			RT_NULL, thread_SysMonitor_stack, sizeof(thread_SysMonitor_stack),
-			thread_SysMonitor_Prio, 5);
-	rt_thread_startup(&thread_SysMonitor);
+    rt_thread_init(&thread_SysMonitor, "SysMonitor", thread_entry_SysMonitor,
+            RT_NULL, thread_SysMonitor_stack, sizeof(thread_SysMonitor_stack),
+            thread_SysMonitor_Prio, 5);
+    rt_thread_startup(&thread_SysMonitor);
 
-	rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
-			thread_entry_ModbusSlavePoll, RT_NULL, thread_ModbusSlavePoll_stack,
-			sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
-			5);
-	rt_thread_startup(&thread_ModbusSlavePoll);
+    rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
+            thread_entry_ModbusSlavePoll, RT_NULL, thread_ModbusSlavePoll_stack,
+            sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
+            5);
+    rt_thread_startup(&thread_ModbusSlavePoll);
 
-	rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
-			thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
-			sizeof(thread_ModbusMasterPoll_stack), thread_ModbusMasterPoll_Prio,
-			5);
-	rt_thread_startup(&thread_ModbusMasterPoll);
+    rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
+            thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
+            sizeof(thread_ModbusMasterPoll_stack), thread_ModbusMasterPoll_Prio,
+            5);
+    rt_thread_startup(&thread_ModbusMasterPoll);
 
-	return 0;
+    return 0;
 }
 
-//**************************³õÊ¼»¯RT-Threadº¯Êı*************************************
-//º¯Êı¶¨Òå: void rtthread_startup(void)
-//Èë¿Ú²ÎÊı£ºÎŞ
-//³ö¿Ú²ÎÊı£ºÎŞ
-//±¸    ×¢£ºEditor£ºArmink 2011-04-04    Company: BXXJS
+//**************************åˆå§‹åŒ–RT-Threadå‡½æ•°*************************************
+//å‡½æ•°å®šä¹‰: void rtthread_startup(void)
+//å…¥å£å‚æ•°ï¼šæ— 
+//å‡ºå£å‚æ•°ï¼šæ— 
+//å¤‡    æ³¨ï¼šEditorï¼šArmink 2011-04-04    Company: BXXJS
 //**********************************************************************************
 void rtthread_startup(void)
 {
-	/* init board */
-	rt_hw_board_init();
+    /* init board */
+    rt_hw_board_init();
 
-	/* show version */
-	rt_show_version();
+    /* show version */
+    rt_show_version();
 
-	/* init tick */
-	rt_system_tick_init();
+    /* init tick */
+    rt_system_tick_init();
 
-	/* init kernel object */
-	rt_system_object_init();
+    /* init kernel object */
+    rt_system_object_init();
 
-	/* init timer system */
-	rt_system_timer_init();
+    /* init timer system */
+    rt_system_timer_init();
 
 #ifdef RT_USING_HEAP
 #ifdef __CC_ARM
-	rt_system_heap_init((void*)&Image$$RW_IRAM1$$ZI$$Limit, (void*)STM32_SRAM_END);
+    rt_system_heap_init((void*)&Image$$RW_IRAM1$$ZI$$Limit, (void*)STM32_SRAM_END);
 #elif __ICCARM__
-	rt_system_heap_init(__segment_end("HEAP"), (void*)STM32_SRAM_END);
+    rt_system_heap_init(__segment_end("HEAP"), (void*)STM32_SRAM_END);
 #else
-	/* init memory system */
-	rt_system_heap_init((void*)&__bss_end, (void*)STM32_SRAM_END);
+    /* init memory system */
+    rt_system_heap_init((void*)&__bss_end, (void*)STM32_SRAM_END);
 #endif
 #endif
 
-	/* init scheduler system */
-	rt_system_scheduler_init();
+    /* init scheduler system */
+    rt_system_scheduler_init();
 
-	/* init all device */
-	rt_device_init_all();
+    /* init all device */
+    rt_device_init_all();
 
-	/* init application */
-	rt_application_init();
+    /* init application */
+    rt_application_init();
 
 #ifdef RT_USING_FINSH
-	/* init finsh */
-	finsh_system_init();
-	finsh_set_device("uart1");
+    /* init finsh */
+    finsh_system_init();
+    finsh_set_device("uart1");
 #endif
 
-	/* init timer thread */
-	rt_system_timer_thread_init();
+    /* init timer thread */
+    rt_system_timer_thread_init();
 
-	/* init idle thread */
-	rt_thread_idle_init();
+    /* init idle thread */
+    rt_thread_idle_init();
 
-	/* Add CPU usage to system */
-	cpu_usage_init();
+    /* Add CPU usage to system */
+    cpu_usage_init();
 
-	/* start scheduler */
-	rt_system_scheduler_start();
+    /* start scheduler */
+    rt_system_scheduler_start();
 
-	/* never reach here */
-	return;
+    /* never reach here */
+    return;
 }
 
