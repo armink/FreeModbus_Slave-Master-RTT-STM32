@@ -208,12 +208,10 @@ void USART1_IRQHandler(void)
   if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
   {
     mbStack.peMBFrameCBByteReceivedCur((void *)&mbStack);
-    return;
   }
   if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
   {
     mbStack.peMBFrameCBTransmitterEmptyCur((void *)&mbStack);
-    return;
   }
   /* USER CODE END USART1_IRQn 0 */
   HAL_UART_IRQHandler(&huart1);
@@ -236,12 +234,10 @@ void USART2_IRQHandler(void)
   if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
   {
     mbMasterStack.peMBMasterFrameCBByteReceivedCur((void *)&mbMasterStack);
-    return;
   }
   if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
   {
     mbMasterStack.peMBMasterFrameCBTransmitterEmptyCur((void *)&mbMasterStack);
-    return;
   }
   
   /* USER CODE END USART2_IRQn 0 */
