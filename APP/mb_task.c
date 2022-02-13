@@ -1,10 +1,6 @@
 /* Includes ------------------------------------------------------------------*/
 #include "mb.h"
 #include "mb_stack.h"
-#include "main.h"
-#include "gpio.h"
-#include "usart.h"
-#include "tim.h"
 
 MB_StackTypeDef mbStack;
 
