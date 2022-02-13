@@ -54,8 +54,9 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_FUNC_READ_DISCRETE_INPUTS_ENABLED > 0
 
 eMBException
-eMBFuncReadDiscreteInputs( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncReadDiscreteInputs( void * this, UCHAR * pucFrame, USHORT * usLen )
 {
+    UNUSED(this);
     USHORT          usRegAddress;
     USHORT          usDiscreteCnt;
     UCHAR           ucNBytes;

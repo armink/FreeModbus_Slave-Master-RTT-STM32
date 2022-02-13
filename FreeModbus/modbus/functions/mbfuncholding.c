@@ -74,8 +74,9 @@ eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
 
 eMBException
-eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncWriteHoldingRegister( void * this, UCHAR * pucFrame, USHORT * usLen )
 {
+    UNUSED(this);
     USHORT          usRegAddress;
     eMBException    eStatus = MB_EX_NONE;
     eMBErrorCode    eRegStatus;
@@ -107,8 +108,9 @@ eMBFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 
 #if MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED > 0
 eMBException
-eMBFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncWriteMultipleHoldingRegister( void * this, UCHAR * pucFrame, USHORT * usLen )
 {
+    UNUSED(this);
     USHORT          usRegAddress;
     USHORT          usRegCount;
     UCHAR           ucRegByteCount;
@@ -167,8 +169,9 @@ eMBFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 #if MB_FUNC_READ_HOLDING_ENABLED > 0
 
 eMBException
-eMBFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncReadHoldingRegister( void * this, UCHAR * pucFrame, USHORT * usLen )
 {
+    UNUSED(this);
     USHORT          usRegAddress;
     USHORT          usRegCount;
     UCHAR          *pucFrameCur;
@@ -232,8 +235,9 @@ eMBFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
 #if MB_FUNC_READWRITE_HOLDING_ENABLED > 0
 
 eMBException
-eMBFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen )
+eMBFuncReadWriteMultipleHoldingRegister( void * this, UCHAR * pucFrame, USHORT * usLen )
 {
+    UNUSED(this);
     USHORT          usRegReadAddress;
     USHORT          usRegReadCount;
     USHORT          usRegWriteAddress;

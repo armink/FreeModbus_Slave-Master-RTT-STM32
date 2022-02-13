@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "Core\\Inc",
+                "Drivers\\STM32F4xx_HAL_Driver\\Inc",
+                "Drivers\\STM32F4xx_HAL_Driver\\Inc\\Legacy",
+                "Middlewares\\Third_Party\\FreeRTOS\\Source\\include",
+                "Middlewares\\Third_Party\\FreeRTOS\\Source\\CMSIS_RTOS_V2",
+                "Middlewares\\Third_Party\\FreeRTOS\\Source\\portable\\GCC\\ARM_CM4F",
+                "Drivers\\CMSIS\\Device\\ST\\STM32F4xx\\Include",
+                "Drivers\\CMSIS\\Include",
+                "FreeModbus\\port",
+                "FreeModbus\\modbus\\ascii",
+                "FreeModbus\\modbus\\include",
+                "FreeModbus\\modbus\\rtu",
+                "FreeModbus\\modbus\\tcp",
+                "FreeModbus\\mbStack"
+            ],
+            "defines": [
+                "USE_HAL_DRIVER",
+                "STM32F407xx"
+            ],
+            "compilerPath": "D:\\mingw64\\bin\\gcc.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++14"
+        }
+    ],
+    "version": 4
+}

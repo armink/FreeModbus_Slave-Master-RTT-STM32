@@ -19,6 +19,10 @@
  * File: $Id: user_mb_app_m.c,v 1.60 2013/11/23 11:49:05 Armink $
  */
 #include "user_mb_app.h"
+#include "mb_stack.h"
+#include "mb_m_stack.h"
+
+extern MB_M_StackTypeDef mbMasterStack;
 
 /*-----------------------Master mode use these variables----------------------*/
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
@@ -61,7 +65,7 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT
     USHORT          REG_INPUT_NREGS;
     USHORT          usRegInStart;
 
-    pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress() - 1];
+    pusRegInputBuf = usMRegInBuf[mbMasterStack.ucMBMasterDestAddress - 1];
     REG_INPUT_START = M_REG_INPUT_START;
     REG_INPUT_NREGS = M_REG_INPUT_NREGS;
     usRegInStart = usMRegInStart;
@@ -109,7 +113,7 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     USHORT          REG_HOLDING_NREGS;
     USHORT          usRegHoldStart;
 
-    pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress() - 1];
+    pusRegHoldingBuf = usMRegHoldBuf[mbMasterStack.ucMBMasterDestAddress - 1];
     REG_HOLDING_START = M_REG_HOLDING_START;
     REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
     usRegHoldStart = usMRegHoldStart;
@@ -175,7 +179,7 @@ eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress,
     USHORT          usCoilStart;
     iNReg =  usNCoils / 8 + 1;
 
-    pucCoilBuf = ucMCoilBuf[ucMBMasterGetDestAddress() - 1];
+    pucCoilBuf = ucMCoilBuf[mbMasterStack.ucMBMasterDestAddress - 1];
     COIL_START = M_COIL_START;
     COIL_NCOILS = M_COIL_NCOILS;
     usCoilStart = usMCoilStart;
@@ -254,7 +258,7 @@ eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USH
     USHORT          usDiscreteInputStart;
     iNReg =  usNDiscrete / 8 + 1;
 
-    pucDiscreteInputBuf = ucMDiscInBuf[ucMBMasterGetDestAddress() - 1];
+    pucDiscreteInputBuf = ucMDiscInBuf[mbMasterStack.ucMBMasterDestAddress - 1];
     DISCRETE_INPUT_START = M_DISCRETE_INPUT_START;
     DISCRETE_INPUT_NDISCRETES = M_DISCRETE_INPUT_NDISCRETES;
     usDiscreteInputStart = usMDiscInStart;

@@ -36,26 +36,26 @@
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C
 #endif
-eMBErrorCode    eMBRTUInit( UCHAR slaveAddress, UCHAR ucPort, ULONG ulBaudRate,
+eMBErrorCode    eMBRTUInit( void * this, UCHAR slaveAddress, UCHAR ucPort, ULONG ulBaudRate,
                             eMBParity eParity );
-void            eMBRTUStart( void );
-void            eMBRTUStop( void );
-eMBErrorCode    eMBRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
-eMBErrorCode    eMBRTUSend( UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
-BOOL            xMBRTUReceiveFSM( void );
-BOOL            xMBRTUTransmitFSM( void );
-BOOL            xMBRTUTimerT15Expired( void );
-BOOL            xMBRTUTimerT35Expired( void );
+void            eMBRTUStart( void * this );
+void            eMBRTUStop( void * this );
+eMBErrorCode    eMBRTUReceive( void * this, UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
+eMBErrorCode    eMBRTUSend( void * this, UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
+BOOL            xMBRTUReceiveFSM( void * this );
+BOOL            xMBRTUTransmitFSM( void * this );
+BOOL            xMBRTUTimerT15Expired( void * this );
+BOOL            xMBRTUTimerT35Expired( void * this );
 
 #if MB_MASTER_RTU_ENABLED > 0
-eMBErrorCode    eMBMasterRTUInit( UCHAR ucPort, ULONG ulBaudRate,eMBParity eParity );
-void            eMBMasterRTUStart( void );
-void            eMBMasterRTUStop( void );
-eMBErrorCode    eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
-eMBErrorCode    eMBMasterRTUSend( UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
-BOOL            xMBMasterRTUReceiveFSM( void );
-BOOL            xMBMasterRTUTransmitFSM( void );
-BOOL            xMBMasterRTUTimerExpired( void );
+eMBErrorCode    eMBMasterRTUInit( void * this, UCHAR ucPort, ULONG ulBaudRate,eMBParity eParity );
+void            eMBMasterRTUStart( void * this );
+void            eMBMasterRTUStop( void * this );
+eMBErrorCode    eMBMasterRTUReceive( void * this, UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );
+eMBErrorCode    eMBMasterRTUSend( void * this, UCHAR slaveAddress, const UCHAR * pucFrame, USHORT usLength );
+BOOL            xMBMasterRTUReceiveFSM( void * this );
+BOOL            xMBMasterRTUTransmitFSM( void * this );
+BOOL            xMBMasterRTUTimerExpired( void * this );
 #endif
 
 #ifdef __cplusplus

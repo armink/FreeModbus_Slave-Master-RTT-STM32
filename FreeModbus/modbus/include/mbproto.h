@@ -69,7 +69,7 @@ PR_BEGIN_EXTERN_C
     MB_EX_GATEWAY_TGT_FAILED = 0x0B
 } eMBException;
 
-typedef         eMBException( *pxMBFunctionHandler ) ( UCHAR * pucFrame, USHORT * pusLength );
+typedef         eMBException( *pxMBFunctionHandler ) ( void * this, UCHAR * pucFrame, USHORT * pusLength );
 
 typedef struct
 {
