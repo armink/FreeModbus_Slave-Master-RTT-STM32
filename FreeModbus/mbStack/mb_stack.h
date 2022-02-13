@@ -46,4 +46,6 @@ typedef struct
 
 } MB_StackTypeDef, *pMB_StackTypeDef;
 
+#define NEW_MB_StackTypeDef {.eState = STATE_NOT_INITIALIZED}
+
 #endif

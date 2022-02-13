@@ -57,6 +57,6 @@ typedef struct
 
 } MB_M_StackTypeDef, *pMB_M_StackTypeDef;
 
-// TODO:初始化协议栈
+#define NEW_MB_M_StackTypeDef {.eState = STATE_NOT_INITIALIZED}
 
 #endif

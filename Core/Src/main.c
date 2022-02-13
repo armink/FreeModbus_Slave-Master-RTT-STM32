@@ -184,11 +184,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
   if (htim == &htim3)
   {
-    mbStack.peMBPortCBTimerExpiredCur(&mbStack);
+    mbMasterStack.peMBMasterPortCBTimerExpiredCur(&mbMasterStack);
   }
   if (htim == &htim4)
   {
-    mbMasterStack.peMBMasterPortCBTimerExpiredCur(&mbMasterStack);
+    mbStack.peMBPortCBTimerExpiredCur(&mbStack);
   }
   /* USER CODE END Callback 1 */
 }
