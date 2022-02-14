@@ -61,25 +61,31 @@ PR_BEGIN_EXTERN_C
  */
 
 /* ----------------------- Defines ------------------------------------------*/
+#define MB_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
+#define MB_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
+#define MB_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
+
 #define MB_PDU_SIZE_MAX     253 /*!< Maximum size of a PDU. */
 #define MB_PDU_SIZE_MIN     1   /*!< Function Code */
 #define MB_PDU_FUNC_OFF     0   /*!< Offset of function code in PDU. */
 #define MB_PDU_DATA_OFF     1   /*!< Offset for response data in PDU. */
 
 /* ----------------------- Prototypes  0-------------------------------------*/
-typedef void    ( *pvMBFrameStart ) ( void );
+typedef void    ( *pvMBFrameStart ) ( void * this );
 
-typedef void    ( *pvMBFrameStop ) ( void );
+typedef void    ( *pvMBFrameStop ) ( void * this );
 
-typedef eMBErrorCode( *peMBFrameReceive ) ( UCHAR * pucRcvAddress,
+typedef eMBErrorCode( *peMBFrameReceive ) ( void * this, UCHAR * pucRcvAddress,
                                             UCHAR ** pucFrame,
                                             USHORT * pusLength );
 
-typedef eMBErrorCode( *peMBFrameSend ) ( UCHAR slaveAddress,
+typedef eMBErrorCode( *peMBFrameSend ) ( void * this, UCHAR slaveAddress,
                                          const UCHAR * pucFrame,
                                          USHORT usLength );
 
-typedef void( *pvMBFrameClose ) ( void );
+typedef void( *pvMBFrameClose ) ( void * this );
 
 #ifdef __cplusplus
 PR_END_EXTERN_C

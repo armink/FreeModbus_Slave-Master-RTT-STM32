@@ -148,7 +148,7 @@ typedef enum
  *        slave addresses are in the range 1 - 247.
  *    - eMBErrorCode::MB_EPORTERR IF the porting layer returned an error.
  */
-eMBErrorCode    eMBInit( eMBMode eMode, UCHAR ucSlaveAddress,
+eMBErrorCode    eMBInit( void * this, eMBMode eMode, UCHAR ucSlaveAddress,
                          UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity );
 
 /*! \ingroup modbus
@@ -165,7 +165,7 @@ eMBErrorCode    eMBInit( eMBMode eMode, UCHAR ucSlaveAddress,
  *        slave addresses are in the range 1 - 247.
  *    - eMBErrorCode::MB_EPORTERR IF the porting layer returned an error.
  */
-eMBErrorCode    eMBTCPInit( USHORT usTCPPort );
+eMBErrorCode    eMBTCPInit( void * this, USHORT usTCPPort );
 
 /*! \ingroup modbus
  * \brief Release resources used by the protocol stack.
@@ -181,7 +181,7 @@ eMBErrorCode    eMBTCPInit( USHORT usTCPPort );
  *   If the protocol stack is not in the disabled state it returns
  *   eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBClose( void );
+eMBErrorCode    eMBClose( void * this );
 
 /*! \ingroup modbus
  * \brief Enable the Modbus protocol stack.
@@ -193,7 +193,7 @@ eMBErrorCode    eMBClose( void );
  *   eMBErrorCode::MB_ENOERR. If it was not in the disabled state it
  *   return eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBEnable( void );
+eMBErrorCode    eMBEnable( void * this );
 
 /*! \ingroup modbus
  * \brief Disable the Modbus protocol stack.
@@ -204,7 +204,7 @@ eMBErrorCode    eMBEnable( void );
  *  eMBErrorCode::MB_ENOERR. If it was not in the enabled state it returns
  *  eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBDisable( void );
+eMBErrorCode    eMBDisable( void * this );
 
 /*! \ingroup modbus
  * \brief The main pooling loop of the Modbus protocol stack.
@@ -218,7 +218,7 @@ eMBErrorCode    eMBDisable( void );
  *   returns eMBErrorCode::MB_EILLSTATE. Otherwise it returns
  *   eMBErrorCode::MB_ENOERR.
  */
-eMBErrorCode    eMBPoll( void );
+eMBErrorCode    eMBPoll( void * this );
 
 /*! \ingroup modbus
  * \brief Configure the slave id of the device.
@@ -241,29 +241,6 @@ eMBErrorCode    eMBPoll( void );
 eMBErrorCode    eMBSetSlaveID( UCHAR ucSlaveID, BOOL xIsRunning,
                                UCHAR const *pucAdditional,
                                USHORT usAdditionalLen );
-
-/*! \ingroup modbus
- * \brief Registers a callback handler for a given function code.
- *
- * This function registers a new callback handler for a given function code.
- * The callback handler supplied is responsible for interpreting the Modbus PDU and
- * the creation of an appropriate response. In case of an error it should return
- * one of the possible Modbus exceptions which results in a Modbus exception frame
- * sent by the protocol stack.
- *
- * \param ucFunctionCode The Modbus function code for which this handler should
- *   be registers. Valid function codes are in the range 1 to 127.
- * \param pxHandler The function handler which should be called in case
- *   such a frame is received. If \c NULL a previously registered function handler
- *   for this function code is removed.
- *
- * \return eMBErrorCode::MB_ENOERR if the handler has been installed. If no
- *   more resources are available it returns eMBErrorCode::MB_ENORES. In this
- *   case the values in mbconfig.h should be adjusted. If the argument was not
- *   valid it returns eMBErrorCode::MB_EINVAL.
- */
-eMBErrorCode    eMBRegisterCB( UCHAR ucFunctionCode,
-                               pxMBFunctionHandler pxHandler );
 
 /* ----------------------- Callback -----------------------------------------*/
 

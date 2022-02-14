@@ -49,44 +49,177 @@ FreeModbus是一款开源的Modbus协议栈，但是只有从机开源，主机�
 
 ## 二、移植
 
-对于协议栈的移植主要包括两个方面，硬件及软件。用户需要根据自己的需求进行自行选择。
+该项目底层代码有Stm32CubeMX自动生成，如果芯片选择STM32也强烈建议您使用Cube生成代码，免去配置接口不必要的麻烦。该项目没有使用任何IDE，Cube生成带Makefile的代码，然后直接编译运行，本人使用的VSC+Cortex Debug插件+make+arm-none-eabi-gcc+jlink的开发方式（**环境搭建请自行搜索**）。 STM32配置详情见demo.ioc，下面介绍的移植过程全部是基于Cube自动生成代码的。
 
-> 注：以下所有说明都主要针对Modbus主机模式进行介绍。
+### 2.1、硬件配置
 
-### 2.1、软件
+#### 2.1.1、选择串口
 
-软件方面支持基于裸机及实时操作系统的移植；支持单个主机与单个从机同时独立运行。另外用户也可以修改协议栈的事件回调接口，使主机请求的接口采用阻塞及非阻塞模式；主机资源等待方面，用户也可以设置等待超时时间等等，诸多功能将会一一介绍。
+打开demo.ioc您会看到配置了两个串口，USART1和USART2，并各配置了两个方向引脚。配置串口时需要配置串口中断，modbus通过中断接收数据。
 
-#### 2.1.1、操作系统与裸机
+#### 2.1.2、选择定时器
 
-对于操作系统与裸机目前协议栈都是支持的，但个人更加推荐采用实时操作系统，因为这样会使得接口调用及接口移植变得更加简单。目前移植完成的操作系统包括国人的 [RT-Thread][1] （详见项目源码） 、 UCOS 及 FreeRTOS。
-操作系统与裸机移植的过程中涉及的文件为`FreeModbus\port\portevent_m.c`
-该文件主要有以下需要用户移植的接口
+打开demo.ioc您会看到配置了两个定时器，TIM3和TIM4，该modbusRTU协议栈需要50us的定时中断。
 
-|接口                            |功能描述|
-|:-----                          |:----|
-|xMBMasterPortEventInit          |主机事件初始化|
-|xMBMasterPortEventPost          |主机发送事件|
-|xMBMasterPortEventGet           |主机获取事件|
-|vMBMasterOsResInit              |主机操作系统资源初始化|
-|xMBMasterRunResTake             |主机资源获取|
-|vMBMasterRunResRelease          |主机资源释放|
-|vMBMasterErrorCBRespondTimeout  |主机响应超时回调接口|
-|vMBMasterErrorCBReceiveData     |主机接收数据出错回调接口|
-|vMBMasterErrorCBExecuteFunction |主机执行Modbus方法出错回调接口|
-|vMBMasterCBRequestScuuess       |主机请求执行成功回调接口|
-|eMBMasterWaitRequestFinish      |主机等待请求完成处理回调接口|
+### 2.2、软件配置
 
-在 **基于操作系统移植** 时，主要用到操作系统线程同步方面的技术，Modbus 协议栈自身需要使用操作系统自带的事件机制来实现事件的发送通知与等待获取，同时用户请求 Modbus 功能的线程与 Modbus 协议栈自身线程（Modbus Poll 线程）需要通过事件机制实现两个线程的同步；主机协议栈还需要一个主机资源占用的信号量，初始化默认为1，采用信号量保证了多线程同时发送主机请求时，只有一个线程可以使用主机。
+修改串口中断函数，文件位于`Core\Src\stm32f4xx_it.c`.
 
-在 **基于裸机移植** 时，需要通过软件模拟方式实现事件通知机制，事件等待及资源等待都得采用用户自定义延时及标志变量来实现，实现起来比操作系统模式下的线程同步机制要复杂很多。
+```C
+/* USER CODE BEGIN Includes */
+#include "mb_m_stack.h"
+#include "mb_stack.h"
+/* USER CODE END Includes */
 
-#### 2.1.2、数据缓冲区
+/* USER CODE BEGIN EV */
+extern MB_M_StackTypeDef mbMasterStack;
+extern MB_StackTypeDef mbStack;
+/* USER CODE END EV */
+
+```
+> 添加协议栈头文件和协议栈句柄。
+
+```C
+/**
+  * @brief This function handles USART1 global interrupt.
+  */
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
+
+  uint32_t isrflags = READ_REG(huart1.Instance->SR);
+  uint32_t cr1its = READ_REG(huart1.Instance->CR1);
+
+  /* UART in mode Receiver -------------------------------------------------*/
+  if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
+  {
+    mbMasterStack.peMBMasterFrameCBByteReceivedCur((void *)&mbMasterStack);
+  }
+  if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
+  {
+    mbMasterStack.peMBMasterFrameCBTransmitterEmptyCur((void *)&mbMasterStack);
+  }
+  
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
+
+  /* USER CODE END USART1_IRQn 1 */
+}
+
+```
+> USART1为主机接口。
+
+```C
+/**
+  * @brief This function handles USART2 global interrupt.
+  */
+void USART2_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART2_IRQn 0 */
+
+  uint32_t isrflags = READ_REG(huart2.Instance->SR);
+  uint32_t cr1its = READ_REG(huart2.Instance->CR1);
+
+  /* UART in mode Receiver -------------------------------------------------*/
+  if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
+  {
+    mbStack.peMBFrameCBByteReceivedCur((void *)&mbStack);
+  }
+  if (((isrflags & USART_SR_TXE) != RESET) && ((cr1its & USART_CR1_TXEIE) != RESET))
+  {
+    mbStack.peMBFrameCBTransmitterEmptyCur((void *)&mbStack);
+  }
+  
+  /* USER CODE END USART2_IRQn 0 */
+  HAL_UART_IRQHandler(&huart2);
+  /* USER CODE BEGIN USART2_IRQn 1 */
+
+  /* USER CODE END USART2_IRQn 1 */
+}
+```
+> USART2为从机接口。
+
+修改定时器中断回调函数，文件位于`Core\Src\main.c`.
+```C
+/* USER CODE BEGIN Includes */
+#include "mb_stack.h"
+#include "mb_m_stack.h"
+/* USER CODE END Includes */
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+  extern MB_M_StackTypeDef mbMasterStack;
+  extern MB_StackTypeDef mbStack;
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM5) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+  if (htim == &htim3)
+  {
+    mbStack.peMBPortCBTimerExpiredCur(&mbStack);
+  }
+  if (htim == &htim4)
+  {
+    mbMasterStack.peMBMasterPortCBTimerExpiredCur(&mbMasterStack);
+  }
+  /* USER CODE END Callback 1 */
+}
+```
+> TIM3为从机定时器，TIM4为主机定时器。
+
+关联协议栈与底层接口，文件位于 `APP\*.c`.
+```C
+#include "mb.h"
+#include "mb_m.h"
+#include "mb_m_stack.h"
+
+MB_M_StackTypeDef mbMasterStack;
+
+void Mb_m_Task(void *argument)
+{
+    mbMasterStack.hardware.max485.phuart = &huart1;
+    mbMasterStack.hardware.max485.dirPin = USART1_DIR_Pin;
+    mbMasterStack.hardware.max485.dirPort = USART1_DIR_GPIO_Port;
+    mbMasterStack.hardware.phtim = &htim4;
+    eMBMasterInit(&mbMasterStack, MB_RTU, 2, 115200, MB_PAR_NONE);
+    eMBMasterEnable(&mbMasterStack);
+    while (1)
+    {
+        eMBMasterPoll(&mbMasterStack);
+    }
+}
+```
+
+```C
+#include "mb.h"
+#include "mb_stack.h"
+
+MB_StackTypeDef mbStack;
+
+void Mb_Task(void *argument)
+{
+    mbStack.hardware.max485.phuart = &huart2;
+    mbStack.hardware.max485.dirPin = USART2_DIR_Pin;
+    mbStack.hardware.max485.dirPort = USART2_DIR_GPIO_Port;
+    mbStack.hardware.phtim = &htim3;
+    eMBInit(&mbStack, MB_RTU, 0x01, 1, 115200, MB_PAR_NONE);
+    eMBEnable(&mbStack);
+    while (1)
+    {
+        eMBPoll(&mbStack);
+    }
+}
+```
+
+### 2.3、数据缓冲区
 
 数据缓冲区定义的位置位于 `FreeModbus\port\user_mb_app_m.c` 文件顶部，共计 **4种** 数据类型。
 FreeModbus从机默认使用 **一维数组** 作为缓存区数据结构，主机可以存储所有网内从机的数据，所以主机采用 **二维数组** 对所有从机节点数据进行存储。二维数组的列号代表寄存器、线圈及离散量地址，行号代表从机节点ID，但需要做减一处理，例如`usMRegHoldBuf[2][1]`代表从机ID为 3，保持寄存器地址为 1 的从机数据。
 
-#### 2.1.3、Modbus数据处理回调接口
+### 2.4、Modbus数据处理回调接口
 
 Modbus 一共有4种不同的数据类型，所有的 Modbus 功能都围绕这些数据类型进行操作。由于不同的用户数据缓冲区结构可能有所不同，那么对应的 Modbus 数据处理方式也就存在差异，所以用户需要把每种数据类型对应的操作，按照自己的数据缓冲区结构进行定制实现。
 所有的 Modbus 数据处理回调接口如下：
@@ -99,48 +232,6 @@ Modbus 一共有4种不同的数据类型，所有的 Modbus 功能都围绕这�
 |eMBMasterRegDiscreteCB          |离散输入回调接口|
 
 > 对于数组形式的数据缓冲区结构，源码中已经做好了移植，直接使用即可。也可以使用 [EasyDataManager](https://github.com/armink/EasyDataManager) 库，采用链表作为缓冲区，该库还支持事件驱动，做到数据变化自动通知应用层。
-
-### 2.2、硬件
-
-移植 FreeModbus 协议栈主机部分时，在硬件方面需要修改串口及定时器配置，文件位于port文件下，用户需要根据自己的CPU进行移植修改。
-> 注：协议栈默认自带STM32F103X移植文件，用户可以参考移植
-
-这里提一下基于操作系统设备驱动框架的移植，后期协议栈会增加对 [RT-Thread][1] 自带设备驱动框架的移植，只要是 RT-Thread 的 BSP 支持的 MCU，用户都无需考虑底层的移植过程，减低移植成本。
-
-#### 2.2.1、串口
-
-涉及到串口的移植文件位于`FreeModbus\port\portserial_m.c`，在这个文件中用户需要对以下接口方法进行修改
-
-|接口                            |功能描述|
-|:-----                          |:----|
-|vMBMasterPortSerialEnable       |使能和失能串口的发送及接收功能，如使用485总线，需要注意收发模式切换|
-|vMBMasterPortClose              |关闭串口|
-|xMBMasterPortSerialInit         |串口初始化，如果使用485，收发模式切换引脚也要在此初始化|
-|xMBMasterPortSerialPutByte      |串口发送单字节数据|
-|xMBMasterPortSerialGetByte      |串口接收单字节数据|
-|prvvUARTTxReadyISR              |串口发送完成中断服务程序接口，按照默认方式，直接引用`pxMBMasterFrameCBTransmitterEmpty`方法即可|
-|prvvUARTRxISR                   |串口接收中断服务程序接口，按照默认方式，直接引用`pxMBMasterFrameCBByteReceived`方法即可|
-
-> 还需要在文件末尾增加 CPU 的自带的串口服务程序，将上表中的发送及接收中断程序接口，放到对应的中断服务程序中去即可。
-
-#### 2.2.2、定时器
-
-涉及到定时器的移植文件位于`FreeModbus\port\porttimer_m.c`，在这个文件中用户需要对以下接口方法进行修改
-
-|接口                                    |功能描述|
-|:-----                                  |:----|
-|xMBMasterPortTimersInit                 |定时器初始化，将定时器预分频数及T3.5时间计数值分别备份到`usPrescalerValue`及`usT35TimeOut50us`|
-|vMBMasterPortTimersT35Enable            |设置定时器按照T3.5时间开始计数|
-|vMBMasterPortTimersConvertDelayEnable   |设置定时器按照广播帧的转换延时时间开始计数|
-|vMBMasterPortTimersRespondTimeoutEnable |设置定时器按照响应超时时间开始计数|
-|vMBMasterPortTimersDisable              |失能定时器，定时器将停止计数|
-|prvvTIMERExpiredISR                     |定时器中断服务程序接口，按照默认方式，直接引用`pxMBMasterPortCBTimerExpired`方法即可|
-
-> 注：
-> 1、`usPrescalerValue`及`usT35TimeOut50us`在文件顶部有定义
-> 2、转换延时时间及响应超时时间在`FreeModbus\modbus\include\mbconfig.h`，用户可以根据自己系统的特点自行设置。
-
-除上面接口方法外，用户需要在文件末尾增加 CPU 的自带的定时器中断服务程序，将上表中的定时器中断服务程序接口放进去。
 
 ## 三、API
 

@@ -22,25 +22,33 @@
 #ifndef _PORT_H
 #define _PORT_H
 
-#include <stm32f10x_conf.h>
+#include "main.h"
 #include "mbconfig.h"
-#include <rthw.h>
-#include <rtthread.h>
 
+#include "cmsis_os2.h"
 #include <assert.h>
 #include <inttypes.h>
 
-#define INLINE
-#define PR_BEGIN_EXTERN_C           extern "C" {
-#define PR_END_EXTERN_C             }
+#define INLINE inline
 
-#define ENTER_CRITICAL_SECTION()    EnterCriticalSection()
-#define EXIT_CRITICAL_SECTION()    ExitCriticalSection()
+#define ENTER_CRITICAL_SECTION(x)                    \
+    do                                               \
+    {                                                \
+        HAL_NVIC_DisableIRQ((x)->hardware.uartIRQn); \
+        HAL_NVIC_DisableIRQ((x)->hardware.timIRQn);  \
+    } while (0)
+
+#define EXIT_CRITICAL_SECTION(x)                     \
+    do                                              \
+    {                                               \
+        HAL_NVIC_EnableIRQ((x)->hardware.uartIRQn); \
+        HAL_NVIC_EnableIRQ((x)->hardware.timIRQn);  \
+    } while (0)
 
 typedef uint8_t BOOL;
 
 typedef unsigned char UCHAR;
-typedef char    CHAR;
+typedef char CHAR;
 
 typedef uint16_t USHORT;
 typedef int16_t SHORT;
@@ -49,14 +57,26 @@ typedef uint32_t ULONG;
 typedef int32_t LONG;
 
 #ifndef TRUE
-#define TRUE            1
+#define TRUE 1
 #endif
 
 #ifndef FALSE
-#define FALSE           0
+#define FALSE 0
 #endif
 
-void EnterCriticalSection(void);
-void ExitCriticalSection(void);
+typedef struct
+{
+    GPIO_TypeDef *dirPort;
+    uint16_t dirPin;
+    UART_HandleTypeDef *phuart;
+} Max485TypeDef, *pMax485TypeDef;
+
+typedef struct
+{
+    Max485TypeDef max485;
+    TIM_HandleTypeDef *phtim;
+    IRQn_Type uartIRQn;
+    IRQn_Type timIRQn;
+} MB_RTU_Hardware, *pMB_RTU_Hardware;
 
 #endif

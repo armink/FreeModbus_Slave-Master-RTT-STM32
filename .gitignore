@@ -1,4 +1,4 @@
-/RVMDK/Output
-/Debug
-/Release
-/EWARM/Debug
+/build/
+.gitignore
+.mxproject
+.vscode/settings.json
