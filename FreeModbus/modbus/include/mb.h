@@ -242,29 +242,6 @@ eMBErrorCode    eMBSetSlaveID( UCHAR ucSlaveID, BOOL xIsRunning,
                                UCHAR const *pucAdditional,
                                USHORT usAdditionalLen );
 
-/*! \ingroup modbus
- * \brief Registers a callback handler for a given function code.
- *
- * This function registers a new callback handler for a given function code.
- * The callback handler supplied is responsible for interpreting the Modbus PDU and
- * the creation of an appropriate response. In case of an error it should return
- * one of the possible Modbus exceptions which results in a Modbus exception frame
- * sent by the protocol stack.
- *
- * \param ucFunctionCode The Modbus function code for which this handler should
- *   be registers. Valid function codes are in the range 1 to 127.
- * \param pxHandler The function handler which should be called in case
- *   such a frame is received. If \c NULL a previously registered function handler
- *   for this function code is removed.
- *
- * \return eMBErrorCode::MB_ENOERR if the handler has been installed. If no
- *   more resources are available it returns eMBErrorCode::MB_ENORES. In this
- *   case the values in mbconfig.h should be adjusted. If the argument was not
- *   valid it returns eMBErrorCode::MB_EINVAL.
- */
-eMBErrorCode    eMBRegisterCB( UCHAR ucFunctionCode,
-                               pxMBFunctionHandler pxHandler );
-
 /* ----------------------- Callback -----------------------------------------*/
 
 /*! \defgroup modbus_registers Modbus Registers

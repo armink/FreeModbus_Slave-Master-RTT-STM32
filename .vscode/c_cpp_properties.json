@@ -22,7 +22,7 @@
                 "USE_HAL_DRIVER",
                 "STM32F407xx"
             ],
-            "compilerPath": "D:\\mingw64\\bin\\gcc.exe",
+            "compilerPath": "D:\\gcc-arm-none-eabi\\10 2020-q4-major\\bin\\arm-none-eabi-gcc.exe",
             "cStandard": "gnu17",
             "cppStandard": "gnu++14"
         }

@@ -10,6 +10,8 @@ void Mb_Task(void *argument)
     mbStack.hardware.max485.dirPin = USART1_DIR_Pin;
     mbStack.hardware.max485.dirPort = USART1_DIR_GPIO_Port;
     mbStack.hardware.phtim = &htim4;
+    mbStack.hardware.uartIRQn = USART1_IRQn;
+    mbStack.hardware.timIRQn = TIM4_IRQn;
     eMBInit(&mbStack, MB_RTU, 0x01, 1, 115200, MB_PAR_NONE);
     eMBEnable(&mbStack);
     while (1)

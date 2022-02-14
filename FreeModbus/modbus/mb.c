@@ -195,53 +195,6 @@ eMBTCPInit( USHORT ucTCPPort )
 #endif
 
 eMBErrorCode
-eMBRegisterCB( UCHAR ucFunctionCode, pxMBFunctionHandler pxHandler )
-{
-    int             i;
-    eMBErrorCode    eStatus;
-
-    if( ( 0 < ucFunctionCode ) && ( ucFunctionCode <= 127 ) )
-    {
-        ENTER_CRITICAL_SECTION(  );
-        if( pxHandler != NULL )
-        {
-            for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
-            {
-                if( ( xFuncHandlers[i].pxHandler == NULL ) ||
-                    ( xFuncHandlers[i].pxHandler == pxHandler ) )
-                {
-                    xFuncHandlers[i].ucFunctionCode = ucFunctionCode;
-                    xFuncHandlers[i].pxHandler = pxHandler;
-                    break;
-                }
-            }
-            eStatus = ( i != MB_FUNC_HANDLERS_MAX ) ? MB_ENOERR : MB_ENORES;
-        }
-        else
-        {
-            for( i = 0; i < MB_FUNC_HANDLERS_MAX; i++ )
-            {
-                if( xFuncHandlers[i].ucFunctionCode == ucFunctionCode )
-                {
-                    xFuncHandlers[i].ucFunctionCode = 0;
-                    xFuncHandlers[i].pxHandler = NULL;
-                    break;
-                }
-            }
-            /* Remove can't fail. */
-            eStatus = MB_ENOERR;
-        }
-        EXIT_CRITICAL_SECTION(  );
-    }
-    else
-    {
-        eStatus = MB_EINVAL;
-    }
-    return eStatus;
-}
-
-
-eMBErrorCode
 eMBClose( void * this )
 {
     eMBErrorCode    eStatus = MB_ENOERR;

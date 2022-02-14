@@ -204,6 +204,10 @@ void USART1_IRQHandler(void)
   uint32_t isrflags = READ_REG(huart1.Instance->SR);
   uint32_t cr1its = READ_REG(huart1.Instance->CR1);
 
+  uint32_t errorflags = 0x00U;
+  /* If no error occurs */
+  errorflags = (isrflags & (uint32_t)(USART_SR_PE | USART_SR_FE | USART_SR_ORE | USART_SR_NE));
+
   /* UART in mode Receiver -------------------------------------------------*/
   if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
   {
@@ -213,8 +217,11 @@ void USART1_IRQHandler(void)
   {
     mbStack.peMBFrameCBTransmitterEmptyCur((void *)&mbStack);
   }
-  /* USER CODE END USART1_IRQn 0 */
-  HAL_UART_IRQHandler(&huart1);
+
+  if (errorflags == SET)
+  {
+    __HAL_UART_CLEAR_PEFLAG(&huart1);
+  }
   /* USER CODE BEGIN USART1_IRQn 1 */
 
   /* USER CODE END USART1_IRQn 1 */
@@ -230,6 +237,10 @@ void USART2_IRQHandler(void)
   uint32_t isrflags = READ_REG(huart2.Instance->SR);
   uint32_t cr1its = READ_REG(huart2.Instance->CR1);
 
+  uint32_t errorflags = 0x00U;
+  /* If no error occurs */
+  errorflags = (isrflags & (uint32_t)(USART_SR_PE | USART_SR_FE | USART_SR_ORE | USART_SR_NE));
+
   /* UART in mode Receiver -------------------------------------------------*/
   if (((isrflags & USART_SR_RXNE) != RESET) && ((cr1its & USART_CR1_RXNEIE) != RESET))
   {
@@ -239,9 +250,11 @@ void USART2_IRQHandler(void)
   {
     mbMasterStack.peMBMasterFrameCBTransmitterEmptyCur((void *)&mbMasterStack);
   }
-  
-  /* USER CODE END USART2_IRQn 0 */
-  HAL_UART_IRQHandler(&huart2);
+
+  if (errorflags == SET)
+  {
+    __HAL_UART_CLEAR_PEFLAG(&huart1);
+  }
   /* USER CODE BEGIN USART2_IRQn 1 */
 
   /* USER CODE END USART2_IRQn 1 */

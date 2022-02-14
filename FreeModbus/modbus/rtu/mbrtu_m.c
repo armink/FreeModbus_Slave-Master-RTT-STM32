@@ -61,7 +61,7 @@ eMBMasterRTUInit(void * this, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
     ULONG           usTimerT35_50us;
     pMB_M_StackTypeDef p = (pMB_M_StackTypeDef)this;
 
-    ENTER_CRITICAL_SECTION(  );
+    ENTER_CRITICAL_SECTION( p );
 
     /* Modbus RTU uses 8 Databits. */
     if( xMBMasterPortSerialInit( (void *)&(p->hardware.max485), ucPort, ulBaudRate, 8, eParity ) != TRUE )
@@ -94,7 +94,7 @@ eMBMasterRTUInit(void * this, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity 
             eStatus = MB_EPORTERR;
         }
     }
-    EXIT_CRITICAL_SECTION(  );
+    EXIT_CRITICAL_SECTION( p );
 
     return eStatus;
 }
@@ -103,7 +103,7 @@ void
 eMBMasterRTUStart( void * this )
 {
     pMB_M_StackTypeDef p = (pMB_M_StackTypeDef)this;
-    ENTER_CRITICAL_SECTION(  );
+    ENTER_CRITICAL_SECTION( p );
     /* Initially the receiver is in the state STATE_M_RX_INIT. we start
      * the timer and if no character is received within t3.5 we change
      * to STATE_M_RX_IDLE. This makes sure that we delay startup of the
@@ -113,17 +113,17 @@ eMBMasterRTUStart( void * this )
     vMBMasterPortSerialEnable( (void *)&(p->hardware.max485), TRUE, FALSE );
     vMBMasterPortTimersT35Enable( this );
 
-    EXIT_CRITICAL_SECTION(  );
+    EXIT_CRITICAL_SECTION( p );
 }
 
 void
 eMBMasterRTUStop( void * this )
 {
     pMB_M_StackTypeDef p = (pMB_M_StackTypeDef)this;
-    ENTER_CRITICAL_SECTION(  );
+    ENTER_CRITICAL_SECTION( p );
     vMBMasterPortSerialEnable( (void*)&(p->hardware.max485), FALSE, FALSE );
     vMBMasterPortTimersDisable( (void *)(p->hardware.phtim) );
-    EXIT_CRITICAL_SECTION(  );
+    EXIT_CRITICAL_SECTION( p );
 }
 
 eMBErrorCode
@@ -132,7 +132,7 @@ eMBMasterRTUReceive( void * this, UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHO
     eMBErrorCode    eStatus = MB_ENOERR;
     pMB_M_StackTypeDef p = (pMB_M_StackTypeDef)this;
 
-    ENTER_CRITICAL_SECTION(  );
+    ENTER_CRITICAL_SECTION( p );
     assert_param( p->usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX );
 
     /* Length and CRC check */
@@ -157,7 +157,7 @@ eMBMasterRTUReceive( void * this, UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHO
         eStatus = MB_EIO;
     }
 
-    EXIT_CRITICAL_SECTION(  );
+    EXIT_CRITICAL_SECTION( p );
     return eStatus;
 }
 
@@ -170,7 +170,7 @@ eMBMasterRTUSend( void * this, UCHAR ucSlaveAddress, const UCHAR * pucFrame, USH
 
     if ( ucSlaveAddress > MB_MASTER_TOTAL_SLAVE_NUM ) return MB_EINVAL;
 
-    ENTER_CRITICAL_SECTION(  );
+    ENTER_CRITICAL_SECTION( p );
 
     /* Check if the receiver is still in idle state. If not we where to
      * slow with processing the received frame and the master sent another
@@ -199,7 +199,7 @@ eMBMasterRTUSend( void * this, UCHAR ucSlaveAddress, const UCHAR * pucFrame, USH
     {
         eStatus = MB_EIO;
     }
-    EXIT_CRITICAL_SECTION(  );
+    EXIT_CRITICAL_SECTION( p );
     return eStatus;
 }
 

@@ -31,8 +31,19 @@
 
 #define INLINE inline
 
-#define ENTER_CRITICAL_SECTION() vPortEnterCritical()
-#define EXIT_CRITICAL_SECTION() vPortExitCritical()
+#define ENTER_CRITICAL_SECTION(x)                    \
+    do                                               \
+    {                                                \
+        HAL_NVIC_DisableIRQ((x)->hardware.uartIRQn); \
+        HAL_NVIC_DisableIRQ((x)->hardware.timIRQn);  \
+    } while (0)
+
+#define EXIT_CRITICAL_SECTION(x)                     \
+    do                                              \
+    {                                               \
+        HAL_NVIC_EnableIRQ((x)->hardware.uartIRQn); \
+        HAL_NVIC_EnableIRQ((x)->hardware.timIRQn);  \
+    } while (0)
 
 typedef uint8_t BOOL;
 
@@ -64,9 +75,8 @@ typedef struct
 {
     Max485TypeDef max485;
     TIM_HandleTypeDef *phtim;
+    IRQn_Type uartIRQn;
+    IRQn_Type timIRQn;
 } MB_RTU_Hardware, *pMB_RTU_Hardware;
-
-void vPortEnterCritical(void);
-void vPortExitCritical(void);
 
 #endif
